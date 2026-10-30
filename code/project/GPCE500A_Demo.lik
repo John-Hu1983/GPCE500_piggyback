@@ -1,0 +1,71 @@
+Version: 3.0
+Options: tsk
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\Resource.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\main.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\isr.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\system.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\BootCode_User.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\SPI_Flash.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\SPU_Play_User.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\aintworried_12K_wav_se4.res"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GIRL_SKY_wav_se4.res"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\FileMerger_ROM_bin.res"
+Lib: "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\CMacro\CMacro1232.lib"
+Output: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GPCE500A_Demo_SPI.bin"
+Define: CODE in "main.obj" with _CODE_SPI_SEC 
+Define: DATA in "main.obj" with _DATA_SPI_SEC 
+Define: CODE in "isr.obj" with _CODE_SPI_SEC 
+Define: DATA in "isr.obj" with _DATA_SPI_SEC 
+Define: CODE in "system.obj" with _CODE_SPI_SEC 
+Define: DATA in "system.obj" with _DATA_SPI_SEC 
+Define: CODE in "BootCode_User.obj" with _CODE_SPI_SEC 
+Define: DATA in "BootCode_User.obj" with _DATA_SPI_SEC 
+Define: CODE in "SPI_Flash.obj" with _CODE_SPI_SEC 
+Define: DATA in "SPI_Flash.obj" with _DATA_SPI_SEC 
+Define: CODE in "SPU_Play_User.obj" with _CODE_SPI_SEC 
+Define: DATA in "SPU_Play_User.obj" with _DATA_SPI_SEC 
+Define: __sn_section_RES_AINTWORRIED_12K_WAV_SE4 in "aintworried_12K_wav_se4.res" with _RESOURCE_SPI_SEC 
+Define: __sn_section_RES_GIRL_SKY_WAV_SE4 in "GIRL_SKY_wav_se4.res" with _RESOURCE_SPI_SEC 
+Define: __sn_section_RES_FILEMERGER_ROM_BIN in "FileMerger_ROM_bin.res" with _RESOURCE_SPI_SEC 
+Locate: _CODE_SPI_SEC at 9800
+Locate: _DATA_SPI_SEC after _CODE_SPI_SEC
+Locate: _RESOURCE_SPI_SEC at 20000
+Locate: __sn_init_table at 11940
+Locate: IRAM after __sn_init_table linkat #RAM
+Locate: IRam_Bank0 after __sn_init_table linkat #RAM
+Locate: SleepCode_RAMCode_SEC in "system.obj" at 10000 linkat 1000
+;Align: SleepCode_RAMCode_SEC in "system.obj" with 0 
+Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
+;Align: SPIFC_RAMCode_SEC in "SPI_Flash.obj" with 0 
+;Locate: TEXT in "isr.obj" at 9818 
+;Align: TEXT in "isr.obj" with 0 
+;Locate: IRAM in "main.obj" at 11945  linkat 1A 
+;Align: IRAM in "main.obj" with 0 
+;Locate: RAM in "system.obj" at 10 
+;Align: RAM in "system.obj" with 0 
+;Locate: RAM in "SPI_Flash.obj" at 17 
+;Align: RAM in "SPI_Flash.obj" with 0 
+;Locate: CODE in "Resource.obj" at 989E 
+;Align: CODE in "Resource.obj" with 0 
+;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
+;Align: BootCode_SEC in "BootCode_User.obj" with 0 
+;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 98AE 
+;Align: CODE in "_GPTag" of "CMacro1232.lib"  with 0 
+;Locate: _CODE_SPI_SEC in "SPI_Flash.obj" at 9800 
+;Align: _CODE_SPI_SEC in "SPI_Flash.obj" with 0 
+;Locate: _CODE_SPI_SEC in "BootCode_User.obj" at 984F 
+;Align: _CODE_SPI_SEC in "BootCode_User.obj" with 0 
+;Locate: _CODE_SPI_SEC in "SPU_Play_User.obj" at 9CB7 
+;Align: _CODE_SPI_SEC in "SPU_Play_User.obj" with 0 
+;Locate: _CODE_SPI_SEC in "system.obj" at 9D1B 
+;Align: _CODE_SPI_SEC in "system.obj" with 0 
+;Locate: _CODE_SPI_SEC in "main.obj" at 9EE6 
+;Align: _CODE_SPI_SEC in "main.obj" with 0 
+;Locate: _RESOURCE_SPI_SEC in "GIRL_SKY_wav_se4.res" at 20000 
+;Align: _RESOURCE_SPI_SEC in "GIRL_SKY_wav_se4.res" with 0 
+;Locate: _RESOURCE_SPI_SEC in "aintworried_12K_wav_se4.res" at 33B1D 
+;Align: _RESOURCE_SPI_SEC in "aintworried_12K_wav_se4.res" with 0 
+;Locate: _RESOURCE_SPI_SEC in "FileMerger_ROM_bin.res" at 49127 
+;Align: _RESOURCE_SPI_SEC in "FileMerger_ROM_bin.res" with 0 
+;Locate: __sn_init_table in "<internal obj.>" of "<internal lib.>"  at 11940 
+;Align: __sn_init_table in "<internal obj.>" of "<internal lib.>"  with 0 
