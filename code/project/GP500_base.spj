@@ -73,32 +73,8 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=3
+EXPORT=1969382656
 SPECIFICFLAG=0
-# Begin Source File
-SOURCE=main.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=isr.asm
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\Include\system.asm
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
 # Begin Source File
 SOURCE=BootCode_User.asm
 USEPARAM=FALSE
@@ -147,8 +123,22 @@ ID=
 EXPORT=3
 SPECIFICFLAG=0
 # End Source File
+# End Group
+# Begin Group "External Headers"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=6499950
+SPECIFICFLAG=0
+# End Group
+# Begin Group "asm"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\Include\SPU_Play_User.asm
+SOURCE=..\asm\SPU_Play_User.asm
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -156,12 +146,44 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
-# Begin Group "External Headers"
+# Begin Group "main"
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
+EXPORT=6499950
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\main\GPCE500.c
+USEPARAM=FALSE
+PARAM=
+ID=
 EXPORT=3
 SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\main.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\isr.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\system.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
 # End Group
 # End SubItem
 #Name End GPCE500A-Debug
@@ -232,32 +254,8 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=3
+EXPORT=1969382656
 SPECIFICFLAG=0
-# Begin Source File
-SOURCE=main.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=isr.asm
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\Include\system.asm
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
 # Begin Source File
 SOURCE=BootCode_User.asm
 USEPARAM=FALSE
@@ -306,8 +304,22 @@ ID=
 EXPORT=3
 SPECIFICFLAG=0
 # End Source File
+# End Group
+# Begin Group "External Headers"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=6499950
+SPECIFICFLAG=0
+# End Group
+# Begin Group "asm"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\Include\SPU_Play_User.asm
+SOURCE=..\asm\SPU_Play_User.asm
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -315,12 +327,44 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
-# Begin Group "External Headers"
+# Begin Group "main"
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
+EXPORT=6499950
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\main\GPCE500.c
+USEPARAM=FALSE
+PARAM=
+ID=
 EXPORT=3
 SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\main.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\isr.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\system.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
 # End Group
 # End SubItem
 #Name End GPCE500A-Release

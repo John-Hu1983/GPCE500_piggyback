@@ -50,7 +50,7 @@ int main()
 	UserTemp01 = C_SPU_SampleFreq_48K;
 	
 	System_Initial();			          	// System initial
-	PWMorCUR_Flg = 0;        //Ñ¡Ôñ 1:PWM DACOut;  0:CUR DACOut
+	PWMorCUR_Flg = 1;        //Ñ¡ï¿½ï¿½ 1:PWM DACOut;  0:CUR DACOut
 	
 	USER_Set_Audio_OUT();    //Set audio output is  CUR OUT 
 	

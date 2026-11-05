@@ -1,0 +1,324 @@
+// Ordinary system logic lives in main\GPCE500.c.
+// Keep CPU instructions, calibrated delays, RAM sleep and legacy ABI adapters here.
+.include GPCE36_CE5.inc
+
+.external _System_Initial
+.external _SP_SwitchChannel
+.external _WatchdogClear
+.external _System_ServiceLoop
+.external _SP_GetCh
+.external _SP_RampUpDAC1
+.external _SP_RampDnDAC1
+.external _SP_RampUpDAC2
+.external _SP_RampDnDAC2
+.external _USER_Set_Audio_OUT
+.external _Cache_Enable
+.external _Cache_Disable
+.external _AutoModeReadAWords
+.external _AutoModeReadNWords
+.external _GotoSleep
+
+.public _System_CPU_Initial
+.public _System_DisableInterrupts
+.public _System_CacheWait
+.public _System_WakeupWait
+.public _System_LVD_Delay
+.public _System_RunSleepCodeFromRAM
+.public _SACM_Delay
+.public F_SACM_Delay
+.public F_System_Initial
+.public F_SP_SwitchChannel
+.public F_WatchdogClear
+.public F_System_ServiceLoop
+.public F_SP_GetCh
+.public F_SP_RampUpDAC1
+.public F_SP_RampDnDAC1
+.public F_SP_RampUpDAC2
+.public F_SP_RampDnDAC2
+.public F_USER_Set_Audio_OUT
+.public F_Cache_Enable
+.public F_Cache_Disable
+.public F_AutoModeReadAWords
+.public F_AutoModeReadNWords
+.public F_GotoSleep
+
+.CODE
+_System_CPU_Initial: .proc
+    int off
+    fir_mov off
+    retf
+    .endp
+
+_System_DisableInterrupts: .proc
+    int off
+    retf
+    .endp
+
+_System_CacheWait: .proc
+    nop
+    nop
+    nop
+    nop
+    nop
+    retf
+    .endp
+
+_System_WakeupWait: .proc
+    nop
+    nop
+    nop
+    nop
+    retf
+    .endp
+
+_System_LVD_Delay: .proc
+    R3 = 10
+?L_LVDDelay:
+    R3 -= 1
+    jne ?L_LVDDelay
+    retf
+    .endp
+
+_SACM_Delay: .proc
+F_SACM_Delay:
+    push R2 to [SP]
+    R2 = 80
+?L_RampDelay:
+    R2 -= 1
+    jnz ?L_RampDelay
+    pop R2 from [SP]
+    retf
+    .endp
+
+// The C ABI uses stack arguments; legacy F_ entries use registers.
+// Adapters preserve the original general-purpose register clobber contracts.
+F_System_Initial: .proc
+    push R2, R4 to [SP]
+    call _System_Initial
+    pop R2, R4 from [SP]
+    retf
+    .endp
+
+F_SP_SwitchChannel: .proc
+    push R1, R4 to [SP]
+    push R1 to [SP]
+    call _SP_SwitchChannel
+    SP += 1
+    pop R1, R4 from [SP]
+    retf
+    .endp
+
+F_WatchdogClear: .proc
+    push R2, R4 to [SP]
+    call _WatchdogClear
+    pop R2, R4 from [SP]
+    retf
+    .endp
+
+F_System_ServiceLoop: .proc
+    push R3, R4 to [SP]
+    call _System_ServiceLoop
+    pop R3, R4 from [SP]
+    retf
+    .endp
+
+F_SP_GetCh: .proc
+    push R3, R4 to [SP]
+    call _SP_GetCh
+    pop R3, R4 from [SP]
+    retf
+    .endp
+
+F_SP_RampUpDAC1: .proc
+    push R1, R4 to [SP]
+    call _SP_RampUpDAC1
+    pop R1, R4 from [SP]
+    retf
+    .endp
+
+F_SP_RampDnDAC1: .proc
+    push R1, R4 to [SP]
+    call _SP_RampDnDAC1
+    pop R1, R4 from [SP]
+    retf
+    .endp
+
+F_SP_RampUpDAC2: .proc
+    push R1, R4 to [SP]
+    call _SP_RampUpDAC2
+    pop R1, R4 from [SP]
+    retf
+    .endp
+
+F_SP_RampDnDAC2: .proc
+    push R1, R4 to [SP]
+    call _SP_RampDnDAC2
+    pop R1, R4 from [SP]
+    retf
+    .endp
+
+F_USER_Set_Audio_OUT: .proc
+    push R2, R4 to [SP]
+    call _USER_Set_Audio_OUT
+    pop R2, R4 from [SP]
+    retf
+    .endp
+
+F_Cache_Enable: .proc
+    push R2, R4 to [SP]
+    call _Cache_Enable
+    pop R2, R4 from [SP]
+    retf
+    .endp
+
+F_Cache_Disable: .proc
+    push R2, R4 to [SP]
+    call _Cache_Disable
+    pop R2, R4 from [SP]
+    retf
+    .endp
+
+F_AutoModeReadAWords: .proc
+    push R2, R4 to [SP]
+    push R2 to [SP]
+    push R1 to [SP]
+    call _AutoModeReadAWords
+    SP += 2
+    pop R2, R4 from [SP]
+    retf
+    .endp
+
+F_AutoModeReadNWords: .proc
+    push R1, R5 to [SP]
+    push R4 to [SP]
+    push R3 to [SP]
+    push R2 to [SP]
+    push R1 to [SP]
+    call _AutoModeReadNWords
+    SP += 4
+    pop R1, R5 from [SP]
+    retf
+    .endp
+
+F_GotoSleep: .proc
+    push R1, R4 to [SP]
+    push R1 to [SP]
+    call _GotoSleep
+    SP += 1
+    pop R1, R4 from [SP]
+    retf
+    .endp
+
+// The linker stores this section at Flash 0x10000, linked for RAM 0x1000.
+// Copy and return while Flash is available; only the RAM procedure powers it down.
+_System_RunSleepCodeFromRAM: .proc
+    push R1, R5 to [SP]
+    push SR to [SP]
+    R1 = 0x1000
+    R2 = F_SleepCodeRAMEnd - F_SleepCodeRAMStr
+    R3 = 0
+    R4 = 1
+    call F_AutoModeReadNWords
+    call F_SleepCodeRAMStr
+    pop SR from [SP]
+    pop R1, R5 from [SP]
+    retf
+    .endp
+
+// No C calls or Flash data accesses are allowed inside this section.
+SleepCode_RAMCode_SEC: .section .CODE
+F_SleepCodeRAMStr: .proc
+    R1 = [P_SPI_Ctrl]
+    R4 = R1
+    R4 &= C_SPI_MultiIO_Sel
+    R1 &= ~(C_SPI_Auto_Enable + C_SPI_CS_SPI + C_SPI_MultiIO_Sel)
+    R1 |= 0x0080
+    [P_SPI_Ctrl] = R1
+    clrb [P_SPI_Man_Ctrl], 1
+    R1 = 0xFF
+    [P_SPI_TX_Data] = R1
+    [P_SPI_TX_Data] = R1
+?L_Check_TXIF_1:
+    R1 = [P_SPI_Misc]
+    test R1, C_SPI_Busy_Flag
+    jnz ?L_Check_TXIF_1
+    test R1, C_SPI_RX_NonEmpty_Flag
+    jz ?L_Check_TXIF_1
+    nop
+    R1 = [P_SPI_RX_Data]
+    R1 = [P_SPI_RX_Data]
+    setb [P_SPI_Man_Ctrl], 1
+    clrb [P_SPI_Man_Ctrl], 1
+    R1 = 0xB9
+    [P_SPI_TX_Data] = R1
+?L_Check_TXIF_2:
+    R1 = [P_SPI_Misc]
+    test R1, C_SPI_Busy_Flag
+    jnz ?L_Check_TXIF_2
+    test R1, C_SPI_RX_NonEmpty_Flag
+    jz ?L_Check_TXIF_2
+    nop
+    R1 = [P_SPI_RX_Data]
+    setb [P_SPI_Man_Ctrl], 1
+    R1 = [P_SPI_Ctrl]
+    R1 &= ~C_SPI_Enable
+    [P_SPI_Ctrl] = R1
+    R1 = [P_IOA_Data]
+    R1 = [P_IOA_Attrib]
+    R1 = [P_IOB_Data]
+    R1 = [P_IOB_Attrib]
+    R1 = [P_IOC_Data]
+    R1 = [P_IOC_Attrib]
+    R1 = C_IRQ4_KEY
+    [P_INT_Ctrl] = R1
+    R1 = 0xFF00
+    [P_IOA_WakeUp_Mask] = R1
+    R1 = 0xFFFF
+    [P_IOB_WakeUp_Mask] = R1
+    [P_IOC_WakeUp_Mask] = R1
+    nop
+    nop
+    R1 = 0xFFFF
+    [P_INT_Status] = R1
+    [P_INT2_Status] = R1
+    R1 = C_System_Sleep
+    [P_System_Sleep] = R1
+    nop
+    nop
+    nop
+    nop
+    R1 = 0
+    [P_INT_Ctrl] = R1
+    [P_INT2_Ctrl] = R1
+    R1 = 0xFFFF
+    [P_INT_Status] = R1
+    [P_INT2_Status] = R1
+    R1 = [P_SPI_Ctrl]
+    R1 |= (C_SPI_Enable + C_SPI_Reset)
+    [P_SPI_Ctrl] = R1
+    clrb [P_SPI_Man_Ctrl], 1
+    R1 = 0xAB
+    [P_SPI_TX_Data] = R1
+?L_Check_TXIF_Wakeup:
+    R1 = [P_SPI_Misc]
+    test R1, C_SPI_Busy_Flag
+    jnz ?L_Check_TXIF_Wakeup
+    test R1, C_SPI_RX_NonEmpty_Flag
+    jz ?L_Check_TXIF_Wakeup
+    R1 = [P_SPI_RX_Data]
+    setb [P_SPI_Man_Ctrl], 1
+    R1 = 4096
+?_Loop_0:
+    R1 -= 1
+    jnz ?_Loop_0
+    R1 = [P_SPI_Auto_Ctrl]
+    R3 = 0
+    [P_SPI_Auto_Ctrl] = R3
+    R3 = [P_SPI_Ctrl]
+    R3 |= (C_SPI_Auto_Enable + C_SPI_CS_SPI)
+    R3 |= R4
+    [P_SPI_Ctrl] = R3
+    [P_SPI_Auto_Ctrl] = R1
+    retf
+F_SleepCodeRAMEnd:
+    .endp

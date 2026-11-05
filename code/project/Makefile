@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		10:22:21	10/30/26
+#	Created by u'nSP IDE V4.1.1		14:17:28	11/05/26
 #
 #####################################################################
 
@@ -53,13 +53,13 @@ LIKMODIFIER	= "$(APPDIR)\toolchain\unSP_LIKModifier"
 
 INCLUDES	= -I"D:/JohnHu/Github_private/GPCE500_piggyback/code/project" -I"C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include" -I"C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include/sys" -I"../Include" -I"../Library"
 
-BODY	= -body GPCE500A -nobdy -bfile "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\GPCE500A_Demo.bdy"
+BODY	= -body GPCE500A -nobdy -bfile "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\GP500_base.bdy"
 
-BODYFILE	= "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\GPCE500A_Demo.bdy" 
+BODYFILE	= "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\GP500_base.bdy" 
 
-BINFILE	= "$(OUTDIR)\GPCE500A_Demo.TSK"
+BINFILE	= "$(OUTDIR)\GP500_base.TSK"
 
-PRJNAME = GPCE500A_Demo
+PRJNAME = GP500_base
 
 BODYNAME = GPCE500A
 
@@ -67,11 +67,11 @@ SWTOOLID = 0x0008
 
 IDEBUILDVER = 0x04010100
 
-BINFILENOEXT	= $(OUTDIR)\GPCE500A_Demo
+BINFILENOEXT	= $(OUTDIR)\GP500_base
 
-ARYFILE	= "$(OUTDIR)\GPCE500A_Demo.ary"
+ARYFILE	= "$(OUTDIR)\GP500_base.ary"
 
-SBMFILE	= "$(OUTDIR)\GPCE500A_Demo.sbm"
+SBMFILE	= "$(OUTDIR)\GP500_base.sbm"
 
 PKINFOFILE	= "$(BINFILENOEXT).pki"
 
@@ -85,7 +85,7 @@ CFLAGS	= $(OPT) -B$(APPDIR)\toolchain\ $(INCLUDES)
 
 BINTYPE	= -at
 
-LDFLAGS	= -Wno-L0062 -blank 0x00 -initdata -infblk "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\GPCE500A_Demo.inb" -conf "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\Body\GPCE5\Checksum\GPCE5.cks"
+LDFLAGS	= -Wno-L0062 -blank 0x00 -initdata -infblk "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\GP500_base.inb" -conf "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\Body\GPCE5\Checksum\GPCE5.cks"
 
 EXTRAFLAGS	= 
 
@@ -95,12 +95,13 @@ OBJFILES	= \
 	"$(OUTDIR)\GIRL_SKY_wav_se4.res" \
 	"$(OUTDIR)\FileMerger_ROM_bin.res" \
 	"$(OUTDIR)\Resource.obj" \
-	"$(OUTDIR)\main.obj" \
-	"$(OUTDIR)\isr.obj" \
-	"$(OUTDIR)\system.obj" \
 	"$(OUTDIR)\BootCode_User.obj" \
 	"$(OUTDIR)\SPI_Flash.obj" \
-	"$(OUTDIR)\SPU_Play_User.obj" 
+	"$(OUTDIR)\SPU_Play_User.obj" \
+	"$(OUTDIR)\GPCE500.obj" \
+	"$(OUTDIR)\main.obj" \
+	"$(OUTDIR)\isr.obj" \
+	"$(OUTDIR)\system.obj" 
 
 "$(OUTDIR)\aintworried_12K_wav_se4.res": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4"
 	$(RESC) "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4" "$(OUTDIR)\aintworried_12K_wav_se4.res" RES_AINTWORRIED_12K_WAV_SE4 
@@ -114,27 +115,34 @@ OBJFILES	= \
 "$(OUTDIR)\Resource.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Resource.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\Resource.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Resource.asm" 
 
-"$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\main.c" 
-	set PATH="$(APPDIR)\toolchain\";%PATH% & \
-	$(CC) $(CFLAGS) -o "$(OUTDIR)\main.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/project/main.c" 
-
-"$(OUTDIR)\main.obj": "$(OUTDIR)\main.asm"
-	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\main.obj" "$(OUTDIR)\main.asm" 
-
-"$(OUTDIR)\isr.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\isr.asm" 
-	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\isr.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\isr.asm" 
-
-"$(OUTDIR)\system.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\system.asm" 
-	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\system.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\system.asm" 
-
 "$(OUTDIR)\BootCode_User.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\BootCode_User.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\BootCode_User.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\BootCode_User.asm" 
 
 "$(OUTDIR)\SPI_Flash.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPI_Flash.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 
-"$(OUTDIR)\SPU_Play_User.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\SPU_Play_User.asm" 
-	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPU_Play_User.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\SPU_Play_User.asm" 
+"$(OUTDIR)\SPU_Play_User.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\asm\SPU_Play_User.asm" 
+	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPU_Play_User.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\asm\SPU_Play_User.asm" 
+
+"$(OUTDIR)\GPCE500.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\GPCE500.c" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\GPCE500.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/GPCE500.c" 
+
+"$(OUTDIR)\GPCE500.obj": "$(OUTDIR)\GPCE500.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\GPCE500.obj" "$(OUTDIR)\GPCE500.asm" 
+
+"$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\main.c" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\main.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/main.c" 
+
+"$(OUTDIR)\main.obj": "$(OUTDIR)\main.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\main.obj" "$(OUTDIR)\main.asm" 
+
+"$(OUTDIR)\isr.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\isr.asm" 
+	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\isr.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\isr.asm" 
+
+"$(OUTDIR)\system.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\system.asm" 
+	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\system.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\system.asm" 
 
 
 GEN_BOOTPACKER_INFO :
@@ -183,6 +191,15 @@ CLEANFILES = \
 	"$(OUTDIR)\FileMerger_ROM_bin.res" \
 	"$(OUTDIR)\Resource.obj" \
 	"$(OUTDIR)\Resource.lst" \
+	"$(OUTDIR)\BootCode_User.obj" \
+	"$(OUTDIR)\BootCode_User.lst" \
+	"$(OUTDIR)\SPI_Flash.obj" \
+	"$(OUTDIR)\SPI_Flash.lst" \
+	"$(OUTDIR)\SPU_Play_User.obj" \
+	"$(OUTDIR)\SPU_Play_User.lst" \
+	"$(OUTDIR)\GPCE500.obj" \
+	"$(OUTDIR)\GPCE500.lst" \
+	"$(OUTDIR)\GPCE500.asm" \
 	"$(OUTDIR)\main.obj" \
 	"$(OUTDIR)\main.lst" \
 	"$(OUTDIR)\main.asm" \
@@ -190,12 +207,6 @@ CLEANFILES = \
 	"$(OUTDIR)\isr.lst" \
 	"$(OUTDIR)\system.obj" \
 	"$(OUTDIR)\system.lst" \
-	"$(OUTDIR)\BootCode_User.obj" \
-	"$(OUTDIR)\BootCode_User.lst" \
-	"$(OUTDIR)\SPI_Flash.obj" \
-	"$(OUTDIR)\SPI_Flash.lst" \
-	"$(OUTDIR)\SPU_Play_User.obj" \
-	"$(OUTDIR)\SPU_Play_User.lst" \
 	"$(BINFILENOEXT).s37" \
 	"$(BINFILENOEXT).tsk" \
 	"$(BINFILENOEXT)_SPI.bin*" \
@@ -209,7 +220,7 @@ CLEANFILES = \
 	$(SBMFILE)
 
 clean :
-	$(RM) $(wordlist 1,30,$(CLEANFILES))
+	$(RM) $(wordlist 1,33,$(CLEANFILES))
 
 .c.asm:
 	$(CC) $(CFLAGS) $(INCLUDES) -o "$(OUTDIR)\$@" $<
