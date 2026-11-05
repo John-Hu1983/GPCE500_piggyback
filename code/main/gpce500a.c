@@ -1,12 +1,12 @@
 /*
- * GPCE500 的 C 系统驱动，与 asm/system.asm 一起参与当前工程构建。
+ * GPCE500A 的 C 系统驱动，与 system.asm 一起参与当前工程构建。
  *
  * 对照资料：spec/MCU/GPCE500A_Programming Guide_v0.1(Spin Master LTD)(Draft).pdf
  * PDF 第 13~15 页：字地址、Cache RAM 和 SPI Bank；第 26~29 页：休眠与唤醒；
  * 第 86~90 页：音频寄存器；第 124~125 页：SPI Bank 和驱动能力。
  *
  * *P_xxx 表示读写硬件寄存器；本芯片 unsigned 为 16 位，unsigned long 为 32 位。
- * 本文件只保留 C 实现；CPU 指令、定长延时、RAM 休眠代码和旧汇编入口
+ * 本文件只保留 C 实现；CPU 指令、定长延时和 RAM 休眠代码
  * 由 system.asm 提供。普通逻辑只在本文件实现，不再在汇编中重复定义。
  * C 循环开销与原汇编不同，声音渐变和休眠唤醒仍需在实机上验证。
  */
@@ -23,6 +23,11 @@ static unsigned R_DebounceReg;
 static unsigned R_DebounceCnt;
 static unsigned R_KeyBuf;
 static unsigned R_KeyStrobe;
+
+void System_EnableIRQ(void)
+{
+    System_CPU_EnableIRQ();
+}
 
 void System_Initial(void)
 {

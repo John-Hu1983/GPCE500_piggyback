@@ -1,4 +1,26 @@
 {
+  "files.exclude": {
+    "**/Debug": true,
+    "project/Device.env": true,
+    "project/GP500_base.bdy": true,
+    "project/GP500_base.env": true,
+    "project/GP500_base.inb": true,
+    "project/GP500_base.inbex": true,
+    "project/GP500_base.opt": true,
+    "project/GP500_base.rc": true,
+    "project/GP500_base.set": true
+  },
+  "search.exclude": {
+    "**/Debug": true,
+    "project/Device.env": true,
+    "project/GP500_base.bdy": true,
+    "project/GP500_base.env": true,
+    "project/GP500_base.inb": true,
+    "project/GP500_base.inbex": true,
+    "project/GP500_base.opt": true,
+    "project/GP500_base.rc": true,
+    "project/GP500_base.set": true
+  },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
@@ -43,6 +65,16 @@
     "**/*"
   ],
   "C_Cpp_Runner.excludeSearch": [
+    "**/Debug",
+    "**/Debug/**",
+    "project/Device.env",
+    "project/GP500_base.bdy",
+    "project/GP500_base.env",
+    "project/GP500_base.inb",
+    "project/GP500_base.inbex",
+    "project/GP500_base.opt",
+    "project/GP500_base.rc",
+    "project/GP500_base.set",
     "**/build",
     "**/build/**",
     "**/.*",

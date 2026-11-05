@@ -3,11 +3,12 @@ Options: tsk
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\Resource.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\BootCode_User.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\SPI_Flash.obj"
-Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\SPU_Play_User.obj"
-Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GPCE500.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\main.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\isr.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\system.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\gpce500a.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\audio_spu.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\spu_patch.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\aintworried_12K_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GIRL_SKY_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\FileMerger_ROM_bin.res"
@@ -32,25 +33,29 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: SPIFC_RAMCode_SEC in "SPI_Flash.obj" with 0 
 ;Locate: TEXT in "isr.obj" at 9818 
 ;Align: TEXT in "isr.obj" with 0 
-;Locate: IRAM in "main.obj" at 11945  linkat 17 
+;Locate: IRAM in "main.obj" at 1194B  linkat 19 
 ;Align: IRAM in "main.obj" with 0 
+;Locate: IRAM in "audio_spu.obj" at 11949  linkat 17 
+;Align: IRAM in "audio_spu.obj" with 0 
 ;Locate: RAM in "SPI_Flash.obj" at 10 
 ;Align: RAM in "SPI_Flash.obj" with 0 
-;Locate: RAM in "GPCE500.obj" at 13 
-;Align: RAM in "GPCE500.obj" with 0 
-;Locate: CODE in "Resource.obj" at 989E 
+;Locate: RAM in "gpce500a.obj" at 13 
+;Align: RAM in "gpce500a.obj" with 0 
+;Locate: CODE in "Resource.obj" at 98CF 
 ;Align: CODE in "Resource.obj" with 0 
 ;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
 ;Align: BootCode_SEC in "BootCode_User.obj" with 0 
-;Locate: CODE in "SPU_Play_User.obj" at A2DE 
-;Align: CODE in "SPU_Play_User.obj" with 0 
-;Locate: CODE in "GPCE500.obj" at 9CB7 
-;Align: CODE in "GPCE500.obj" with 0 
-;Locate: CODE in "main.obj" at 9FCA 
+;Locate: CODE in "main.obj" at A166 
 ;Align: CODE in "main.obj" with 0 
-;Locate: CODE in "system.obj" at A25D 
+;Locate: CODE in "system.obj" at 989E 
 ;Align: CODE in "system.obj" with 0 
-;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 98AE 
+;Locate: CODE in "gpce500a.obj" at 9CB7 
+;Align: CODE in "gpce500a.obj" with 0 
+;Locate: CODE in "audio_spu.obj" at 9FD0 
+;Align: CODE in "audio_spu.obj" with 0 
+;Locate: CODE in "spu_patch.obj" at 98DF 
+;Align: CODE in "spu_patch.obj" with 0 
+;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 98E9 
 ;Align: CODE in "_GPTag" of "CMacro1232.lib"  with 0 
 ;Locate: _CODE_SPI_SEC in "SPI_Flash.obj" at 9800 
 ;Align: _CODE_SPI_SEC in "SPI_Flash.obj" with 0 

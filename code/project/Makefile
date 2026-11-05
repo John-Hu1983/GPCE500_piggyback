@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		14:17:28	11/05/26
+#	Created by u'nSP IDE V4.1.1		15:14:37	11/05/26
 #
 #####################################################################
 
@@ -97,11 +97,12 @@ OBJFILES	= \
 	"$(OUTDIR)\Resource.obj" \
 	"$(OUTDIR)\BootCode_User.obj" \
 	"$(OUTDIR)\SPI_Flash.obj" \
-	"$(OUTDIR)\SPU_Play_User.obj" \
-	"$(OUTDIR)\GPCE500.obj" \
 	"$(OUTDIR)\main.obj" \
 	"$(OUTDIR)\isr.obj" \
-	"$(OUTDIR)\system.obj" 
+	"$(OUTDIR)\system.obj" \
+	"$(OUTDIR)\gpce500a.obj" \
+	"$(OUTDIR)\audio_spu.obj" \
+	"$(OUTDIR)\spu_patch.obj" 
 
 "$(OUTDIR)\aintworried_12K_wav_se4.res": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4"
 	$(RESC) "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4" "$(OUTDIR)\aintworried_12K_wav_se4.res" RES_AINTWORRIED_12K_WAV_SE4 
@@ -121,16 +122,6 @@ OBJFILES	= \
 "$(OUTDIR)\SPI_Flash.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPI_Flash.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 
-"$(OUTDIR)\SPU_Play_User.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\asm\SPU_Play_User.asm" 
-	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPU_Play_User.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\asm\SPU_Play_User.asm" 
-
-"$(OUTDIR)\GPCE500.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\GPCE500.c" 
-	set PATH="$(APPDIR)\toolchain\";%PATH% & \
-	$(CC) $(CFLAGS) -o "$(OUTDIR)\GPCE500.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/GPCE500.c" 
-
-"$(OUTDIR)\GPCE500.obj": "$(OUTDIR)\GPCE500.asm"
-	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\GPCE500.obj" "$(OUTDIR)\GPCE500.asm" 
-
 "$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\main.c" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\main.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/main.c" 
@@ -143,6 +134,23 @@ OBJFILES	= \
 
 "$(OUTDIR)\system.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\system.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\system.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\system.asm" 
+
+"$(OUTDIR)\gpce500a.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\gpce500a.c" "GPCE36_CE5.h" "..\Include\System.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\gpce500a.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/gpce500a.c" 
+
+"$(OUTDIR)\gpce500a.obj": "$(OUTDIR)\gpce500a.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gpce500a.obj" "$(OUTDIR)\gpce500a.asm" 
+
+"$(OUTDIR)\audio_spu.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "GPCE36_CE5.h" "Resource.h" "..\Include\System.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\audio_spu.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/audio/audio_spu.c" 
+
+"$(OUTDIR)\audio_spu.obj": "$(OUTDIR)\audio_spu.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\audio_spu.obj" "$(OUTDIR)\audio_spu.asm" 
+
+"$(OUTDIR)\spu_patch.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
+	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\spu_patch.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
 
 
 GEN_BOOTPACKER_INFO :
@@ -195,11 +203,6 @@ CLEANFILES = \
 	"$(OUTDIR)\BootCode_User.lst" \
 	"$(OUTDIR)\SPI_Flash.obj" \
 	"$(OUTDIR)\SPI_Flash.lst" \
-	"$(OUTDIR)\SPU_Play_User.obj" \
-	"$(OUTDIR)\SPU_Play_User.lst" \
-	"$(OUTDIR)\GPCE500.obj" \
-	"$(OUTDIR)\GPCE500.lst" \
-	"$(OUTDIR)\GPCE500.asm" \
 	"$(OUTDIR)\main.obj" \
 	"$(OUTDIR)\main.lst" \
 	"$(OUTDIR)\main.asm" \
@@ -207,6 +210,14 @@ CLEANFILES = \
 	"$(OUTDIR)\isr.lst" \
 	"$(OUTDIR)\system.obj" \
 	"$(OUTDIR)\system.lst" \
+	"$(OUTDIR)\gpce500a.obj" \
+	"$(OUTDIR)\gpce500a.lst" \
+	"$(OUTDIR)\gpce500a.asm" \
+	"$(OUTDIR)\audio_spu.obj" \
+	"$(OUTDIR)\audio_spu.lst" \
+	"$(OUTDIR)\audio_spu.asm" \
+	"$(OUTDIR)\spu_patch.obj" \
+	"$(OUTDIR)\spu_patch.lst" \
 	"$(BINFILENOEXT).s37" \
 	"$(BINFILENOEXT).tsk" \
 	"$(BINFILENOEXT)_SPI.bin*" \
@@ -220,7 +231,7 @@ CLEANFILES = \
 	$(SBMFILE)
 
 clean :
-	$(RM) $(wordlist 1,33,$(CLEANFILES))
+	$(RM) $(wordlist 1,36,$(CLEANFILES))
 
 .c.asm:
 	$(CC) $(CFLAGS) $(INCLUDES) -o "$(OUTDIR)\$@" $<

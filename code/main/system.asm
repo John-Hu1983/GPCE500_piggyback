@@ -1,51 +1,26 @@
-// Ordinary system logic lives in main\GPCE500.c.
-// Keep CPU instructions, calibrated delays, RAM sleep and legacy ABI adapters here.
+// CPU primitives, calibrated delays and RAM sleep for gpce500a.c.
 .include GPCE36_CE5.inc
 
-.external _System_Initial
-.external _SP_SwitchChannel
-.external _WatchdogClear
-.external _System_ServiceLoop
-.external _SP_GetCh
-.external _SP_RampUpDAC1
-.external _SP_RampDnDAC1
-.external _SP_RampUpDAC2
-.external _SP_RampDnDAC2
-.external _USER_Set_Audio_OUT
-.external _Cache_Enable
-.external _Cache_Disable
-.external _AutoModeReadAWords
 .external _AutoModeReadNWords
-.external _GotoSleep
 
 .public _System_CPU_Initial
+.public _System_CPU_EnableIRQ
 .public _System_DisableInterrupts
 .public _System_CacheWait
 .public _System_WakeupWait
 .public _System_LVD_Delay
 .public _System_RunSleepCodeFromRAM
 .public _SACM_Delay
-.public F_SACM_Delay
-.public F_System_Initial
-.public F_SP_SwitchChannel
-.public F_WatchdogClear
-.public F_System_ServiceLoop
-.public F_SP_GetCh
-.public F_SP_RampUpDAC1
-.public F_SP_RampDnDAC1
-.public F_SP_RampUpDAC2
-.public F_SP_RampDnDAC2
-.public F_USER_Set_Audio_OUT
-.public F_Cache_Enable
-.public F_Cache_Disable
-.public F_AutoModeReadAWords
-.public F_AutoModeReadNWords
-.public F_GotoSleep
 
 .CODE
 _System_CPU_Initial: .proc
     int off
     fir_mov off
+    retf
+    .endp
+
+_System_CPU_EnableIRQ: .proc
+    irq on
     retf
     .endp
 
@@ -80,132 +55,12 @@ _System_LVD_Delay: .proc
     .endp
 
 _SACM_Delay: .proc
-F_SACM_Delay:
     push R2 to [SP]
     R2 = 80
 ?L_RampDelay:
     R2 -= 1
     jnz ?L_RampDelay
     pop R2 from [SP]
-    retf
-    .endp
-
-// The C ABI uses stack arguments; legacy F_ entries use registers.
-// Adapters preserve the original general-purpose register clobber contracts.
-F_System_Initial: .proc
-    push R2, R4 to [SP]
-    call _System_Initial
-    pop R2, R4 from [SP]
-    retf
-    .endp
-
-F_SP_SwitchChannel: .proc
-    push R1, R4 to [SP]
-    push R1 to [SP]
-    call _SP_SwitchChannel
-    SP += 1
-    pop R1, R4 from [SP]
-    retf
-    .endp
-
-F_WatchdogClear: .proc
-    push R2, R4 to [SP]
-    call _WatchdogClear
-    pop R2, R4 from [SP]
-    retf
-    .endp
-
-F_System_ServiceLoop: .proc
-    push R3, R4 to [SP]
-    call _System_ServiceLoop
-    pop R3, R4 from [SP]
-    retf
-    .endp
-
-F_SP_GetCh: .proc
-    push R3, R4 to [SP]
-    call _SP_GetCh
-    pop R3, R4 from [SP]
-    retf
-    .endp
-
-F_SP_RampUpDAC1: .proc
-    push R1, R4 to [SP]
-    call _SP_RampUpDAC1
-    pop R1, R4 from [SP]
-    retf
-    .endp
-
-F_SP_RampDnDAC1: .proc
-    push R1, R4 to [SP]
-    call _SP_RampDnDAC1
-    pop R1, R4 from [SP]
-    retf
-    .endp
-
-F_SP_RampUpDAC2: .proc
-    push R1, R4 to [SP]
-    call _SP_RampUpDAC2
-    pop R1, R4 from [SP]
-    retf
-    .endp
-
-F_SP_RampDnDAC2: .proc
-    push R1, R4 to [SP]
-    call _SP_RampDnDAC2
-    pop R1, R4 from [SP]
-    retf
-    .endp
-
-F_USER_Set_Audio_OUT: .proc
-    push R2, R4 to [SP]
-    call _USER_Set_Audio_OUT
-    pop R2, R4 from [SP]
-    retf
-    .endp
-
-F_Cache_Enable: .proc
-    push R2, R4 to [SP]
-    call _Cache_Enable
-    pop R2, R4 from [SP]
-    retf
-    .endp
-
-F_Cache_Disable: .proc
-    push R2, R4 to [SP]
-    call _Cache_Disable
-    pop R2, R4 from [SP]
-    retf
-    .endp
-
-F_AutoModeReadAWords: .proc
-    push R2, R4 to [SP]
-    push R2 to [SP]
-    push R1 to [SP]
-    call _AutoModeReadAWords
-    SP += 2
-    pop R2, R4 from [SP]
-    retf
-    .endp
-
-F_AutoModeReadNWords: .proc
-    push R1, R5 to [SP]
-    push R4 to [SP]
-    push R3 to [SP]
-    push R2 to [SP]
-    push R1 to [SP]
-    call _AutoModeReadNWords
-    SP += 4
-    pop R1, R5 from [SP]
-    retf
-    .endp
-
-F_GotoSleep: .proc
-    push R1, R4 to [SP]
-    push R1 to [SP]
-    call _GotoSleep
-    SP += 1
-    pop R1, R4 from [SP]
     retf
     .endp
 
@@ -218,7 +73,12 @@ _System_RunSleepCodeFromRAM: .proc
     R2 = F_SleepCodeRAMEnd - F_SleepCodeRAMStr
     R3 = 0
     R4 = 1
-    call F_AutoModeReadNWords
+    push R4 to [SP]
+    push R3 to [SP]
+    push R2 to [SP]
+    push R1 to [SP]
+    call _AutoModeReadNWords
+    SP += 4
     call F_SleepCodeRAMStr
     pop SR from [SP]
     pop R1, R5 from [SP]

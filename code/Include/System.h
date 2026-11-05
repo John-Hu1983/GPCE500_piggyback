@@ -9,6 +9,8 @@
 #define	__SYSTEM_H__
 
 extern void System_Initial(void);
+/* Enable CPU IRQ only; peripheral interrupt masks and FIQ are unchanged. */
+extern void System_EnableIRQ(void);
 extern void System_ServiceLoop(void);
 extern void WatchdogClear(void);
 extern unsigned SP_GetCh(void);
@@ -30,6 +32,7 @@ extern void AutoModeReadNWords(unsigned bufferAddress, unsigned wordCount,
 
 // CPU-specific primitives and calibrated delays implemented in system.asm.
 extern void System_CPU_Initial(void);
+extern void System_CPU_EnableIRQ(void);
 extern void System_DisableInterrupts(void);
 extern void System_CacheWait(void);
 extern void System_WakeupWait(void);

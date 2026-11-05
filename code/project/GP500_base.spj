@@ -130,19 +130,12 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=6499950
 SPECIFICFLAG=0
-# End Group
-# Begin Group "asm"
-#PROP Default_Filter=
-USEPARAM=FALSE
-PARAM=
-EXPORT=3
-SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\asm\SPU_Play_User.asm
+SOURCE=..\Include\System.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=1768191329
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -152,14 +145,6 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=6499950
 SPECIFICFLAG=0
-# Begin Source File
-SOURCE=..\main\GPCE500.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
 # Begin Source File
 SOURCE=..\main\main.c
 USEPARAM=FALSE
@@ -182,6 +167,45 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\gpce500a.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465664
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "audio"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=25390
+# Begin Source File
+SOURCE=..\audio\audio_spu.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778921332
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\audio_spu.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778921216
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\spu_patch.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465664
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -311,19 +335,12 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=6499950
 SPECIFICFLAG=0
-# End Group
-# Begin Group "asm"
-#PROP Default_Filter=
-USEPARAM=FALSE
-PARAM=
-EXPORT=3
-SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\asm\SPU_Play_User.asm
+SOURCE=..\Include\System.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=1768191329
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -333,14 +350,6 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=6499950
 SPECIFICFLAG=0
-# Begin Source File
-SOURCE=..\main\GPCE500.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
 # Begin Source File
 SOURCE=..\main\main.c
 USEPARAM=FALSE
@@ -363,6 +372,45 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\main\gpce500a.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465664
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "audio"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=25390
+# Begin Source File
+SOURCE=..\audio\audio_spu.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778921332
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\audio_spu.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778921216
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\spu_patch.asm
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465664
 SPECIFICFLAG=0
 # End Source File
 # End Group
