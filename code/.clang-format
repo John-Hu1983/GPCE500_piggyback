@@ -1,0 +1,37 @@
+# C/C++ formatting rules for this directory and its subdirectories.
+# Edit the value after ":"; keep the option name unchanged.
+# Lines starting with "#" are comments and do not affect formatting.
+
+# Base preset for options not explicitly configured below.
+# Common presets: LLVM, Google, Microsoft, GNU.
+# The settings below override the selected preset.
+BasedOnStyle: LLVM
+
+# Spaces per indentation level: 4 means four spaces; use 2 for two spaces.
+IndentWidth: 4
+
+# Never: use spaces, not tabs.
+# ForIndentation: allow tabs for indentation, but use spaces for alignment.
+# Always: use tabs wherever possible.
+UseTab: Never
+
+# Allman: opening braces normally start on a new line.
+# Attach: opening braces normally stay on the preceding statement's line.
+# Other short-function/block options can still allow single-line forms.
+BreakBeforeBraces: Allman
+
+# Target line width. For example, 80 wraps earlier than 100.
+# Use 0 to disable length-based wrapping; other formatting rules still apply.
+# Long strings and protected regions can exceed this width.
+ColumnLimit: 100
+
+# false: preserve the existing #include order.
+# true: enable automatic #include sorting.
+# Keeping this false avoids changing potentially order-dependent headers.
+SortIncludes: false
+
+# To protect a region, put these comments in the C/C++ SOURCE file:
+#   // clang-format off
+#   ... code whose layout must stay unchanged ...
+#   // clang-format on
+# Without the matching "on", protection continues to the end of the file.

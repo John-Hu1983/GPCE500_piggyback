@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		15:14:37	11/05/26
+#	Created by u'nSP IDE V4.1.1		16:30:35	11/05/26
 #
 #####################################################################
 
@@ -122,7 +122,7 @@ OBJFILES	= \
 "$(OUTDIR)\SPI_Flash.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPI_Flash.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 
-"$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\main.c" 
+"$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\main.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "..\Include\System.h" "..\Include\user_config.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\main.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/main.c" 
 
@@ -142,7 +142,7 @@ OBJFILES	= \
 "$(OUTDIR)\gpce500a.obj": "$(OUTDIR)\gpce500a.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gpce500a.obj" "$(OUTDIR)\gpce500a.asm" 
 
-"$(OUTDIR)\audio_spu.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "GPCE36_CE5.h" "Resource.h" "..\Include\System.h" 
+"$(OUTDIR)\audio_spu.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "GPCE36_CE5.h" "Resource.h" "..\Include\System.h" "..\Include\user_config.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\audio_spu.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/audio/audio_spu.c" 
 

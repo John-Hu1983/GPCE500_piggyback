@@ -138,6 +138,14 @@ ID=
 EXPORT=1768191329
 SPECIFICFLAG=0
 # End Source File
+# Begin Source File
+SOURCE=..\Include\user_config.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1768191232
+SPECIFICFLAG=0
+# End Source File
 # End Group
 # Begin Group "main"
 #PROP Default_Filter=
@@ -341,6 +349,14 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=1768191329
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\Include\user_config.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1768191232
 SPECIFICFLAG=0
 # End Source File
 # End Group

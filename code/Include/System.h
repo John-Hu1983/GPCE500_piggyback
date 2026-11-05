@@ -23,7 +23,6 @@ extern void SP_RampDnDAC1(void);
 extern void SP_RampUpDAC2(void);
 extern void SP_RampDnDAC2(void);
 
-extern unsigned USER_Set_Audio_OUT(void);
 extern void SPIFCHiDrivingCheck(void);
 extern void GotoSleep(unsigned keepRTC);
 extern unsigned AutoModeReadAWords(unsigned addressLow, unsigned addressHigh);

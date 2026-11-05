@@ -45,13 +45,13 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: CODE in "Resource.obj" with 0 
 ;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
 ;Align: BootCode_SEC in "BootCode_User.obj" with 0 
-;Locate: CODE in "main.obj" at A166 
+;Locate: CODE in "main.obj" at A158 
 ;Align: CODE in "main.obj" with 0 
 ;Locate: CODE in "system.obj" at 989E 
 ;Align: CODE in "system.obj" with 0 
 ;Locate: CODE in "gpce500a.obj" at 9CB7 
 ;Align: CODE in "gpce500a.obj" with 0 
-;Locate: CODE in "audio_spu.obj" at 9FD0 
+;Locate: CODE in "audio_spu.obj" at 9F9E 
 ;Align: CODE in "audio_spu.obj" with 0 
 ;Locate: CODE in "spu_patch.obj" at 98DF 
 ;Align: CODE in "spu_patch.obj" with 0 

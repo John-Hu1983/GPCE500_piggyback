@@ -4,7 +4,7 @@
 #include "System.h"
 
 /*
- * SPU 初始化、资源配置和播放控制集中在本文件。
+ * SPU 初始化、输出模式、资源配置和播放控制集中在本文件。
  * CPU 中断控制由系统模块提供；汇编仅提供资源表地址。
  * 本芯片按 16 位字寻址；FileMerger 表内记录的偏移则以字节为单位。
  */
@@ -13,13 +13,42 @@
 unsigned DPTR_H = 0;
 unsigned DPTR_L = 0;
 
-static const unsigned volumeLevels[16] = {
-    0x0480, 0x0580, 0x0680, 0x0880,
-    0x0A80, 0x0D80, 0x1080, 0x1480,
-    0x1980, 0x2080, 0x2880, 0x3380,
-    0x4F80, 0x5180, 0x6680, 0x7F80};
+static const unsigned volumeLevels[16] = {0x0480, 0x0580, 0x0680, 0x0880, 0x0A80, 0x0D80,
+                                          0x1080, 0x1480, 0x1980, 0x2080, 0x2880, 0x3380,
+                                          0x4F80, 0x5180, 0x6680, 0x7F80};
 
-void SPU_Init(void)
+static void _spu_set_addr_from_table(unsigned long tableAddress, unsigned inx)
+{
+    const volatile unsigned *entry;
+
+    /* 每项由低、高两个字组成，不能把这个表误当成字节数组。 */
+    entry = (const volatile unsigned *)(tableAddress + 2UL * inx);
+    DPTR_L = entry[0];
+    DPTR_H = entry[1];
+}
+
+unsigned audio_set_pwm_dac(unsigned outputMode)
+{
+    unsigned control;
+
+    if (outputMode == AUDIO_OUTMODE_PWM)
+    {
+        *P_AUDIO_Ctrl1 =
+            C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable | C_AUDIO_Gain_Sel | C_MuteControl_DATACHAGE;
+        control = C_PWM_sData;
+    }
+    else
+    {
+        *P_AUDIO_Ctrl1 =
+            C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable | C_AUDIO_Gain_Sel | C_MuteControl_DATACHAGE;
+        control = C_PWM_sData | C_RDAC_Enable | C_PWM_Mute_50Duty | C_DRAC_Current;
+    }
+
+    *P_AUDIO_Ctrl3 = control;
+    return control;
+}
+
+void spu_init_audio(void)
 {
     *P_SPU_CLK_Ctrl = C_SPUCLK_DIV_2;
     *P_SPU_Volume_Ctrl = C_SPU_Mixer_MaxVolume | C_SPU_Mixer_FullSwing;
@@ -29,7 +58,7 @@ void SPU_Init(void)
     System_EnableIRQ();
 }
 
-void USER_SPU_fptr_Volume(unsigned volumeIndex)
+void spu_set_volume(unsigned volumeIndex)
 {
     unsigned level = volumeLevels[volumeIndex];
 
@@ -37,36 +66,19 @@ void USER_SPU_fptr_Volume(unsigned volumeIndex)
     *P_SPU_Volume_Ctrl = level | (*P_SPU_Volume_Ctrl & 0x8000);
 }
 
-void SPU_Play(unsigned channel)
+void spu_open_channel(SPU_Channel channel) { *P_SPU_CH_Ctrl |= C_SPU_Ch0_En << channel; }
+
+void spu_stop_channel(SPU_Channel channel) { *P_SPU_CH_Ctrl &= ~(C_SPU_Ch0_En << channel); }
+
+void spu_read_PCM_addrs(unsigned inx)
 {
-    *P_SPU_CH_Ctrl |= C_SPU_Ch0_En << channel;
+    _spu_set_addr_from_table(Audio_SPU_GetPCMTableAddress(), inx);
 }
 
-void SPU_StopPlay(unsigned channel)
-{
-    *P_SPU_CH_Ctrl &= ~(C_SPU_Ch0_En << channel);
-}
-
-static void Audio_SPU_SetAddressFromTable(unsigned long tableAddress,
-                                          unsigned speechIndex)
-{
-    const volatile unsigned *entry;
-
-    /* 每项由低、高两个字组成，不能把这个表误当成字节数组。 */
-    entry = (const volatile unsigned *)(tableAddress + 2UL * speechIndex);
-    DPTR_L = entry[0];
-    DPTR_H = entry[1];
-}
-
-void USER_SPU_SetPCM_sppAddr(unsigned speechIndex)
-{
-    Audio_SPU_SetAddressFromTable(Audio_SPU_GetPCMTableAddress(), speechIndex);
-}
-
-void USER_SPU_SetA34PE_sppAddr(unsigned speechIndex)
+void spu_read_A34PE_addrs(unsigned inx)
 {
 #if AUDIO_SPU_SPEECH_SOURCE_TYPE == AUDIO_SPU_SOURCE_ROM_TABLE
-    Audio_SPU_SetAddressFromTable(Audio_SPU_GetA34PETableAddress(), speechIndex);
+    _spu_set_addr_from_table(Audio_SPU_GetA34PETableAddress(), inx);
 #else
     unsigned long baseAddress = RES_FILEMERGER_ROM_BIN_SA;
     const volatile unsigned *entry;
@@ -74,7 +86,7 @@ void USER_SPU_SetA34PE_sppAddr(unsigned speechIndex)
     unsigned long wordAddress;
 
     /* 第一个 32 位字是文件数；之后每项是一个 32 位字节偏移。 */
-    entry = (const volatile unsigned *)(baseAddress + 2UL + 2UL * speechIndex);
+    entry = (const volatile unsigned *)(baseAddress + 2UL + 2UL * inx);
     byteOffset = entry[0];
     byteOffset |= (unsigned long)entry[1] << 16;
 
@@ -85,21 +97,20 @@ void USER_SPU_SetA34PE_sppAddr(unsigned speechIndex)
 #endif
 }
 
-void SPU_SetResAddr(unsigned channel, SPU_Format format,
-                    unsigned sampleFrequency, unsigned speechIndex)
+void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq,
+                      unsigned inx)
 {
-    unsigned pcmFormat = format == SPU_FORMAT_PCM_8BIT ||
-                         format == SPU_FORMAT_PCM_16BIT;
+    unsigned pcmFormat = format == SPU_PCM_8BIT || format == SPU_PCM_16BIT;
     unsigned registerOffset = AUDIO_SPU_CHANNEL_STRIDE * channel;
     unsigned long byteAddress;
 
     if (pcmFormat)
     {
-        USER_SPU_SetPCM_sppAddr(speechIndex);
+        spu_read_PCM_addrs(inx);
     }
     else
     {
-        USER_SPU_SetA34PE_sppAddr(speechIndex);
+        spu_read_A34PE_addrs(inx);
     }
 
     byteAddress = ((unsigned long)DPTR_H << 16) | DPTR_L;
@@ -120,7 +131,7 @@ void SPU_SetResAddr(unsigned channel, SPU_Format format,
     DPTR_H = (unsigned)(byteAddress >> 16) | ((unsigned)format << 14);
 
     *(P_SPU_Ch0_Volume_Ctrl + registerOffset) = 0xFFFF;
-    *(P_SPU_Ch0_SampleFreq + registerOffset) = sampleFrequency;
+    *(P_SPU_Ch0_SampleFreq + registerOffset) = freq;
     *(P_SPU_Ch0_DPTR_L + registerOffset) = DPTR_L;
     *(P_SPU_Ch0_DPTR_H + registerOffset) = DPTR_H;
     *(P_SPU_Ch0_LoopLength + registerOffset) = 0;

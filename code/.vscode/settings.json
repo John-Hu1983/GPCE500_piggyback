@@ -1,4 +1,12 @@
 {
+  "[c]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "C_Cpp.formatting": "clangFormat",
+  "C_Cpp.clang_format_style": "file",
   "files.exclude": {
     "**/Debug": true,
     "project/Device.env": true,

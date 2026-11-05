@@ -16,8 +16,6 @@
 
 #define C_DebounceCnt       0x0080
 
-extern unsigned PWMorCUR_Flg;
-
 /* 对应原汇编的 RAM 变量；计数单位是 ServiceLoop 的调用次数，不是毫秒。 */
 static unsigned R_DebounceReg;
 static unsigned R_DebounceCnt;
@@ -152,27 +150,6 @@ void SP_RampUpDAC1(void)
 void SP_RampUpDAC2(void)
 {
     SP_RampDACToZero(P_AUDIO_CH2_Data);
-}
-
-unsigned USER_Set_Audio_OUT(void)
-{
-    unsigned control;
-
-    if (PWMorCUR_Flg != 0) {
-        *P_AUDIO_Ctrl1 = C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable |
-                         C_AUDIO_Gain_Sel | C_MuteControl_DATACHAGE;
-        control = C_PWM_sData;
-    } else {
-        /* 原指令操作的是 IOB1；不要按旧注释误改为 IOB8。 */
-        *P_IOB_Buffer |= 0x0002;
-        *P_AUDIO_Ctrl1 = C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable |
-                         C_AUDIO_Gain_Sel | C_MuteControl_DATACHAGE;
-        control = C_PWM_sData | C_RDAC_Enable |
-                  C_PWM_Mute_50Duty | C_DRAC_Current;
-    }
-
-    *P_AUDIO_Ctrl3 = control;
-    return control;
 }
 
 void SPIFCHiDrivingCheck(void)
