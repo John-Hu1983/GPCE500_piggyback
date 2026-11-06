@@ -12,6 +12,9 @@ Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\spu_patch.ob
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_gpio.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_adc.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_iopwm.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_spi.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_uart.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_serial.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\aintworried_12K_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GIRL_SKY_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\FileMerger_ROM_bin.res"
@@ -36,39 +39,59 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: SPIFC_RAMCode_SEC in "SPI_Flash.obj" with 0 
 ;Locate: TEXT in "isr.obj" at 9818 
 ;Align: TEXT in "isr.obj" with 0 
-;Locate: IRAM in "main.obj" at 1194B  linkat 19 
+;Locate: IRAM in "main.obj" at 11955  linkat 1B
 ;Align: IRAM in "main.obj" with 0 
-;Locate: IRAM in "audio_spu.obj" at 11949  linkat 17 
+;Locate: IRAM in "audio_spu.obj" at 11951  linkat 17
 ;Align: IRAM in "audio_spu.obj" with 0 
+;Locate: IRAM in "hal_spi.obj" at 11953  linkat 19
+;Align: IRAM in "hal_spi.obj" with 0
+;Locate: IRAM in "hal_uart.obj" at 11958  linkat 1E
+;Align: IRAM in "hal_uart.obj" with 0
 ;Locate: RAM in "SPI_Flash.obj" at 10 
 ;Align: RAM in "SPI_Flash.obj" with 0 
 ;Locate: RAM in "gpce500a.obj" at 13 
 ;Align: RAM in "gpce500a.obj" with 0 
-;Locate: CODE in "Resource.obj" at 98CF 
+;Locate: CODE in "Resource.obj" at BC31
 ;Align: CODE in "Resource.obj" with 0 
 ;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
 ;Align: BootCode_SEC in "BootCode_User.obj" with 0 
-;Locate: CODE in "main.obj" at A3CD 
+;Locate: CODE in "main.obj" at B879
 ;Align: CODE in "main.obj" with 0 
-;Locate: CODE in "system.obj" at 989E 
+;Locate: CODE in "system.obj" at 98A8
 ;Align: CODE in "system.obj" with 0 
-;Locate: CODE in "gpce500a.obj" at 9CB7 
+;Locate: CODE in "gpce500a.obj" at AEC8
 ;Align: CODE in "gpce500a.obj" with 0 
-;Locate: CODE in "audio_spu.obj" at A213 
+;Locate: CODE in "audio_spu.obj" at B6BF
 ;Align: CODE in "audio_spu.obj" with 0 
-;Locate: CODE in "spu_patch.obj" at 98DF 
+;Locate: CODE in "spu_patch.obj" at BC41
 ;Align: CODE in "spu_patch.obj" with 0 
-;Locate: CODE in "hal_gpio.obj" at 9F9E 
+;Locate: CODE in "hal_gpio.obj" at B44A
 ;Align: CODE in "hal_gpio.obj" with 0 
-;Locate: CODE in "hal_adc.obj" at A4EF 
+;Locate: CODE in "hal_adc.obj" at B99B
 ;Align: CODE in "hal_adc.obj" with 0 
-;Locate: CODE in "hal_iopwm.obj" at A600 
+;Locate: CODE in "hal_iopwm.obj" at BAAC
 ;Align: CODE in "hal_iopwm.obj" with 0 
-;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 98E9 
+;Locate: CODE in "hal_spi.obj" at A613
+;Align: CODE in "hal_spi.obj" with 0
+;Locate: CODE in "hal_uart.obj" at 9CB7
+;Align: CODE in "hal_uart.obj" with 0
+;Locate: CODE in "hal_serial.obj" at B1AF
+;Align: CODE in "hal_serial.obj" with 0
+;Locate: CODE in "divu2" of "CMacro1232.lib"  at BB92
+;Align: CODE in "divu2" of "CMacro1232.lib"  with 0
+;Locate: CODE in "muliu2" of "CMacro1232.lib"  at 98ED
+;Align: CODE in "muliu2" of "CMacro1232.lib"  with 0
+;Locate: CODE in "__clz32" of "CMacro1232.lib"  at 98D9
+;Align: CODE in "__clz32" of "CMacro1232.lib"  with 0
+;Locate: CODE in "__divi32_n" of "CMacro1232.lib"  at BC09
+;Align: CODE in "__divi32_n" of "CMacro1232.lib"  with 0
+;Locate: CODE in "lshiu2" of "CMacro1232.lib"  at BC4B
+;Align: CODE in "lshiu2" of "CMacro1232.lib"  with 0
+;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at BC55
 ;Align: CODE in "_GPTag" of "CMacro1232.lib"  with 0 
 ;Locate: _CODE_SPI_SEC in "SPI_Flash.obj" at 9800 
 ;Align: _CODE_SPI_SEC in "SPI_Flash.obj" with 0 
-;Locate: _CODE_SPI_SEC in "BootCode_User.obj" at 984F 
+;Locate: _CODE_SPI_SEC in "BootCode_User.obj" at 9859
 ;Align: _CODE_SPI_SEC in "BootCode_User.obj" with 0 
 ;Locate: _RESOURCE_SPI_SEC in "GIRL_SKY_wav_se4.res" at 20000 
 ;Align: _RESOURCE_SPI_SEC in "GIRL_SKY_wav_se4.res" with 0 

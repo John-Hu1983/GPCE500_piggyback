@@ -1,20 +1,7 @@
 #ifndef _HAL_GPIO_H__
 #define _HAL_GPIO_H__
 
-#if defined(SUNPLUS) || defined(unSP) || defined(__CHAR_16__)
-/* Legacy uDOCC has no stdint/stdbool; this pin-index alias may occupy a 16-bit word. */
-typedef unsigned char uint8_t;
-#ifndef __cplusplus
-typedef enum
-{
-    false = 0,
-    true = 1
-} bool;
-#endif
-#else
-#include <stdint.h>
-#include <stdbool.h>
-#endif
+#include "user_config.h"
 
 typedef struct
 {

@@ -271,6 +271,54 @@ ID=
 EXPORT=1969382656
 SPECIFICFLAG=0
 # End Source File
+# Begin Source File
+SOURCE=..\hal\hal_spi.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_spi.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=6499840
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_uart.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1869180928
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_uart.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_serial.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_serial.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
 # End Group
 # End SubItem
 #Name End GPCE500A-Debug
@@ -537,6 +585,54 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_spi.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_spi.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=6499840
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_uart.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1869180928
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_uart.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_serial.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_serial.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
 SPECIFICFLAG=0
 # End Source File
 # End Group

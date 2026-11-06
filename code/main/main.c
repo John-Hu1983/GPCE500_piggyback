@@ -5,9 +5,7 @@ unsigned key = 0;
 unsigned voice = 0;
 unsigned vol = 9; ////0 ~ 15
 
-//***************************************************************************************
-// Main Function Area
-//***************************************************************************************
+
 /*
  *@ brief    : Run the key-controlled SPU playback example.
  *@ type     : public

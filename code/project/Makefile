@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		13:12:07	11/06/26
+#	Created by u'nSP IDE V4.1.1		13:52:08	11/06/26
 #
 #####################################################################
 
@@ -105,7 +105,10 @@ OBJFILES	= \
 	"$(OUTDIR)\spu_patch.obj" \
 	"$(OUTDIR)\hal_gpio.obj" \
 	"$(OUTDIR)\hal_adc.obj" \
-	"$(OUTDIR)\hal_iopwm.obj" 
+	"$(OUTDIR)\hal_iopwm.obj" \
+	"$(OUTDIR)\hal_spi.obj" \
+	"$(OUTDIR)\hal_uart.obj" \
+	"$(OUTDIR)\hal_serial.obj" 
 
 "$(OUTDIR)\aintworried_12K_wav_se4.res": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4"
 	$(RESC) "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4" "$(OUTDIR)\aintworried_12K_wav_se4.res" RES_AINTWORRIED_12K_WAV_SE4 
@@ -125,7 +128,7 @@ OBJFILES	= \
 "$(OUTDIR)\SPI_Flash.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\SPI_Flash.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\SPI_Flash.asm" 
 
-"$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\main.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "..\Include\System.h" "..\Include\user_config.h" 
+"$(OUTDIR)\main.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\main\main.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "..\Include\System.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\main.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/main/main.c" 
 
@@ -145,7 +148,7 @@ OBJFILES	= \
 "$(OUTDIR)\gpce500a.obj": "$(OUTDIR)\gpce500a.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gpce500a.obj" "$(OUTDIR)\gpce500a.asm" 
 
-"$(OUTDIR)\audio_spu.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "GPCE36_CE5.h" "Resource.h" "..\Include\System.h" "..\Include\user_config.h" 
+"$(OUTDIR)\audio_spu.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "GPCE36_CE5.h" "Resource.h" "..\Include\System.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\audio_spu.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/audio/audio_spu.c" 
 
@@ -155,26 +158,47 @@ OBJFILES	= \
 "$(OUTDIR)\spu_patch.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\spu_patch.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
 
-"$(OUTDIR)\hal_gpio.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" 
+"$(OUTDIR)\hal_gpio.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_gpio.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_gpio.c" 
 
 "$(OUTDIR)\hal_gpio.obj": "$(OUTDIR)\hal_gpio.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_gpio.obj" "$(OUTDIR)\hal_gpio.asm" 
 
-"$(OUTDIR)\hal_adc.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "GPCE36_CE5.h" 
+"$(OUTDIR)\hal_adc.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_adc.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_adc.c" 
 
 "$(OUTDIR)\hal_adc.obj": "$(OUTDIR)\hal_adc.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_adc.obj" "$(OUTDIR)\hal_adc.asm" 
 
-"$(OUTDIR)\hal_iopwm.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "GPCE36_CE5.h" 
+"$(OUTDIR)\hal_iopwm.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_iopwm.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_iopwm.c" 
 
 "$(OUTDIR)\hal_iopwm.obj": "$(OUTDIR)\hal_iopwm.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_iopwm.obj" "$(OUTDIR)\hal_iopwm.asm" 
+
+"$(OUTDIR)\hal_spi.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_spi.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_spi.c" 
+
+"$(OUTDIR)\hal_spi.obj": "$(OUTDIR)\hal_spi.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_spi.obj" "$(OUTDIR)\hal_spi.asm" 
+
+"$(OUTDIR)\hal_uart.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_uart.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_uart.c" 
+
+"$(OUTDIR)\hal_uart.obj": "$(OUTDIR)\hal_uart.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_uart.obj" "$(OUTDIR)\hal_uart.asm" 
+
+"$(OUTDIR)\hal_serial.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_serial.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_serial.c" 
+
+"$(OUTDIR)\hal_serial.obj": "$(OUTDIR)\hal_serial.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_serial.obj" "$(OUTDIR)\hal_serial.asm" 
 
 
 GEN_BOOTPACKER_INFO :
@@ -251,6 +275,15 @@ CLEANFILES = \
 	"$(OUTDIR)\hal_iopwm.obj" \
 	"$(OUTDIR)\hal_iopwm.lst" \
 	"$(OUTDIR)\hal_iopwm.asm" \
+	"$(OUTDIR)\hal_spi.obj" \
+	"$(OUTDIR)\hal_spi.lst" \
+	"$(OUTDIR)\hal_spi.asm" \
+	"$(OUTDIR)\hal_uart.obj" \
+	"$(OUTDIR)\hal_uart.lst" \
+	"$(OUTDIR)\hal_uart.asm" \
+	"$(OUTDIR)\hal_serial.obj" \
+	"$(OUTDIR)\hal_serial.lst" \
+	"$(OUTDIR)\hal_serial.asm" \
 	"$(BINFILENOEXT).s37" \
 	"$(BINFILENOEXT).tsk" \
 	"$(BINFILENOEXT)_SPI.bin*" \
@@ -264,7 +297,7 @@ CLEANFILES = \
 	$(SBMFILE)
 
 clean :
-	$(RM) $(wordlist 1,45,$(CLEANFILES))
+	$(RM) $(wordlist 1,54,$(CLEANFILES))
 
 .c.asm:
 	$(CC) $(CFLAGS) $(INCLUDES) -o "$(OUTDIR)\$@" $<

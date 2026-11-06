@@ -67,6 +67,8 @@
 //**************************************************************************
 // External Function Declaration
 //**************************************************************************
+.external _uart_service_irq
+.external _spi_service_irq
 
 //**************************************************************************
 // RAM Definition Area
@@ -131,8 +133,10 @@ _IRQ2:
 //****************************************************************
 _IRQ3:
 	push R1, R5 to [SP]
-
-		
+	push SR to [SP]
+	call _uart_service_irq
+	call _spi_service_irq
+	pop SR from [SP]
 	pop R1, R5 from [SP]
 	reti;
 
@@ -196,7 +200,9 @@ _IRQ6:
 //****************************************************************
 _IRQ7:
 	push R1, R5 to [SP]
-	
+	push SR to [SP]
+	call _uart_service_irq
+	pop SR from [SP]
 	pop R1, R5 from [SP]
 	reti;
 
