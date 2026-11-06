@@ -58,7 +58,6 @@ typedef enum
 extern unsigned long Audio_SPU_GetPCMTableAddress(void);
 extern unsigned long Audio_SPU_GetA34PETableAddress(void);
 
-
 unsigned audio_set_pwm_dac(unsigned outputMode);
 void spu_init_audio(void);
 void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx);
@@ -67,9 +66,5 @@ void spu_set_volume(unsigned volumeIndex);
 void spu_stop_channel(SPU_Channel channel);
 void spu_read_PCM_addrs(unsigned inx);
 void spu_read_A34PE_addrs(unsigned inx);
-
-/* Legacy resource-address scratch words, owned by the audio module. */
-extern unsigned DPTR_H;
-extern unsigned DPTR_L;
 
 #endif

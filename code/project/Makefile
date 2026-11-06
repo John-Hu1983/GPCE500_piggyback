@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		16:30:35	11/05/26
+#	Created by u'nSP IDE V4.1.1		08:10:42	11/06/26
 #
 #####################################################################
 
@@ -102,7 +102,9 @@ OBJFILES	= \
 	"$(OUTDIR)\system.obj" \
 	"$(OUTDIR)\gpce500a.obj" \
 	"$(OUTDIR)\audio_spu.obj" \
-	"$(OUTDIR)\spu_patch.obj" 
+	"$(OUTDIR)\spu_patch.obj" \
+	"$(OUTDIR)\hal_gpio.obj" \
+	"$(OUTDIR)\hal_adc.obj"
 
 "$(OUTDIR)\aintworried_12K_wav_se4.res": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4"
 	$(RESC) "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4" "$(OUTDIR)\aintworried_12K_wav_se4.res" RES_AINTWORRIED_12K_WAV_SE4 
@@ -151,6 +153,20 @@ OBJFILES	= \
 
 "$(OUTDIR)\spu_patch.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\spu_patch.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
+
+"$(OUTDIR)\hal_gpio.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_gpio.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_gpio.c" 
+
+"$(OUTDIR)\hal_gpio.obj": "$(OUTDIR)\hal_gpio.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_gpio.obj" "$(OUTDIR)\hal_gpio.asm" 
+
+"$(OUTDIR)\hal_adc.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "GPCE36_CE5.h"
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_adc.asm" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.c"
+
+"$(OUTDIR)\hal_adc.obj": "$(OUTDIR)\hal_adc.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_adc.obj" "$(OUTDIR)\hal_adc.asm"
 
 
 GEN_BOOTPACKER_INFO :
@@ -218,6 +234,12 @@ CLEANFILES = \
 	"$(OUTDIR)\audio_spu.asm" \
 	"$(OUTDIR)\spu_patch.obj" \
 	"$(OUTDIR)\spu_patch.lst" \
+	"$(OUTDIR)\hal_gpio.obj" \
+	"$(OUTDIR)\hal_gpio.lst" \
+	"$(OUTDIR)\hal_gpio.asm" \
+	"$(OUTDIR)\hal_adc.obj" \
+	"$(OUTDIR)\hal_adc.lst" \
+	"$(OUTDIR)\hal_adc.asm" \
 	"$(BINFILENOEXT).s37" \
 	"$(BINFILENOEXT).tsk" \
 	"$(BINFILENOEXT)_SPI.bin*" \
@@ -231,11 +253,10 @@ CLEANFILES = \
 	$(SBMFILE)
 
 clean :
-	$(RM) $(wordlist 1,36,$(CLEANFILES))
+	$(RM) $(wordlist 1,42,$(CLEANFILES))
 
 .c.asm:
 	$(CC) $(CFLAGS) $(INCLUDES) -o "$(OUTDIR)\$@" $<
 
 .asm.obj:
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\$@" $<
-
