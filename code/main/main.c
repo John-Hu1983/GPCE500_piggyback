@@ -1,61 +1,67 @@
 #include "System.h"
 #include "..\audio\audio_spu.h"
 
-unsigned Key = 0;
-unsigned A34PE_Index = 0;
-unsigned VolIndex_SPU = 9; ////0 ~ 15
+unsigned key = 0;
+unsigned voice = 0;
+unsigned vol = 9; ////0 ~ 15
 
 //***************************************************************************************
 // Main Function Area
 //***************************************************************************************
+/*
+ *@ brief    : Run the key-controlled SPU playback example.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Does not normally return.
+ *@ theme    : Initialize the system/audio and service key events continuously.
+ */
 int main(void)
 {
     // add your code here
-    Key = 0;
+    key = 0;
 
-    System_Initial(); // System initial
+    system_init_module(); // System initial
 
     audio_set_pwm_dac(AUDIO_OUTMODE_PWM);
 
     spu_init_audio();
     spu_set_volume(AUDIO_VOLUME_DEFAULT);
 
-    VolIndex_SPU = AUDIO_VOLUME_DEFAULT;
+    vol = AUDIO_VOLUME_DEFAULT;
     while (1)
     {
-        Key = SP_GetCh();
-        switch (Key)
+        key = key_read_event();
+        switch (key)
         {
-        case 0x0001:       // IOA0 + Vcc
-            A34PE_Index++; // index in ROM Table 0 ~ 1;  //in fileMerger rom bin  0 ~ 4 is
-                           // A34PE_Index
-            if (A34PE_Index >= 5)
-                A34PE_Index = 0;
-            spu_select_voice(SPU_Channel_0, SPU_A3400_4BIT, SPU_Freq_12K, A34PE_Index);
+        case 0x0001: // IOA0 + Vcc
+            voice++; // FileMerger resource index, 0..4.
+            if (voice >= 5)
+                voice = 0;
+            spu_select_voice(SPU_Channel_0, SPU_A3400_4BIT, SPU_Freq_12K, voice);
             spu_open_channel(SPU_Channel_0);
             break;
 
-        case 0x0002:             // IOA1 + Vcc
+        case 0x0002:                         // IOA1 + Vcc
             spu_stop_channel(SPU_Channel_0); ////Channel
             break;
 
         case 0x0004: // IOA2 + Vcc
-            A34PE_Index = 0;
-            spu_select_voice(SPU_Channel_1, SPU_A3400_4BIT, SPU_Freq_12K, A34PE_Index);
+            voice = 0;
+            spu_select_voice(SPU_Channel_1, SPU_A3400_4BIT, SPU_Freq_12K, voice);
             spu_open_channel(SPU_Channel_1);
             break;
 
-        case 0x0008:             // IOA3 + Vcc
+        case 0x0008:                         // IOA3 + Vcc
             spu_stop_channel(SPU_Channel_1); ////Channel
             break;
 
         case 0x0010: // IOA4 + Vcc
-            VolIndex_SPU++;
-            if (VolIndex_SPU >= 16)
+            vol++;
+            if (vol >= 16)
             {
-                VolIndex_SPU = 0;
+                vol = 0;
             }
-            spu_set_volume(VolIndex_SPU);
+            spu_set_volume(vol);
 
             break;
 
@@ -75,7 +81,7 @@ int main(void)
             break;
         } // end of switch
 
-        System_ServiceLoop();
+        system_service_loop();
     }
 
     return 0;

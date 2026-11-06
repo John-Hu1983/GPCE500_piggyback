@@ -1,51 +1,79 @@
 #include "hal_gpio.h"
 
-static void gpio_fail(void)
+/*
+ *@ brief    : Halt on an invalid GPIO request.
+ *@ type     : private
+ *@ argu in  : None.
+ *@ argu out : Does not return.
+ *@ theme    : Fail before unsafe register access; no fault RAM.
+ */
+static void _gpio_halt_fault(void)
 {
     for (;;)
     {
     }
 }
 
-static unsigned gpio_pin_mask(handle_t *port, uint8_t pin)
+/*
+ *@ brief    : Validate a port and pin, then get its bit mask.
+ *@ type     : private
+ *@ argu in  : port: GPIOA/B/C; pin: pin index.
+ *@ argu out : Validated pin mask.
+ *@ theme    : Reject invalid pointers and shifts.
+ */
+static unsigned _gpio_get_mask(handle_t *port, uint8_t pin)
 {
     if (port != GPIOA && port != GPIOB && port != GPIOC)
     {
-        gpio_fail();
+        _gpio_halt_fault();
     }
     if (pin >= 16 || (port == GPIOC && pin >= 8))
     {
-        gpio_fail();
+        _gpio_halt_fault();
     }
     return 1U << pin;
 }
 
-static unsigned gpio_output_mask(handle_t *port, uint8_t pin)
+/*
+ *@ brief    : Get the mask of a writable output pin.
+ *@ type     : private
+ *@ argu in  : port: GPIOA/B/C; pin: pin index.
+ *@ argu out : Output pin mask.
+ *@ theme    : Reject input-only pins and input mode.
+ */
+static unsigned _gpio_get_outmask(handle_t *port, uint8_t pin)
 {
-    unsigned mask = gpio_pin_mask(port, pin);
+    unsigned mask = _gpio_get_mask(port, pin);
 
     if ((port == GPIOC && pin < 2) || (port->dir & mask) == 0)
     {
-        gpio_fail();
+        _gpio_halt_fault();
     }
     return mask;
 }
 
+/*
+ *@ brief    : Configure one GPIO pin's input or output mode.
+ *@ type     : public
+ *@ argu in  : port: GPIOA/B/C; pin: index; pattern: supported mode.
+ *@ argu out : None.
+ *@ theme    : Preserve other pins; set the latch before enabling output.
+ */
 void gpio_init_pattern(handle_t *port, uint8_t pin, GPIO_Pattern pattern)
 {
-    unsigned mask = gpio_pin_mask(port, pin);
+    unsigned mask = _gpio_get_mask(port, pin);
 
     if ((unsigned)pattern > GPIO_Out_Inv_High)
     {
-        gpio_fail();
+        _gpio_halt_fault();
     }
     if (pattern == GPIO_In_PullHigh && (port != GPIOB || pin >= 8))
     {
-        gpio_fail();
+        _gpio_halt_fault();
     }
     if (pattern >= GPIO_Out && port == GPIOC && pin < 2)
     {
-        gpio_fail();
+        _gpio_halt_fault();
     }
 
     /* Release the driver before changing the latch/attribute; enable output last. */
@@ -86,23 +114,37 @@ void gpio_init_pattern(handle_t *port, uint8_t pin, GPIO_Pattern pattern)
     }
 }
 
+/*
+ *@ brief    : Read the physical pin level.
+ *@ type     : public
+ *@ argu in  : port: GPIOA/B/C; pin: pin index.
+ *@ argu out : true: HIGH; false: LOW.
+ *@ theme    : Read the pad register, not the output latch.
+ */
 bool gpio_read_level(handle_t *port, uint8_t pin)
 {
-    unsigned mask = gpio_pin_mask(port, pin);
+    unsigned mask = _gpio_get_mask(port, pin);
 
     return (port->data & mask) != 0U;
 }
 
+/*
+ *@ brief    : Set an output pin's physical level.
+ *@ type     : public
+ *@ argu in  : port: GPIOA/B/C; pin: index; lev: HIGH/LOW.
+ *@ argu out : None.
+ *@ theme    : Account for inverted output and preserve other latch bits.
+ */
 void gpio_write_level(handle_t *port, uint8_t pin, bool lev)
 {
-    unsigned mask = gpio_output_mask(port, pin);
-    bool bufferLevel = lev;
+    unsigned mask = _gpio_get_outmask(port, pin);
+    bool latch = lev;
 
     if ((port->attrib & mask) == 0)
     {
-        bufferLevel = !lev;
+        latch = !lev;
     }
-    if (bufferLevel)
+    if (latch)
     {
         port->buffer |= mask;
     }
@@ -112,9 +154,16 @@ void gpio_write_level(handle_t *port, uint8_t pin, bool lev)
     }
 }
 
+/*
+ *@ brief    : Toggle an output pin.
+ *@ type     : public
+ *@ argu in  : port: GPIOA/B/C; pin: pin index.
+ *@ argu out : None.
+ *@ theme    : Toggle the latch without relying on the pad level.
+ */
 void gpio_reverse_level(handle_t *port, uint8_t pin)
 {
-    unsigned mask = gpio_output_mask(port, pin);
+    unsigned mask = _gpio_get_outmask(port, pin);
 
     port->buffer ^= mask;
 }

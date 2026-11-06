@@ -244,7 +244,7 @@ SOURCE=..\hal\hal_adc.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=7102824
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -252,7 +252,23 @@ SOURCE=..\hal\hal_adc.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=6499840
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_iopwm.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_iopwm.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -496,7 +512,7 @@ SOURCE=..\hal\hal_adc.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=7102824
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -504,7 +520,23 @@ SOURCE=..\hal\hal_adc.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=6499840
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_iopwm.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_iopwm.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
 SPECIFICFLAG=0
 # End Source File
 # End Group

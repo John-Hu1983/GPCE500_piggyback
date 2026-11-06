@@ -5,29 +5,32 @@
 // Last modified date:
 //              2012/10/24
 //==========================================================================
-#ifndef	__SYSTEM_H__
-#define	__SYSTEM_H__
+#ifndef __SYSTEM_H__
+#define __SYSTEM_H__
 
-extern void System_Initial(void);
+#define SYSTEM_DEBOUNCE_COUNT 0x0080
+
+extern void system_init_module(void);
 /* Enable CPU IRQ only; peripheral interrupt masks and FIQ are unchanged. */
-extern void System_EnableIRQ(void);
-extern void System_ServiceLoop(void);
-extern void WatchdogClear(void);
-extern unsigned SP_GetCh(void);
-extern void SP_SwitchChannel(unsigned ADC_Channel);
-extern void Cache_Enable(void);
-extern void Cache_Disable(void);
+extern void system_enable_irq(void);
+extern void system_service_loop(void);
+extern void system_clear_watchdog(void);
+extern unsigned key_read_event(void);
+/* Legacy placeholder only; this does not perform ADC channel switching. */
+extern void system_switch_channel(unsigned channel);
+extern void cache_enable_module(void);
+extern void cache_disable_module(void);
 
-extern void SP_RampUpDAC1(void);
-extern void SP_RampDnDAC1(void);
-extern void SP_RampUpDAC2(void);
-extern void SP_RampDnDAC2(void);
+extern void audio_raise_dac1(void);
+extern void audio_lower_dac1(void);
+extern void audio_raise_dac2(void);
+extern void audio_lower_dac2(void);
 
-extern void SPIFCHiDrivingCheck(void);
-extern void GotoSleep(unsigned keepRTC);
-extern unsigned AutoModeReadAWords(unsigned addressLow, unsigned addressHigh);
-extern void AutoModeReadNWords(unsigned bufferAddress, unsigned wordCount,
-                              unsigned addressLow, unsigned addressHigh);
+extern void spi_check_drive(void);
+extern void system_enter_sleep(unsigned rtc);
+extern unsigned spi_read_word(unsigned addr_lo, unsigned addr_hi);
+/* count=0 retains the legacy 65536-word copy behavior. */
+extern void spi_read_words(unsigned buf, unsigned count, unsigned addr_lo, unsigned addr_hi);
 
 // CPU-specific primitives and calibrated delays implemented in system.asm.
 extern void System_CPU_Initial(void);

@@ -14,26 +14,33 @@
 #include "GPCE36_CE5.h"
 #include "System.h"
 
-#define C_DebounceCnt       0x0080
-
 /* 对应原汇编的 RAM 变量；计数单位是 ServiceLoop 的调用次数，不是毫秒。 */
-static unsigned R_DebounceReg;
-static unsigned R_DebounceCnt;
-static unsigned R_KeyBuf;
-static unsigned R_KeyStrobe;
+static unsigned deb_prev;
+static unsigned deb_cnt;
+static unsigned key_buf;
+static unsigned key_evt;
 
-void System_EnableIRQ(void)
-{
-    System_CPU_EnableIRQ();
-}
+/*
+ *@ brief    : Enable CPU IRQ.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Leave FIQ and peripheral interrupt masks unchanged.
+ */
+void system_enable_irq(void) { System_CPU_EnableIRQ(); }
 
-void System_Initial(void)
+/*
+ *@ brief    : Initialize CPU, system clock and basic peripherals.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Select 81.92MHz, clear interrupt flags and reset GPIO A/B.
+ */
+void system_init_module(void)
 {
     System_CPU_Initial();
 
-    *P_System_Clock = C_SYSCLK_81920KHz |
-                      C_Sleep_IOSC32K_SLP_Off |
-                      C_IOSC8192M_Trim_from_Fuse;
+    *P_System_Clock = C_SYSCLK_81920KHz | C_Sleep_IOSC32K_SLP_Off | C_IOSC8192M_Trim_from_Fuse;
     *P_IO_Ctrl = 0;
     *P_INT_Ctrl = 0;
     *P_INT2_Ctrl = 0;
@@ -53,205 +60,328 @@ void System_Initial(void)
     *P_IOB_Buffer = 0;
 }
 
-void SP_SwitchChannel(unsigned ADC_Channel)
+/*
+ *@ brief    : Preserve the legacy channel-switch placeholder.
+ *@ type     : public
+ *@ argu in  : channel: unused legacy index.
+ *@ argu out : None.
+ *@ theme    : No hardware action; use adc_read_channel for actual conversions.
+ */
+void system_switch_channel(unsigned channel)
 {
     /* 原汇编只有返回指令，并没有实现切换 ADC 通道。 */
-    (void)ADC_Channel;
+    (void)channel;
 }
 
-void WatchdogClear(void)
-{
-    *P_Watchdog_Clear = C_Watchdog_Clear;
-}
+/*
+ *@ brief    : Clear the watchdog timer.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Write the hardware watchdog-clear key.
+ */
+void system_clear_watchdog(void) { *P_Watchdog_Clear = C_Watchdog_Clear; }
 
-static void Key_DebounceCnt_Down(void)
+/*
+ *@ brief    : Advance the key debounce countdown.
+ *@ type     : private
+ *@ argu in  : None.
+ *@ argu out : Updates deb_cnt.
+ *@ theme    : Count service-loop calls without underflow.
+ */
+static void _key_update_debounce(void)
 {
-    if (R_DebounceCnt != 0) {
-        --R_DebounceCnt;
+    if (deb_cnt != 0)
+    {
+        --deb_cnt;
     }
 }
 
-static void Key_Scan_ServiceLoop(void)
+/*
+ *@ brief    : Sample and debounce the low eight GPIO A pins.
+ *@ type     : private
+ *@ argu in  : None.
+ *@ argu out : Updates debounce state and pending key events.
+ *@ theme    : Accumulate rising-edge key events after stable samples.
+ */
+static void _key_scan_level(void)
 {
     unsigned sample = *P_IOA_Data & 0x00FF;
-    unsigned previousSample = R_DebounceReg;
-    unsigned previousKeys;
+    unsigned prev = deb_prev;
+    unsigned keys;
 
-    R_DebounceReg = sample;
-    if (previousSample != sample) {
-        R_DebounceCnt = C_DebounceCnt;
+    deb_prev = sample;
+    if (prev != sample)
+    {
+        deb_cnt = SYSTEM_DEBOUNCE_COUNT;
         return;
     }
 
-    if (R_DebounceCnt != 0) {
+    if (deb_cnt != 0)
+    {
         return;
     }
 
-    previousKeys = R_KeyBuf;
-    R_KeyBuf = sample;
+    keys = key_buf;
+    key_buf = sample;
 
     /* 只记录由低到高的新按下；多个按键事件按位累积，读取后才清空。 */
-    R_KeyStrobe |= (previousKeys ^ 0xFFFF) & R_KeyBuf;
+    key_evt |= (keys ^ 0xFFFF) & key_buf;
 }
 
-void System_ServiceLoop(void)
+/*
+ *@ brief    : Run periodic key and watchdog maintenance.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Update debounce, sample keys and clear the watchdog.
+ */
+void system_service_loop(void)
 {
-    Key_DebounceCnt_Down();
-    Key_Scan_ServiceLoop();
-    WatchdogClear();
+    _key_update_debounce();
+    _key_scan_level();
+    system_clear_watchdog();
 }
 
-unsigned SP_GetCh(void)
+/*
+ *@ brief    : Consume pending key events.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Rising-edge key bit mask.
+ *@ theme    : Clear the event latch after reading.
+ */
+unsigned key_read_event(void)
 {
-    unsigned keys = R_KeyStrobe;
+    unsigned keys = key_evt;
 
-    R_KeyStrobe = 0;
+    key_evt = 0;
     return keys;
 }
 
-static void SP_RampDACToZero(volatile unsigned *dataRegister)
+/*
+ *@ brief    : Ramp an audio data register toward zero.
+ *@ type     : private
+ *@ argu in  : reg: audio channel data register.
+ *@ argu out : Register reaches zero.
+ *@ theme    : Preserve signed ramp direction, 0x40 steps and calibrated delays.
+ */
+static void _audio_ramp_zero(volatile unsigned *reg)
 {
-    unsigned sample = *dataRegister & 0xFFC0;
+    unsigned sample = *reg & 0xFFC0;
 
     /*
      * 原汇编的 RampUp 和 RampDn 实际完全相同：以 0x40 为步长回到零。
      * bit15 为符号位；保留原行为，不根据函数名改写成另一种渐变。
      */
-    if ((sample & 0x8000) != 0) {
-        while (sample != 0) {
+    if ((sample & 0x8000) != 0)
+    {
+        while (sample != 0)
+        {
             SACM_Delay();
             sample = (sample + 0x0040) & 0xFFFF;
-            *dataRegister = sample;
+            *reg = sample;
         }
-    } else {
-        while (sample != 0) {
+    }
+    else
+    {
+        while (sample != 0)
+        {
             SACM_Delay();
             sample -= 0x0040;
-            *dataRegister = sample;
+            *reg = sample;
         }
     }
 }
 
-void SP_RampDnDAC1(void)
-{
-    SP_RampDACToZero(P_AUDIO_CH1_Data);
-}
+/*
+ *@ brief    : Ramp DAC channel 1 down to zero.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Channel 1 data becomes zero.
+ *@ theme    : Preserve the original ramp behavior.
+ */
+void audio_lower_dac1(void) { _audio_ramp_zero(P_AUDIO_CH1_Data); }
 
-void SP_RampDnDAC2(void)
-{
-    SP_RampDACToZero(P_AUDIO_CH2_Data);
-}
+/*
+ *@ brief    : Ramp DAC channel 2 down to zero.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Channel 2 data becomes zero.
+ *@ theme    : Preserve the original ramp behavior.
+ */
+void audio_lower_dac2(void) { _audio_ramp_zero(P_AUDIO_CH2_Data); }
 
-void SP_RampUpDAC1(void)
-{
-    SP_RampDACToZero(P_AUDIO_CH1_Data);
-}
+/*
+ *@ brief    : Apply the legacy ramp-up operation to DAC channel 1.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Channel 1 data becomes zero.
+ *@ theme    : Legacy ramp-up and ramp-down intentionally share the same behavior.
+ */
+void audio_raise_dac1(void) { _audio_ramp_zero(P_AUDIO_CH1_Data); }
 
-void SP_RampUpDAC2(void)
-{
-    SP_RampDACToZero(P_AUDIO_CH2_Data);
-}
+/*
+ *@ brief    : Apply the legacy ramp-up operation to DAC channel 2.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Channel 2 data becomes zero.
+ *@ theme    : Legacy ramp-up and ramp-down intentionally share the same behavior.
+ */
+void audio_raise_dac2(void) { _audio_ramp_zero(P_AUDIO_CH2_Data); }
 
-void SPIFCHiDrivingCheck(void)
+/*
+ *@ brief    : Check SPI Flash high-drive selection against supply voltage.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : May update the SPI drive flag.
+ *@ theme    : Restore the original LVD configuration after the check.
+ */
+void spi_check_drive(void)
 {
-    unsigned previousLVD = *P_Reset_LVD_Ctrl & C_LVD_Ctrl;
+    unsigned lvd = *P_Reset_LVD_Ctrl & C_LVD_Ctrl;
 
-    if ((*P_SPI_Auto_Setting & 0x8000) != 0) {
+    if ((*P_SPI_Auto_Setting & 0x8000) != 0)
+    {
         *P_Reset_LVD_Ctrl = C_LVD_Ctrl_2D6V;
         System_LVD_Delay();
-        if ((*P_Reset_LVD_Ctrl & 0x0800) == 0) {
+        if ((*P_Reset_LVD_Ctrl & 0x0800) == 0)
+        {
             *P_SPI_Auto_Setting ^= 0x8000;
         }
-    } else {
+    }
+    else
+    {
         *P_Reset_LVD_Ctrl = C_LVD_Ctrl_2D4V;
         System_LVD_Delay();
-        if ((*P_Reset_LVD_Ctrl & 0x0800) != 0) {
+        if ((*P_Reset_LVD_Ctrl & 0x0800) != 0)
+        {
             *P_SPI_Auto_Setting ^= 0x8000;
         }
     }
 
     /* 与原汇编一致：只恢复低压检测配置位，而非整个状态寄存器。 */
-    *P_Reset_LVD_Ctrl = previousLVD;
+    *P_Reset_LVD_Ctrl = lvd;
     System_LVD_Delay();
 }
 
-void Cache_Disable(void)
+/*
+ *@ brief    : Disable the SPI Flash cache.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Wait for the hardware transition using the assembly delay.
+ */
+void cache_disable_module(void)
 {
     *P_Cache_Ctrl = C_Cache_Disable;
     System_CacheWait();
 }
 
-void Cache_Enable(void)
+/*
+ *@ brief    : Clear and enable the SPI Flash cache.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Wait for cache clear to complete before enabling.
+ */
+void cache_enable_module(void)
 {
-    Cache_Disable();
+    cache_disable_module();
     *P_Cache_Ctrl = C_Cache_Clear;
     System_CacheWait();
 
-    while ((*P_Cache_Ctrl & C_Cache_Clear) != 0) {
+    while ((*P_Cache_Ctrl & C_Cache_Clear) != 0)
+    {
         /* 等待硬件完成清除。 */
     }
 
     *P_Cache_Ctrl = C_Cache_Enable;
 }
 
-unsigned AutoModeReadAWords(unsigned addressLow, unsigned addressHigh)
+/*
+ *@ brief    : Read one word through the SPI Flash bank window.
+ *@ type     : public
+ *@ argu in  : addr_lo/addr_hi: window word address.
+ *@ argu out : Flash word.
+ *@ theme    : Preserve legacy bank-selection side effects.
+ */
+unsigned spi_read_word(unsigned addr_lo, unsigned addr_hi)
 {
-    unsigned long cpuAddress;
+    unsigned long addr;
 
-    *P_SPI_Bank = addressHigh >> 4;
-    cpuAddress = ((unsigned long)(0x30 + (addressHigh & 0x000F)) << 16) |
-                 addressLow;
+    *P_SPI_Bank = addr_hi >> 4;
+    addr = ((unsigned long)(0x30 + (addr_hi & 0x000F)) << 16) | addr_lo;
 
     /*
      * 对应 DS = 0x30 + (高字 & 0x0F)，再读取 D:[低字]。
      * 原单字读取虽然备份 Bank，却没有恢复；这里保留这个副作用。
      * 参数沿用原函数的窗口字地址，不是普通文件的字节偏移。
      */
-    return *(volatile unsigned *)cpuAddress;
+    return *(volatile unsigned *)addr;
 }
 
-void AutoModeReadNWords(unsigned bufferAddress, unsigned wordCount,
-                        unsigned addressLow, unsigned addressHigh)
+/*
+ *@ brief    : Copy words from the SPI Flash window to RAM.
+ *@ type     : public
+ *@ argu in  : buf: RAM word address; count: words; addr_lo/addr_hi: Flash word address.
+ *@ argu out : Destination buffer receives data; original SPI bank is restored.
+ *@ theme    : Preserve address wrapping and legacy count=0 meaning 65536 words.
+ */
+void spi_read_words(unsigned buf, unsigned count, unsigned addr_lo, unsigned addr_hi)
 {
-    unsigned previousBank = *P_SPI_Bank;
-    unsigned segment = 0x30 + (addressHigh & 0x000F);
-    unsigned long cpuAddress;
+    unsigned bank = *P_SPI_Bank;
+    unsigned seg = 0x30 + (addr_hi & 0x000F);
+    unsigned long addr;
     unsigned value;
 
-    *P_SPI_Bank = addressHigh >> 4;
+    *P_SPI_Bank = addr_hi >> 4;
 
     /*
      * 原循环先读再减计数，wordCount == 0 时会读 65536 个字，而不是零个。
      * 原目的地址只有 16 位；这里显式保留地址回绕，避免变成另一种接口。
      */
-    do {
-        cpuAddress = ((unsigned long)segment << 16) | addressLow;
-        value = *(volatile unsigned *)cpuAddress;
-        *(unsigned *)((unsigned long)bufferAddress) = value;
-        bufferAddress = (bufferAddress + 1) & 0xFFFF;
-        addressLow = (addressLow + 1) & 0xFFFF;
-        wordCount = (wordCount - 1) & 0xFFFF;
-        if (wordCount == 0) {
+    do
+    {
+        addr = ((unsigned long)seg << 16) | addr_lo;
+        value = *(volatile unsigned *)addr;
+        *(unsigned *)((unsigned long)buf) = value;
+        buf = (buf + 1) & 0xFFFF;
+        addr_lo = (addr_lo + 1) & 0xFFFF;
+        count = (count - 1) & 0xFFFF;
+        if (count == 0)
+        {
             break;
         }
 
-        if (addressLow == 0) {
-            segment = (segment + 1) & 0x003F;
-            if (segment == 0) {
+        if (addr_lo == 0)
+        {
+            seg = (seg + 1) & 0x003F;
+            if (seg == 0)
+            {
                 *P_SPI_Bank += 1;
-                segment = 0x30;
+                seg = 0x30;
             }
         }
     } while (1);
 
-    *P_SPI_Bank = previousBank;
+    *P_SPI_Bank = bank;
 }
 
-void GotoSleep(unsigned keepRTC)
+/*
+ *@ brief    : Enter sleep using the RAM-resident system routine.
+ *@ type     : public
+ *@ argu in  : rtc: nonzero keeps the RTC clock active.
+ *@ argu out : Returns after wakeup.
+ *@ theme    : Preserve peripheral shutdown, RAM copy and wakeup behavior.
+ */
+void system_enter_sleep(unsigned rtc)
 {
-    if (keepRTC != 0) {
+    if (rtc != 0)
+    {
         *P_System_Clock |= C_Sleep_IOSC32K_SLP_Work;
-    } else {
+    }
+    else
+    {
         *P_System_Clock &= ~C_Sleep_IOSC32K_SLP_Work;
     }
 
@@ -272,16 +402,16 @@ void GotoSleep(unsigned keepRTC)
     *P_UART_Ctrl = 0;
     *P_CTS_Ctrl0 = 0;
 
-    SP_RampDnDAC1();
-    SP_RampDnDAC2();
+    audio_lower_dac1();
+    audio_lower_dac2();
     *P_AUDIO_Ctrl1 &= ~(C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable);
     *P_AUDIO_Ctrl3 &= ~C_RDAC_Enable;
     *P_SPU_Clock_Ctrl = 0;
 
-    Cache_Disable();
+    cache_disable_module();
     /* 此调用先复制休眠代码到 Cache RAM，Flash 关闭期间只在 RAM 中执行。 */
     System_RunSleepCodeFromRAM();
-    Cache_Enable();
+    cache_enable_module();
     System_WakeupWait();
 
     /* 原函数唤醒后也没有重新开启中断或恢复其他外设。 */

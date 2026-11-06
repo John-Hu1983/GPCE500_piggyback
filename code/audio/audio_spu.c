@@ -8,46 +8,65 @@
  * CPU 中断控制由系统模块提供；汇编仅提供资源表地址。
  * 本芯片按 16 位字寻址；FileMerger 表内记录的偏移则以字节为单位。
  */
-#define AUDIO_SPU_CHANNEL_STRIDE 0x10U
+unsigned spu_addr_hi = 0;
+unsigned spu_addr_lo = 0;
 
-unsigned DPTR_H = 0;
-unsigned DPTR_L = 0;
+static const unsigned vol_tab[16] = {0x0480, 0x0580, 0x0680, 0x0880, 0x0A80, 0x0D80,
+                                     0x1080, 0x1480, 0x1980, 0x2080, 0x2880, 0x3380,
+                                     0x4F80, 0x5180, 0x6680, 0x7F80};
 
-static const unsigned volumeLevels[16] = {0x0480, 0x0580, 0x0680, 0x0880, 0x0A80, 0x0D80,
-                                          0x1080, 0x1480, 0x1980, 0x2080, 0x2880, 0x3380,
-                                          0x4F80, 0x5180, 0x6680, 0x7F80};
-
-static void _spu_set_addr_from_table(unsigned long tableAddress, unsigned inx)
+/*
+ *@ brief    : Load a resource address from a word-address table.
+ *@ type     : private
+ *@ argu in  : table: table word address; inx: resource index.
+ *@ argu out : Updates spu_addr_lo and spu_addr_hi.
+ *@ theme    : Each table entry contains a low and high word.
+ */
+static void _spu_read_table(unsigned long table, unsigned inx)
 {
     const volatile unsigned *entry;
 
     /* 每项由低、高两个字组成，不能把这个表误当成字节数组。 */
-    entry = (const volatile unsigned *)(tableAddress + 2UL * inx);
-    DPTR_L = entry[0];
-    DPTR_H = entry[1];
+    entry = (const volatile unsigned *)(table + 2UL * inx);
+    spu_addr_lo = entry[0];
+    spu_addr_hi = entry[1];
 }
 
-unsigned audio_set_pwm_dac(unsigned outputMode)
+/*
+ *@ brief    : Select PWM or DAC audio output.
+ *@ type     : public
+ *@ argu in  : mode: AUDIO_OUTMODE_PWM or AUDIO_OUTMODE_DAC.
+ *@ argu out : Written audio control-register value.
+ *@ theme    : Configure audio only; do not control amplifier GPIO.
+ */
+unsigned audio_set_pwm_dac(unsigned mode)
 {
-    unsigned control;
+    unsigned ctrl;
 
-    if (outputMode == AUDIO_OUTMODE_PWM)
+    if (mode == AUDIO_OUTMODE_PWM)
     {
         *P_AUDIO_Ctrl1 =
             C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable | C_AUDIO_Gain_Sel | C_MuteControl_DATACHAGE;
-        control = C_PWM_sData;
+        ctrl = C_PWM_sData;
     }
     else
     {
         *P_AUDIO_Ctrl1 =
             C_AUDIO_PWMIP_Enable | C_AUDIO_PWM_Enable | C_AUDIO_Gain_Sel | C_MuteControl_DATACHAGE;
-        control = C_PWM_sData | C_RDAC_Enable | C_PWM_Mute_50Duty | C_DRAC_Current;
+        ctrl = C_PWM_sData | C_RDAC_Enable | C_PWM_Mute_50Duty | C_DRAC_Current;
     }
 
-    *P_AUDIO_Ctrl3 = control;
-    return control;
+    *P_AUDIO_Ctrl3 = ctrl;
+    return ctrl;
 }
 
+/*
+ *@ brief    : Initialize SPU clock, mixing and interrupts.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : None.
+ *@ theme    : Configure channels 0/1 and enable CPU IRQ only.
+ */
 void spu_init_audio(void)
 {
     *P_SPU_CLK_Ctrl = C_SPUCLK_DIV_2;
@@ -55,88 +74,126 @@ void spu_init_audio(void)
     *P_SPU_Mixer_Ctrl = C_SPU_Mixer_Ch0_En | C_SPU_Mixer_Ch1_En;
     *P_SPU_INT_Ctrl = C_SPU_Ch0_INT_En | C_SPU_Ch1_INT_En;
     *P_INT_Ctrl = C_IRQ5_SPU;
-    System_EnableIRQ();
+    system_enable_irq();
 }
 
-void spu_set_volume(unsigned volumeIndex)
+/*
+ *@ brief    : Set the SPU mixer volume.
+ *@ type     : public
+ *@ argu in  : vol: volume table index, 0..15.
+ *@ argu out : None.
+ *@ theme    : Preserve the existing bit15 control flag.
+ */
+void spu_set_volume(unsigned vol)
 {
-    unsigned level = volumeLevels[volumeIndex];
+    unsigned level = vol_tab[vol];
 
     /* bit15 是原控制位，调整音量时保留它。 */
     *P_SPU_Volume_Ctrl = level | (*P_SPU_Volume_Ctrl & 0x8000);
 }
 
+/*
+ *@ brief    : Enable one SPU playback channel.
+ *@ type     : public
+ *@ argu in  : channel: hardware index, 0..7.
+ *@ argu out : None.
+ *@ theme    : Preserve other channel-enable bits.
+ */
 void spu_open_channel(SPU_Channel channel) { *P_SPU_CH_Ctrl |= C_SPU_Ch0_En << channel; }
 
+/*
+ *@ brief    : Stop one SPU playback channel.
+ *@ type     : public
+ *@ argu in  : channel: hardware index, 0..7.
+ *@ argu out : None.
+ *@ theme    : Preserve other channel-enable bits.
+ */
 void spu_stop_channel(SPU_Channel channel) { *P_SPU_CH_Ctrl &= ~(C_SPU_Ch0_En << channel); }
 
-void spu_read_PCM_addrs(unsigned inx)
-{
-    _spu_set_addr_from_table(Audio_SPU_GetPCMTableAddress(), inx);
-}
+/*
+ *@ brief    : Load a PCM resource address.
+ *@ type     : public
+ *@ argu in  : inx: resource index.
+ *@ argu out : Updates spu_addr_lo and spu_addr_hi.
+ *@ theme    : Read the assembly-provided PCM address table.
+ */
+void spu_read_pcm(unsigned inx) { _spu_read_table(Audio_SPU_GetPCMTableAddress(), inx); }
 
-void spu_read_A34PE_addrs(unsigned inx)
+/*
+ *@ brief    : Load an A3400 resource address.
+ *@ type     : public
+ *@ argu in  : inx: resource index.
+ *@ argu out : Updates spu_addr_lo and spu_addr_hi.
+ *@ theme    : Support ROM tables and FileMerger byte offsets.
+ */
+void spu_read_a34pe(unsigned inx)
 {
 #if AUDIO_SPU_SPEECH_SOURCE_TYPE == AUDIO_SPU_SOURCE_ROM_TABLE
-    _spu_set_addr_from_table(Audio_SPU_GetA34PETableAddress(), inx);
+    _spu_read_table(Audio_SPU_GetA34PETableAddress(), inx);
 #else
-    unsigned long baseAddress = RES_FILEMERGER_ROM_BIN_SA;
+    unsigned long base = RES_FILEMERGER_ROM_BIN_SA;
     const volatile unsigned *entry;
-    unsigned long byteOffset;
-    unsigned long wordAddress;
+    unsigned long offset;
+    unsigned long addr;
 
     /* 第一个 32 位字是文件数；之后每项是一个 32 位字节偏移。 */
-    entry = (const volatile unsigned *)(baseAddress + 2UL + 2UL * inx);
-    byteOffset = entry[0];
-    byteOffset |= (unsigned long)entry[1] << 16;
+    entry = (const volatile unsigned *)(base + 2UL + 2UL * inx);
+    offset = entry[0];
+    offset |= (unsigned long)entry[1] << 16;
 
     /* 等价于原汇编的高字右移、移位缓冲区旋转和带进位相加。 */
-    wordAddress = baseAddress + (byteOffset >> 1);
-    DPTR_L = (unsigned)wordAddress;
-    DPTR_H = (unsigned)(wordAddress >> 16);
+    addr = base + (offset >> 1);
+    spu_addr_lo = (unsigned)addr;
+    spu_addr_hi = (unsigned)(addr >> 16);
 #endif
 }
 
-void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq,
-                      unsigned inx)
+/*
+ *@ brief    : Configure the resource and format for one SPU channel.
+ *@ type     : public
+ *@ argu in  : channel: 0..7; format: codec; freq: sample rate; inx: resource index.
+ *@ argu out : Channel playback registers and current resource address.
+ *@ theme    : Convert word addresses to byte addresses and reset filter state.
+ */
+void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx)
 {
-    unsigned pcmFormat = format == SPU_PCM_8BIT || format == SPU_PCM_16BIT;
-    unsigned registerOffset = AUDIO_SPU_CHANNEL_STRIDE * channel;
-    unsigned long byteAddress;
+    unsigned pcm = format == SPU_PCM_8BIT || format == SPU_PCM_16BIT;
+    unsigned offset = AUDIO_SPU_CHANNEL_STRIDE * channel;
+    unsigned long addr;
 
-    if (pcmFormat)
+    if (pcm)
     {
-        spu_read_PCM_addrs(inx);
+        spu_read_pcm(inx);
     }
     else
     {
-        spu_read_A34PE_addrs(inx);
+        spu_read_a34pe(inx);
     }
 
-    byteAddress = ((unsigned long)DPTR_H << 16) | DPTR_L;
-    byteAddress <<= 1;
+    addr = ((unsigned long)spu_addr_hi << 16) | spu_addr_lo;
+    addr <<= 1;
 
     /* A3400 跳过 9 字节头；PCM 的硬件起点是首字节地址减 1。 */
-    if (pcmFormat)
+    if (pcm)
     {
-        byteAddress -= 1UL;
+        addr -= 1UL;
     }
     else
     {
-        byteAddress += 9UL;
+        addr += 9UL;
     }
 
-    DPTR_L = (unsigned)byteAddress;
+    spu_addr_lo = (unsigned)addr;
     /* 高字的 bit15..14 是格式选择位，不是资源地址的一部分。 */
-    DPTR_H = (unsigned)(byteAddress >> 16) | ((unsigned)format << 14);
+    spu_addr_hi = (unsigned)(addr >> 16) | ((unsigned)format << 14);
 
-    *(P_SPU_Ch0_Volume_Ctrl + registerOffset) = 0xFFFF;
-    *(P_SPU_Ch0_SampleFreq + registerOffset) = freq;
-    *(P_SPU_Ch0_DPTR_L + registerOffset) = DPTR_L;
-    *(P_SPU_Ch0_DPTR_H + registerOffset) = DPTR_H;
-    *(P_SPU_Ch0_LoopLength + registerOffset) = 0;
-    *(P_SPU_Ch0_NextDPTR_L + registerOffset) = 0;
-    *(P_SPU_Ch0_NextDPTR_H + registerOffset) = 0;
-    *(P_SPU_Ch0_Filter_S2 + registerOffset) = 0;
-    *(P_SPU_Ch0_Filter_S1 + registerOffset) = 0;
+    *(P_SPU_Ch0_Volume_Ctrl + offset) = 0xFFFF;
+    *(P_SPU_Ch0_SampleFreq + offset) = freq;
+    *(P_SPU_Ch0_DPTR_L + offset) = spu_addr_lo;
+    *(P_SPU_Ch0_DPTR_H + offset) = spu_addr_hi;
+    *(P_SPU_Ch0_LoopLength + offset) = 0;
+    *(P_SPU_Ch0_NextDPTR_L + offset) = 0;
+    *(P_SPU_Ch0_NextDPTR_H + offset) = 0;
+    *(P_SPU_Ch0_Filter_S2 + offset) = 0;
+    *(P_SPU_Ch0_Filter_S1 + offset) = 0;
 }

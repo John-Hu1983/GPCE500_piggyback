@@ -1,7 +1,7 @@
 // CPU primitives, calibrated delays and RAM sleep for gpce500a.c.
 .include GPCE36_CE5.inc
 
-.external _AutoModeReadNWords
+.external _spi_read_words
 
 .public _System_CPU_Initial
 .public _System_CPU_EnableIRQ
@@ -77,7 +77,7 @@ _System_RunSleepCodeFromRAM: .proc
     push R3 to [SP]
     push R2 to [SP]
     push R1 to [SP]
-    call _AutoModeReadNWords
+    call _spi_read_words
     SP += 4
     call F_SleepCodeRAMStr
     pop SR from [SP]

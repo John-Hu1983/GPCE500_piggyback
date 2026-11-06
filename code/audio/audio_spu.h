@@ -5,6 +5,7 @@
 
 #define AUDIO_SPU_SOURCE_ROM_TABLE 0
 #define AUDIO_SPU_SOURCE_FILEMERGER_VERSION1 1
+#define AUDIO_SPU_CHANNEL_STRIDE 0x10U
 
 /* Preserve the original default; select ROM_TABLE here or with a compiler define. */
 #ifndef AUDIO_SPU_SPEECH_SOURCE_TYPE
@@ -58,13 +59,16 @@ typedef enum
 extern unsigned long Audio_SPU_GetPCMTableAddress(void);
 extern unsigned long Audio_SPU_GetA34PETableAddress(void);
 
-unsigned audio_set_pwm_dac(unsigned outputMode);
+extern unsigned spu_addr_hi;
+extern unsigned spu_addr_lo;
+
+unsigned audio_set_pwm_dac(unsigned mode);
 void spu_init_audio(void);
 void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx);
 void spu_open_channel(SPU_Channel channel);
-void spu_set_volume(unsigned volumeIndex);
+void spu_set_volume(unsigned vol);
 void spu_stop_channel(SPU_Channel channel);
-void spu_read_PCM_addrs(unsigned inx);
-void spu_read_A34PE_addrs(unsigned inx);
+void spu_read_pcm(unsigned inx);
+void spu_read_a34pe(unsigned inx);
 
 #endif

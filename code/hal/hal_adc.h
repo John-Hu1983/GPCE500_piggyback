@@ -1,6 +1,11 @@
 #ifndef _HAL_ADC_H__
 #define _HAL_ADC_H__
 
+#include "GPCE36_CE5.h"
+
+#define ADC_MODE (C_CMPADC_Auto_Enable | C_CMPADC_Manual)
+#define ADC_FLAGS (C_CMPADC_INT_Flag | C_CMPADC_Timeout_Flag)
+
 typedef enum
 {
     ADC_Ch_A11 = 0,
@@ -19,17 +24,17 @@ typedef enum
  * hardware auto discharge, no timer/DMA. ADC IRQ/FIQ are masked; other sources are preserved.
  * About 1nF gives ~4096
  * counts at 3.3V/81.92MHz; adc_read_channel returns the full 16-bit raw count.
- * Call adc_init after System_Initial; it leaves ADC disabled. Then adc_enable.
+ * Call adc_init_module after system_init_module; it leaves ADC disabled. Then adc_enable_module.
  * Initialization floats IOA12; reads float only the selected external input.
  * Caller must release conflicting pin peripherals and configure PGA for ADC_Ch_PGA.
  * Reference voltage needs calibration; no fixed value is assumed.
  * Reads are blocking. Disabled/misconfigured ADC, invalid channel or timeout
- * disables ADC and halts in adc_fail (debugger breakpoint); no fault RAM is stored.
+ * disables ADC and halts in _adc_halt_fault (debugger breakpoint); no fault RAM is stored.
  * Serialize all ADC access, including ISR access. Disable ADC before sleep.
  */
-void adc_init(void);
-void adc_enable(void);
-void adc_disable(void);
+void adc_init_module(void);
+void adc_enable_module(void);
+void adc_disable_module(void);
 unsigned adc_read_channel(ADC_Channel channel);
 
 #endif /* _HAL_ADC_H__ */

@@ -11,6 +11,7 @@ Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\audio_spu.ob
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\spu_patch.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_gpio.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_adc.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_iopwm.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\aintworried_12K_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GIRL_SKY_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\FileMerger_ROM_bin.res"
@@ -47,20 +48,22 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: CODE in "Resource.obj" with 0 
 ;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
 ;Align: BootCode_SEC in "BootCode_User.obj" with 0 
-;Locate: CODE in "main.obj" at A3CD
+;Locate: CODE in "main.obj" at A3CD 
 ;Align: CODE in "main.obj" with 0 
 ;Locate: CODE in "system.obj" at 989E 
 ;Align: CODE in "system.obj" with 0 
 ;Locate: CODE in "gpce500a.obj" at 9CB7 
 ;Align: CODE in "gpce500a.obj" with 0 
-;Locate: CODE in "audio_spu.obj" at A213
+;Locate: CODE in "audio_spu.obj" at A213 
 ;Align: CODE in "audio_spu.obj" with 0 
 ;Locate: CODE in "spu_patch.obj" at 98DF 
 ;Align: CODE in "spu_patch.obj" with 0 
-;Locate: CODE in "hal_gpio.obj" at 9F9E
-;Align: CODE in "hal_gpio.obj" with 0
-;Locate: CODE in "hal_adc.obj" at A4EF
-;Align: CODE in "hal_adc.obj" with 0
+;Locate: CODE in "hal_gpio.obj" at 9F9E 
+;Align: CODE in "hal_gpio.obj" with 0 
+;Locate: CODE in "hal_adc.obj" at A4EF 
+;Align: CODE in "hal_adc.obj" with 0 
+;Locate: CODE in "hal_iopwm.obj" at A600 
+;Align: CODE in "hal_iopwm.obj" with 0 
 ;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 98E9 
 ;Align: CODE in "_GPTag" of "CMacro1232.lib"  with 0 
 ;Locate: _CODE_SPI_SEC in "SPI_Flash.obj" at 9800 
