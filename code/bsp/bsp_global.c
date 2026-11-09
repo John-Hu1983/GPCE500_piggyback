@@ -7,6 +7,7 @@
 #include "..\dev\dev_button.h"
 #include "..\message\message.h"
 #include "..\schedule\schedule.h"
+#include "..\task\task_led.h"
 
 static u16 Bsp_phy_state = 0;
 /*
@@ -31,15 +32,6 @@ void bsp_set_phy_init(BSP_phy_name phy) { Bsp_phy_state |= (1 << phy); }
 
 void bsp_clear_phy_init(BSP_phy_name phy) { Bsp_phy_state &= ~(1 << phy); }
 
-/*
- *@ brief    : Keep the board RTC GPIO test.
- *@ type     : public
- *@ argu in  : None.
- *@ argu out : GPIOB0 changes level once.
- *@ theme    : RTC array callback; initialize GPIOB0 as an output before RTC starts.
- */
-void bsp_service_rtc(void) { gpio_reverse_level(GPIOB, 0); }
-
 void bsp_init_global(void)
 {
     system_init_module();
@@ -52,6 +44,7 @@ void bsp_init_global(void)
     spu_set_volume(AUDIO_VOLUME_DEFAULT);
 
     btn_init_module();
-    gpio_init_pattern(GPIOB, 0, GPIO_Out);
+    led_init_task();
+
     rtc_init_module(RTC_Freq_2K);
 }

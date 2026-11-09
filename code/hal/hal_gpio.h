@@ -20,7 +20,7 @@ typedef enum
     GPIO_In_Float = 0,
     GPIO_In_PullLow = 1,
     GPIO_In_PullHigh = 2,
-    GPIO_Out = 3,
+    GPIO_Out_Low = 3,
     GPIO_Out_Inv = 4,
     GPIO_Out_High = 5,
     GPIO_Out_Inv_High = 6

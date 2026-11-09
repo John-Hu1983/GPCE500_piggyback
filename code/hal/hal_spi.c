@@ -152,15 +152,15 @@ Serial_Result spi_init_module(unsigned long hz, SPI_Mode mode)
 #if SPI_PORT == SERIAL_PORT_A
     *P_IO_Ctrl &= ~C_SPI2_IOB;
     *P_IO_Swap = (*P_IO_Swap & ~C_SPI2_IOA_Swap_Enable) | C_SPI2_IOA_MOSI_Enable;
-    gpio_init_pattern(GPIOA, 1, (mode & C_SPI_Clock_Pol) != 0 ? GPIO_Out_High : GPIO_Out);
+    gpio_init_pattern(GPIOA, 1, (mode & C_SPI_Clock_Pol) != 0 ? GPIO_Out_High : GPIO_Out_Low);
     gpio_init_pattern(GPIOA, 2, GPIO_In_Float);
-    gpio_init_pattern(GPIOA, 3, GPIO_Out);
+    gpio_init_pattern(GPIOA, 3, GPIO_Out_Low);
 #else
     *P_IO_Ctrl |= C_SPI2_IOB;
     *P_IO_Swap = (*P_IO_Swap & ~C_SPI2_IOB_Swap_Enable) | C_SPI2_IOB_MOSI_Enable;
-    gpio_init_pattern(GPIOB, 13, (mode & C_SPI_Clock_Pol) != 0 ? GPIO_Out_High : GPIO_Out);
+    gpio_init_pattern(GPIOB, 13, (mode & C_SPI_Clock_Pol) != 0 ? GPIO_Out_High : GPIO_Out_Low);
     gpio_init_pattern(GPIOB, 14, GPIO_In_Float);
-    gpio_init_pattern(GPIOB, 15, GPIO_Out);
+    gpio_init_pattern(GPIOB, 15, GPIO_Out_Low);
 #endif
     *P_SPI2_Ctrl = C_SPI_CS_GPIO | (unsigned)mode | sel;
     _spi_reset_fifo();

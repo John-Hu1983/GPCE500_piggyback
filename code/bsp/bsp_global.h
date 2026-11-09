@@ -39,7 +39,9 @@ typedef enum
     BSP_Fault_SCH_Task = 0x0901,
     BSP_Fault_SCH_Ticks = 0x0902,
     BSP_Fault_SCH_Handler = 0x0903,
-    BSP_Fault_SCH_State = 0x0904
+    BSP_Fault_SCH_State = 0x0904,
+    BSP_Fault_LED_Mode = 0x0A01,
+    BSP_Fault_LED_State = 0x0A02
 } BSP_Fault;
 
 typedef enum
@@ -59,6 +61,5 @@ void bsp_halt_fault(volatile BSP_Fault fault);
 bool bsp_is_phy_init(BSP_phy_name phy);
 void bsp_set_phy_init(BSP_phy_name phy);
 void bsp_clear_phy_init(BSP_phy_name phy);
-void bsp_service_rtc(void);
 void bsp_init_global(void);
 #endif

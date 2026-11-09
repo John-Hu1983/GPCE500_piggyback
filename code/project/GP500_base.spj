@@ -444,6 +444,29 @@ EXPORT=778265600
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "task"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=103
+# Begin Source File
+SOURCE=..\task\task_led.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=2003857152
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\task\task_led.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=7369570
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End SubItem
 #Name End GPCE500A-Debug
 #Name Begin GPCE500A-Release
@@ -881,6 +904,29 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=778265600
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "task"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=103
+# Begin Source File
+SOURCE=..\task\task_led.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=2003857152
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\task\task_led.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=7369570
 SPECIFICFLAG=0
 # End Source File
 # End Group

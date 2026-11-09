@@ -52,7 +52,7 @@ typedef void (*RTC_Handler)(void);
  *
  * Startup: system_init_module();
  *          swt_init_module();
- *          gpio_init_pattern(GPIOB, 0, GPIO_Out);
+ *          gpio_init_pattern(GPIOB, 0, GPIO_Out_Low);
  *          rtc_init_module(RTC_Freq_2K);
  *          system_enable_irq();
  */

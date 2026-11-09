@@ -2,7 +2,7 @@
 #include "..\bsp\bsp_global.h"
 #include "..\dev\soft_timer.h"
 
-static const RTC_Handler rtc_handler[] = {swt_service_tick, bsp_service_rtc};
+static const RTC_Handler rtc_handler[] = {swt_service_tick};
 
 /*
  *@ brief    : Validate one hardware RTC frequency.

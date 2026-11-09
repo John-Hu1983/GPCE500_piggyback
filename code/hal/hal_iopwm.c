@@ -31,7 +31,7 @@ void iopwm_init_channel(IOPWM_Channel channel)
     volatile unsigned *ctrl = _iopwm_get_reg(channel);
 
     *ctrl = 0;
-    gpio_init_pattern(GPIOA, (uint8_t)channel, GPIO_Out);
+    gpio_init_pattern(GPIOA, (uint8_t)channel, GPIO_Out_Low);
     *ctrl = C_IOPWM_CNT_Clear | IOPWM_Clk_Sys64 | 128U;
 }
 
@@ -48,7 +48,7 @@ void iopwm_enable_channel(IOPWM_Channel channel)
 
     if ((*ctrl & C_IOPWM_Enable) == 0)
     {
-        gpio_init_pattern(GPIOA, (uint8_t)channel, GPIO_Out);
+        gpio_init_pattern(GPIOA, (uint8_t)channel, GPIO_Out_Low);
     }
     *ctrl = (*ctrl & (IOPWM_CONFIG & ~C_IOPWM_Mask)) | C_IOPWM_Enable;
 }
@@ -65,7 +65,7 @@ void iopwm_disable_channel(IOPWM_Channel channel)
     volatile unsigned *ctrl = _iopwm_get_reg(channel);
 
     *ctrl &= C_IOPWM_CLK_SRC | C_IOPWM_Duty;
-    gpio_init_pattern(GPIOA, (uint8_t)channel, GPIO_Out);
+    gpio_init_pattern(GPIOA, (uint8_t)channel, GPIO_Out_Low);
 }
 
 /*

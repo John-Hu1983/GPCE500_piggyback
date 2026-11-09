@@ -6,6 +6,7 @@
 #include "..\message\message.h"
 #include "..\dev\dev_button.h"
 #include "..\schedule\schedule.h"
+#include "..\task\task_led.h"
 
 #include "../bsp/bsp_global.h"
 
@@ -67,6 +68,16 @@ static void _main_service_button(const MSG_Message *message)
             vol = 0;
         }
         spu_set_volume(vol);
+        break;
+    case BTN_Key_5:
+        if (led_get_mode() >= LED_Mode_2Hz)
+        {
+            led_set_mode(LED_Mode_Off);
+        }
+        else
+        {
+            led_set_mode((LED_Mode)(led_get_mode() + 1));
+        }
         break;
     default:
         break;

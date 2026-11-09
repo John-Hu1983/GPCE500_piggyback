@@ -58,7 +58,7 @@ void gpio_init_pattern(handle_t *port, uint8_t pin, GPIO_Pattern pattern)
     {
         bsp_halt_fault(BSP_Fault_GPIO_Pull);
     }
-    if (pattern >= GPIO_Out && port == GPIOC && pin < 2)
+    if (pattern >= GPIO_Out_Low && port == GPIOC && pin < 2)
     {
         bsp_halt_fault(BSP_Fault_GPIO_Input);
     }
@@ -78,7 +78,7 @@ void gpio_init_pattern(handle_t *port, uint8_t pin, GPIO_Pattern pattern)
         port->buffer |= mask;
         port->attrib &= ~mask;
         break;
-    case GPIO_Out:
+    case GPIO_Out_Low:
         port->buffer &= ~mask;
         port->attrib |= mask;
         port->dir |= mask;
