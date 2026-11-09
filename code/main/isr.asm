@@ -69,6 +69,8 @@
 //**************************************************************************
 .external _uart_service_irq
 .external _spi_service_irq
+.external _rtc_service_irq
+.external _spu_service_irq
 
 //**************************************************************************
 // RAM Definition Area
@@ -134,8 +136,10 @@ _IRQ2:
 _IRQ3:
 	push R1, R5 to [SP]
 	push SR to [SP]
+
 	call _uart_service_irq
 	call _spi_service_irq
+
 	pop SR from [SP]
 	pop R1, R5 from [SP]
 	reti;
@@ -154,36 +158,12 @@ _IRQ4:
 //****************************************************************
 _IRQ5:
 	push R1, R5 to [SP]
-	R1 = [P_SPU_INT_Status];
-?L_SPU_Ch0:
-	cmp R1, C_SPU_Ch0_INT_Flag;
-	jne ?L_SPU_Ch1;
-	
-	R1 &= ~C_SPU_Ch0_En;
- 	[P_SPU_CH_Ctrl] = R1;
- 	
-	R1 = C_SPU_Ch0_INT_Flag;
-	[P_SPU_INT_Status] = R1;
-	jmp ?L_Exit;
-	
-?L_SPU_Ch1:	
-	cmp R1, C_SPU_Ch1_INT_Flag;
-	jne ?L_SPU_Ch2;
-	
- 	R1 &= ~C_SPU_Ch1_En;
- 	[P_SPU_CH_Ctrl] = R1;
-	
-	R1 = C_SPU_Ch1_INT_Flag;
-	[P_SPU_INT_Status] = R1;
-	jmp ?L_Exit;
-	
-?L_SPU_Ch2:
-	//....
-	
-?L_Exit:	
-	R1 = C_IRQ5_SPU;
-	[P_INT_Status] = R1;
-		pop R1, R5 from [SP]
+	push SR to [SP]
+
+	call _spu_service_irq
+
+	pop SR from [SP]
+	pop R1, R5 from [SP]
 	reti;
 
 //****************************************************************
@@ -191,7 +171,14 @@ _IRQ5:
 //****************************************************************
 _IRQ6:
 	push R1, R5 to [SP]
-	
+	push SR to [SP]
+
+	R1 = C_IRQ6_512Hz | C_IRQ6_2048Hz | C_IRQ6_4096Hz
+	push R1 to [SP]
+	call _rtc_service_irq
+	SP += 1
+
+	pop SR from [SP]
 	pop R1, R5 from [SP]
 	reti;
 
@@ -202,6 +189,12 @@ _IRQ7:
 	push R1, R5 to [SP]
 	push SR to [SP]
 	call _uart_service_irq
+
+	R1 = C_IRQ7_2Hz | C_IRQ7_16Hz | C_IRQ7_64Hz
+	push R1 to [SP]
+	call _rtc_service_irq
+	SP += 1
+
 	pop SR from [SP]
 	pop R1, R5 from [SP]
 	reti;

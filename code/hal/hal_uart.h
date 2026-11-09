@@ -20,7 +20,7 @@ typedef struct
 
 /*
  * UART 8N1; UART_PORT selects A(TX3/RX2) or B(TX15/RX14).
- * Initialize after system_init_module and spu_init_audio (which replaces IRQ masks).
+ * Initialize after system_init_module and the startup audio setup.
  * init accepts baud in bps; read_rate returns the actual nominal rate.
  * Choose send/recv_manual, send/recv_isr or send/recv_dma per request.
  * Manual is blocking with bounded polling; ISR/DMA return Serial_Ok after submission.

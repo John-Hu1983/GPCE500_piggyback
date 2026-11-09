@@ -319,6 +319,22 @@ ID=
 EXPORT=1953653109
 SPECIFICFLAG=0
 # End Source File
+# Begin Source File
+SOURCE=..\hal\hal_rtc.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=6499840
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_rtc.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
 # End Group
 # End SubItem
 #Name End GPCE500A-Debug
@@ -629,6 +645,22 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\hal\hal_serial.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953653109
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_rtc.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=6499840
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_rtc.h
 USEPARAM=FALSE
 PARAM=
 ID=

@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		13:52:08	11/06/26
+#	Created by u'nSP IDE V4.1.1		14:50:33	11/06/26
 #
 #####################################################################
 
@@ -108,7 +108,8 @@ OBJFILES	= \
 	"$(OUTDIR)\hal_iopwm.obj" \
 	"$(OUTDIR)\hal_spi.obj" \
 	"$(OUTDIR)\hal_uart.obj" \
-	"$(OUTDIR)\hal_serial.obj" 
+	"$(OUTDIR)\hal_serial.obj" \
+	"$(OUTDIR)\hal_rtc.obj" 
 
 "$(OUTDIR)\aintworried_12K_wav_se4.res": "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4"
 	$(RESC) "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\voice\se4_12k\aintworried_12K_wav.se4" "$(OUTDIR)\aintworried_12K_wav_se4.res" RES_AINTWORRIED_12K_WAV_SE4 
@@ -200,6 +201,13 @@ OBJFILES	= \
 "$(OUTDIR)\hal_serial.obj": "$(OUTDIR)\hal_serial.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_serial.obj" "$(OUTDIR)\hal_serial.asm" 
 
+"$(OUTDIR)\hal_rtc.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_rtc.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_rtc.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_rtc.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_rtc.c" 
+
+"$(OUTDIR)\hal_rtc.obj": "$(OUTDIR)\hal_rtc.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_rtc.obj" "$(OUTDIR)\hal_rtc.asm" 
+
 
 GEN_BOOTPACKER_INFO :
 	@echo TagAlgorithm=0x0001 >> "$(OUTDIR)\BootpackerIni.ini"
@@ -284,6 +292,9 @@ CLEANFILES = \
 	"$(OUTDIR)\hal_serial.obj" \
 	"$(OUTDIR)\hal_serial.lst" \
 	"$(OUTDIR)\hal_serial.asm" \
+	"$(OUTDIR)\hal_rtc.obj" \
+	"$(OUTDIR)\hal_rtc.lst" \
+	"$(OUTDIR)\hal_rtc.asm" \
 	"$(BINFILENOEXT).s37" \
 	"$(BINFILENOEXT).tsk" \
 	"$(BINFILENOEXT)_SPI.bin*" \
@@ -297,7 +308,7 @@ CLEANFILES = \
 	$(SBMFILE)
 
 clean :
-	$(RM) $(wordlist 1,54,$(CLEANFILES))
+	$(RM) $(wordlist 1,57,$(CLEANFILES))
 
 .c.asm:
 	$(CC) $(CFLAGS) $(INCLUDES) -o "$(OUTDIR)\$@" $<

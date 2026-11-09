@@ -65,16 +65,46 @@ unsigned audio_set_pwm_dac(unsigned mode)
  *@ type     : public
  *@ argu in  : None.
  *@ argu out : None.
- *@ theme    : Configure channels 0/1 and enable CPU IRQ only.
+ *@ theme    : Keep mixing channels 0/1; enable all channel IRQs without replacing IRQ masks.
  */
 void spu_init_audio(void)
 {
     *P_SPU_CLK_Ctrl = C_SPUCLK_DIV_2;
     *P_SPU_Volume_Ctrl = C_SPU_Mixer_MaxVolume | C_SPU_Mixer_FullSwing;
     *P_SPU_Mixer_Ctrl = C_SPU_Mixer_Ch0_En | C_SPU_Mixer_Ch1_En;
-    *P_SPU_INT_Ctrl = C_SPU_Ch0_INT_En | C_SPU_Ch1_INT_En;
-    *P_INT_Ctrl = C_IRQ5_SPU;
+    *P_SPU_INT_Ctrl = 0;
+    *P_SPU_INT_Status = AUDIO_SPU_CHANNEL_MASK;
+    *P_INT_Status = C_IRQ5_SPU;
+    *P_FIQ_Sel &= ~C_IRQ5_SPU;
+    *P_SPU_INT_Ctrl = AUDIO_SPU_CHANNEL_MASK;
+    *P_INT_Ctrl |= C_IRQ5_SPU;
     system_enable_irq();
+}
+
+/*
+ *@ brief    : Service every pending enabled SPU channel interrupt.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Stops flagged channels and acknowledges their interrupt flags.
+ *@ theme    : IRQ5 calls this; preserve other channels, concatenation and shared IRQ sources.
+ */
+void spu_service_irq(void)
+{
+    unsigned flags;
+
+    if ((*P_INT_Status & *P_INT_Ctrl & ~*P_FIQ_Sel & C_IRQ5_SPU) == 0)
+    {
+        return;
+    }
+
+    /* Ack the parent first so a later channel event is not erased on exit. */
+    *P_INT_Status = C_IRQ5_SPU;
+    flags = *P_SPU_INT_Status & *P_SPU_INT_Ctrl & AUDIO_SPU_CHANNEL_MASK;
+    if (flags != 0)
+    {
+        *P_SPU_CH_Ctrl &= ~flags;
+        *P_SPU_INT_Status = flags;
+    }
 }
 
 /*

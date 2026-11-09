@@ -6,6 +6,7 @@
 #define AUDIO_SPU_SOURCE_ROM_TABLE 0
 #define AUDIO_SPU_SOURCE_FILEMERGER_VERSION1 1
 #define AUDIO_SPU_CHANNEL_STRIDE 0x10U
+#define AUDIO_SPU_CHANNEL_MASK 0x00FFU
 
 /* Preserve the original default; select ROM_TABLE here or with a compiler define. */
 #ifndef AUDIO_SPU_SPEECH_SOURCE_TYPE
@@ -64,6 +65,17 @@ extern unsigned spu_addr_lo;
 
 unsigned audio_set_pwm_dac(unsigned mode);
 void spu_init_audio(void);
+/*
+ * IRQ5 entry calls this handler; it services all eight enabled channel flags.
+ * Each flagged channel is stopped, preserving other channels/concatenation bits.
+ * Default mixing remains channels 0/1; initialization enables interrupts for 0..7.
+ * A3400 event tags also generate channel interrupts: this simple stop-on-interrupt
+ * policy is not an event-tag dispatcher or a concatenated-playback sequencer.
+ * The handler acknowledges only SPU flags, never EXT1/EXT2 or other IRQ sources.
+ * Serialize channel-control updates with this ISR. Initialize audio at startup,
+ * before other interrupt-driven work, with CPU IRQ/FIQ masked.
+ */
+void spu_service_irq(void);
 void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx);
 void spu_open_channel(SPU_Channel channel);
 void spu_set_volume(unsigned vol);
