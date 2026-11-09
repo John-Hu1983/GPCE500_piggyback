@@ -5,6 +5,7 @@
 #include "..\dev\soft_timer.h"
 #include "..\message\message.h"
 #include "..\dev\dev_button.h"
+#include "..\schedule\schedule.h"
 
 #include "../bsp/bsp_global.h"
 
@@ -88,6 +89,7 @@ int main(void)
     while (1)
     {
         swt_service_loop();
+        sch_service_loop();
         system_clear_watchdog();
     }
 

@@ -35,7 +35,11 @@ typedef enum
     BSP_Fault_MSG_Sub = 0x0802,
     BSP_Fault_MSG_Handler = 0x0803,
     BSP_Fault_MSG_Type = 0x0804,
-    BSP_Fault_MSG_State = 0x0805
+    BSP_Fault_MSG_State = 0x0805,
+    BSP_Fault_SCH_Task = 0x0901,
+    BSP_Fault_SCH_Ticks = 0x0902,
+    BSP_Fault_SCH_Handler = 0x0903,
+    BSP_Fault_SCH_State = 0x0904
 } BSP_Fault;
 
 typedef enum

@@ -6,6 +6,7 @@
 #include "..\hal\hal_rtc.h"
 #include "..\dev\dev_button.h"
 #include "..\message\message.h"
+#include "..\schedule\schedule.h"
 
 static u16 Bsp_phy_state = 0;
 /*
@@ -43,6 +44,7 @@ void bsp_init_global(void)
 {
     system_init_module();
     swt_init_module();
+    sch_init_module();
     msg_init_module();
 
     audio_set_pwm_dac(AUDIO_OUTMODE_PWM);

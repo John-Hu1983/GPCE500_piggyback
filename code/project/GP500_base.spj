@@ -421,6 +421,29 @@ EXPORT=778661888
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "schedule"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\schedule\schedule.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\schedule\schedule.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778265600
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End SubItem
 #Name End GPCE500A-Debug
 #Name Begin GPCE500A-Release
@@ -835,6 +858,29 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=778661888
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "schedule"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\schedule\schedule.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\schedule\schedule.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778265600
 SPECIFICFLAG=0
 # End Source File
 # End Group
