@@ -14,12 +14,6 @@
 #include "GPCE36_CE5.h"
 #include "System.h"
 
-/* 对应原汇编的 RAM 变量；计数单位是 ServiceLoop 的调用次数，不是毫秒。 */
-static unsigned deb_prev;
-static unsigned deb_cnt;
-static unsigned key_buf;
-static unsigned key_evt;
-
 /*
  *@ brief    : Enable CPU IRQ.
  *@ type     : public
@@ -81,82 +75,6 @@ void system_switch_channel(unsigned channel)
  *@ theme    : Write the hardware watchdog-clear key.
  */
 void system_clear_watchdog(void) { *P_Watchdog_Clear = C_Watchdog_Clear; }
-
-/*
- *@ brief    : Advance the key debounce countdown.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Updates deb_cnt.
- *@ theme    : Count service-loop calls without underflow.
- */
-static void _key_update_debounce(void)
-{
-    if (deb_cnt != 0)
-    {
-        --deb_cnt;
-    }
-}
-
-/*
- *@ brief    : Sample and debounce the low eight GPIO A pins.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Updates debounce state and pending key events.
- *@ theme    : Accumulate rising-edge key events after stable samples.
- */
-static void _key_scan_level(void)
-{
-    unsigned sample = *P_IOA_Data & 0x00FF;
-    unsigned prev = deb_prev;
-    unsigned keys;
-
-    deb_prev = sample;
-    if (prev != sample)
-    {
-        deb_cnt = SYSTEM_DEBOUNCE_COUNT;
-        return;
-    }
-
-    if (deb_cnt != 0)
-    {
-        return;
-    }
-
-    keys = key_buf;
-    key_buf = sample;
-
-    /* 只记录由低到高的新按下；多个按键事件按位累积，读取后才清空。 */
-    key_evt |= (keys ^ 0xFFFF) & key_buf;
-}
-
-/*
- *@ brief    : Run periodic key and watchdog maintenance.
- *@ type     : public
- *@ argu in  : None.
- *@ argu out : None.
- *@ theme    : Update debounce, sample keys and clear the watchdog.
- */
-void system_service_loop(void)
-{
-    _key_update_debounce();
-    _key_scan_level();
-    system_clear_watchdog();
-}
-
-/*
- *@ brief    : Consume pending key events.
- *@ type     : public
- *@ argu in  : None.
- *@ argu out : Rising-edge key bit mask.
- *@ theme    : Clear the event latch after reading.
- */
-unsigned key_read_event(void)
-{
-    unsigned keys = key_evt;
-
-    key_evt = 0;
-    return keys;
-}
 
 /*
  *@ brief    : Ramp an audio data register toward zero.

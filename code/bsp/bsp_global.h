@@ -28,7 +28,14 @@ typedef enum
     BSP_Fault_SWT_Ticks = 0x0602,
     BSP_Fault_SWT_Mode = 0x0603,
     BSP_Fault_SWT_Handler = 0x0604,
-    BSP_Fault_SWT_State = 0x0605
+    BSP_Fault_SWT_State = 0x0605,
+    BSP_Fault_BTN_Config = 0x0701,
+    BSP_Fault_BTN_State = 0x0702,
+    BSP_Fault_MSG_Message = 0x0801,
+    BSP_Fault_MSG_Sub = 0x0802,
+    BSP_Fault_MSG_Handler = 0x0803,
+    BSP_Fault_MSG_Type = 0x0804,
+    BSP_Fault_MSG_State = 0x0805
 } BSP_Fault;
 
 typedef enum

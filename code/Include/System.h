@@ -8,14 +8,10 @@
 #ifndef __SYSTEM_H__
 #define __SYSTEM_H__
 
-#define SYSTEM_DEBOUNCE_COUNT 0x0080
-
 extern void system_init_module(void);
 /* Enable CPU IRQ only; peripheral interrupt masks and FIQ are unchanged. */
 extern void system_enable_irq(void);
-extern void system_service_loop(void);
 extern void system_clear_watchdog(void);
-extern unsigned key_read_event(void);
 /* Legacy placeholder only; this does not perform ADC channel switching. */
 extern void system_switch_channel(unsigned channel);
 extern void cache_enable_module(void);

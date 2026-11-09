@@ -178,11 +178,11 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\main\gpce500a.c
+SOURCE=..\main\gpce.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=1852399872
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -379,6 +379,45 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=778269696
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\dev_button.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953652992
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\dev_button.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "message"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\message\message.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953652992
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\message\message.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778661888
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -556,11 +595,11 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\main\gpce500a.c
+SOURCE=..\main\gpce.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=3
+EXPORT=1852399872
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -757,6 +796,45 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=778269696
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\dev_button.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953652992
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\dev_button.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1969382656
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "message"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\message\message.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=1953652992
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\message\message.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778661888
 SPECIFICFLAG=0
 # End Source File
 # End Group

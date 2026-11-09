@@ -57,6 +57,8 @@ typedef struct SWT_Timer
  * All init/start/stop/service_loop calls belong to one foreground context; only
  * service_tick belongs to one non-nested ISR. No interrupt masks are changed.
  * Invalid arguments halt through bsp_halt_fault with an SWT fault code.
+ * swt_read_tick returns an atomic 16-bit snapshot; use unsigned differences for
+ * intervals shorter than a full wrap. Reading never dispatches or advances time.
  *
  * Example integration:
  *   static SWT_Timer app_timer;
@@ -70,6 +72,7 @@ typedef struct SWT_Timer
 void swt_init_module(void);
 void swt_start_timer(SWT_Timer *timer, u16 ticks, SWT_Mode mode, SWT_Handler handler);
 void swt_stop_timer(SWT_Timer *timer);
+u16 swt_read_tick(void);
 void swt_service_tick(void);
 void swt_service_loop(void);
 

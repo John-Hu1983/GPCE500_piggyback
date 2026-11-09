@@ -141,6 +141,15 @@ void swt_stop_timer(SWT_Timer *timer)
 }
 
 /*
+ *@ brief    : Read the current software timebase.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Atomic 16-bit RTC tick snapshot.
+ *@ theme    : Read without scanning timers; subtract snapshots as unsigned words.
+ */
+u16 swt_read_tick(void) { return swt_tick; }
+
+/*
  *@ brief    : Advance the software timebase by one tick.
  *@ type     : public
  *@ argu in  : None.
