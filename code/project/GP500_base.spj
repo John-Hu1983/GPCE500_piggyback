@@ -128,14 +128,14 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1768191232
+EXPORT=808465664
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\System.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=7102824
+EXPORT=6499950
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -143,7 +143,7 @@ SOURCE=..\Include\user_config.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=808465664
+EXPORT=808465765
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -151,7 +151,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=808465664
+EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\main\main.c
@@ -190,7 +190,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=808465664
+EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\audio\audio_spu.c
@@ -221,7 +221,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1836278016
+EXPORT=1953653109
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\hal\hal_gpio.c
@@ -244,7 +244,7 @@ SOURCE=..\hal\hal_adc.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=7102824
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -252,7 +252,7 @@ SOURCE=..\hal\hal_adc.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6499840
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -260,7 +260,7 @@ SOURCE=..\hal\hal_iopwm.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1969382656
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -268,7 +268,7 @@ SOURCE=..\hal\hal_iopwm.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1969382656
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -276,7 +276,7 @@ SOURCE=..\hal\hal_spi.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1969382656
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -284,7 +284,7 @@ SOURCE=..\hal\hal_spi.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6499840
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -292,7 +292,7 @@ SOURCE=..\hal\hal_uart.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1869180928
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -300,7 +300,7 @@ SOURCE=..\hal\hal_uart.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -308,7 +308,7 @@ SOURCE=..\hal\hal_serial.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -316,7 +316,7 @@ SOURCE=..\hal\hal_serial.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -324,7 +324,7 @@ SOURCE=..\hal\hal_rtc.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6499840
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -332,7 +332,30 @@ SOURCE=..\hal\hal_rtc.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "bsp"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\bsp\bsp_global.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465765
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\bsp\bsp_global.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778269810
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -460,14 +483,14 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1768191232
+EXPORT=808465664
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\System.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=7102824
+EXPORT=6499950
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -475,7 +498,7 @@ SOURCE=..\Include\user_config.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=808465664
+EXPORT=808465765
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -483,7 +506,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=808465664
+EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\main\main.c
@@ -522,7 +545,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=808465664
+EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\audio\audio_spu.c
@@ -553,7 +576,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1836278016
+EXPORT=1953653109
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\hal\hal_gpio.c
@@ -576,7 +599,7 @@ SOURCE=..\hal\hal_adc.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=7102824
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -584,7 +607,7 @@ SOURCE=..\hal\hal_adc.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6499840
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -592,7 +615,7 @@ SOURCE=..\hal\hal_iopwm.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1969382656
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -600,7 +623,7 @@ SOURCE=..\hal\hal_iopwm.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1969382656
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -608,7 +631,7 @@ SOURCE=..\hal\hal_spi.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1969382656
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -616,7 +639,7 @@ SOURCE=..\hal\hal_spi.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6499840
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -624,7 +647,7 @@ SOURCE=..\hal\hal_uart.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1869180928
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -632,7 +655,7 @@ SOURCE=..\hal\hal_uart.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -640,7 +663,7 @@ SOURCE=..\hal\hal_serial.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -648,7 +671,7 @@ SOURCE=..\hal\hal_serial.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -656,7 +679,7 @@ SOURCE=..\hal\hal_rtc.c
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6499840
+EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
@@ -664,7 +687,30 @@ SOURCE=..\hal\hal_rtc.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1953653109
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "bsp"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\bsp\bsp_global.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465765
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\bsp\bsp_global.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778269810
 SPECIFICFLAG=0
 # End Source File
 # End Group

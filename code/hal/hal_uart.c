@@ -536,6 +536,7 @@ void uart_service_irq(void)
     unsigned data;
     unsigned budget = 16;
     Serial_Result result;
+
     if (tx != null && tx->dma != DMA_None)
     {
         result = serial_read_dma(tx->dma);
@@ -555,6 +556,7 @@ void uart_service_irq(void)
             }
         }
     }
+
     rx = uart_rx;
     if (rx != null && rx->dma != DMA_None)
     {
@@ -564,16 +566,19 @@ void uart_service_irq(void)
             _uart_finish_rx(result);
         }
     }
+
     if ((*P_INT2_Ctrl & C_IRQ7_UART) == 0)
     {
         return;
     }
+
     tx = uart_tx;
     rx = uart_rx;
     if (tx != null && tx->dma == DMA_None && (*P_UART_Ctrl & C_UART_TX_INT_Enable) != 0)
     {
         _uart_fill_fifo(tx);
     }
+
     if (rx != null && rx->dma == DMA_None && (*P_UART_Ctrl & C_UART_RX_INT_Enable) != 0)
     {
         while (budget-- != 0 && rx->done < rx->count &&
@@ -598,5 +603,6 @@ void uart_service_irq(void)
             _uart_finish_rx(Serial_Err_RX);
         }
     }
+
     _uart_sync_irq();
 }

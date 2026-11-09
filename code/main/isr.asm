@@ -173,10 +173,7 @@ _IRQ6:
 	push R1, R5 to [SP]
 	push SR to [SP]
 
-	R1 = C_IRQ6_512Hz | C_IRQ6_2048Hz | C_IRQ6_4096Hz
-	push R1 to [SP]
 	call _rtc_service_irq
-	SP += 1
 
 	pop SR from [SP]
 	pop R1, R5 from [SP]
@@ -188,12 +185,9 @@ _IRQ6:
 _IRQ7:
 	push R1, R5 to [SP]
 	push SR to [SP]
-	call _uart_service_irq
 
-	R1 = C_IRQ7_2Hz | C_IRQ7_16Hz | C_IRQ7_64Hz
-	push R1 to [SP]
+	call _uart_service_irq
 	call _rtc_service_irq
-	SP += 1
 
 	pop SR from [SP]
 	pop R1, R5 from [SP]

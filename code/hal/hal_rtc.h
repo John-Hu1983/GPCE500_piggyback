@@ -4,9 +4,8 @@
 #include "GPCE36_CE5.h"
 #include "user_config.h"
 
-#define RTC_IRQ6_MASK (C_IRQ6_512Hz | C_IRQ6_2048Hz | C_IRQ6_4096Hz)
-#define RTC_IRQ7_MASK (C_IRQ7_2Hz | C_IRQ7_16Hz | C_IRQ7_64Hz)
-#define RTC_IRQ_MASK (RTC_IRQ6_MASK | RTC_IRQ7_MASK)
+#define RTC_IRQ_MASK                                                                               \
+    (C_IRQ7_2Hz | C_IRQ7_16Hz | C_IRQ7_64Hz | C_IRQ6_512Hz | C_IRQ6_2048Hz | C_IRQ6_4096Hz)
 
 typedef enum
 {
@@ -31,17 +30,18 @@ typedef void (*RTC_Handler)(void);
  * serialized with other users of the shared interrupt registers. They do not
  * change CPU interrupt enables; call system_enable_irq after startup setup.
  *
- * The callback runs in IRQ6 (512Hz/2K/4K) or IRQ7 (2Hz/16Hz/64Hz).
+ * IRQ6 and IRQ7 call the same no-argument handler. Either entry can dispatch
+ * the selected RTC source when its flag is pending, including during UART/CTS IRQs.
  * Keep it short/non-blocking: flag work for the main loop when necessary.
  * UART and CTS enable/status/FIQ bits are preserved. RTC owns all six RTC sources.
- * IRQ wrappers pass their RTC mask; only that vector's enabled pending RTC flags
- * are acknowledged before invoking the callback.
+ * Only enabled, IRQ-routed pending RTC flags are acknowledged before invoking
+ * the callback. No pending RTC flag means no callback and no status write.
  * Hardware flags do not count missed ticks; long interrupt masking merges events.
  *
  * The shared RTC divider and system clock/sleep settings are not reset/changed.
  * The first tick after init can arrive before a complete period has elapsed.
  * This is a periodic interrupt driver, not a high-resolution timestamp/calendar.
- * Invalid frequency/null callback halts before register writes, without fault RAM.
+ * Invalid frequency/null callback calls bsp_halt_fault with an RTC code before writes.
  *
  * Startup: system_init_module();
  *          rtc_init_module(RTC_Freq_2K, app_service_tick);
@@ -49,6 +49,6 @@ typedef void (*RTC_Handler)(void);
  */
 void rtc_init_module(RTC_Freq freq, RTC_Handler handler);
 void rtc_disable_module(void);
-void rtc_service_irq(unsigned mask);
+void rtc_service_irq(void);
 
 #endif /* _HAL_RTC_H_ */

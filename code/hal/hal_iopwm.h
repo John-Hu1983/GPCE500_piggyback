@@ -45,7 +45,7 @@ typedef enum
  * duty is 0..256: 0=0%, 128=50%, 255=255/256, 256=100%. All other values are invalid.
  * Updates are immediate, not guaranteed glitch-free or synchronized.
  * Serialize access to PWM/GPIO registers if shared with an ISR. Disable before sleep.
- * Invalid arguments halt in _iopwm_halt_fault before register writes; no fault RAM is stored.
+ * Invalid arguments call bsp_halt_fault with an IOPWM code before writes; no global fault RAM.
  */
 void iopwm_init_channel(IOPWM_Channel channel);
 void iopwm_enable_channel(IOPWM_Channel channel);

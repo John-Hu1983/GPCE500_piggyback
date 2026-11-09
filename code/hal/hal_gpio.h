@@ -32,7 +32,7 @@ typedef enum
  * Configure after system_init_module(), which resets A/B.
  * Outputs initialize LOW, except *_High patterns. The latch is set before enabling output.
  * Read/write levels refer to the physical pad, even when inverted.
- * Write/reverse require an output. Invalid requests halt in _gpio_halt_fault before GPIO writes,
+ * Write/reverse require an output. Invalid requests halt in bsp_halt_fault before GPIO writes,
  * even with NDEBUG; set a debugger breakpoint there. No fault state or callback is stored.
  * Mux/peripheral ownership, wakeup and IOB's PL1M setting are not changed.
  * Register updates are read-modify-write: serialize access if a port is shared with an ISR.

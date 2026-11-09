@@ -1,20 +1,7 @@
 #include "hal_iopwm.h"
 #include "hal_gpio.h"
 #include "GPCE36_CE5.h"
-
-/*
- *@ brief    : Halt on an invalid IOPWM request.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Does not return.
- *@ theme    : Fail before register writes without fault RAM.
- */
-static void _iopwm_halt_fault(void)
-{
-    for (;;)
-    {
-    }
-}
+#include "..\bsp\bsp_global.h"
 
 /*
  *@ brief    : Get the selected IOPWM control register.
@@ -27,7 +14,7 @@ static volatile unsigned *_iopwm_get_reg(IOPWM_Channel channel)
 {
     if ((unsigned)channel > IOPWM_Ch_8)
     {
-        _iopwm_halt_fault();
+        bsp_halt_fault(BSP_Fault_IOPWM_Ch);
     }
     return P_PWM0_Ctrl + (unsigned)channel;
 }
@@ -94,7 +81,7 @@ void iopwm_set_freq(IOPWM_Channel channel, IOPWM_Clock clock)
 
     if (((unsigned)clock & ~C_IOPWM_CLK_SRC) != 0)
     {
-        _iopwm_halt_fault();
+        bsp_halt_fault(BSP_Fault_IOPWM_Clk);
     }
     *ctrl = (*ctrl & (IOPWM_CONFIG & ~C_IOPWM_CLK_SRC)) | (unsigned)clock;
 }
@@ -112,7 +99,7 @@ void iopwm_set_duty(IOPWM_Channel channel, unsigned duty)
 
     if (duty > 256U)
     {
-        _iopwm_halt_fault();
+        bsp_halt_fault(BSP_Fault_IOPWM_Duty);
     }
     *ctrl = (*ctrl & (IOPWM_CONFIG & ~C_IOPWM_Duty)) | duty;
 }

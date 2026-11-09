@@ -29,7 +29,7 @@ typedef enum
  * Caller must release conflicting pin peripherals and configure PGA for ADC_Ch_PGA.
  * Reference voltage needs calibration; no fixed value is assumed.
  * Reads are blocking. Disabled/misconfigured ADC, invalid channel or timeout
- * disables ADC and halts in _adc_halt_fault (debugger breakpoint); no fault RAM is stored.
+ * disables ADC and calls bsp_halt_fault with an ADC fault code; no global fault RAM is stored.
  * Serialize all ADC access, including ISR access. Disable ADC before sleep.
  */
 void adc_init_module(void);

@@ -1,18 +1,5 @@
 #include "hal_gpio.h"
-
-/*
- *@ brief    : Halt on an invalid GPIO request.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Does not return.
- *@ theme    : Fail before unsafe register access; no fault RAM.
- */
-static void _gpio_halt_fault(void)
-{
-    for (;;)
-    {
-    }
-}
+#include "..\bsp\bsp_global.h"
 
 /*
  *@ brief    : Validate a port and pin, then get its bit mask.
@@ -25,11 +12,11 @@ static unsigned _gpio_get_mask(handle_t *port, uint8_t pin)
 {
     if (port != GPIOA && port != GPIOB && port != GPIOC)
     {
-        _gpio_halt_fault();
+        bsp_halt_fault(BSP_Fault_GPIO_Port);
     }
     if (pin >= 16 || (port == GPIOC && pin >= 8))
     {
-        _gpio_halt_fault();
+        bsp_halt_fault(BSP_Fault_GPIO_Pin);
     }
     return 1U << pin;
 }
@@ -47,7 +34,7 @@ static unsigned _gpio_get_outmask(handle_t *port, uint8_t pin)
 
     if ((port == GPIOC && pin < 2) || (port->dir & mask) == 0)
     {
-        _gpio_halt_fault();
+        bsp_halt_fault(BSP_Fault_GPIO_Out);
     }
     return mask;
 }
@@ -65,15 +52,15 @@ void gpio_init_pattern(handle_t *port, uint8_t pin, GPIO_Pattern pattern)
 
     if ((unsigned)pattern > GPIO_Out_Inv_High)
     {
-        _gpio_halt_fault();
+        bsp_halt_fault(BSP_Fault_GPIO_Pattern);
     }
     if (pattern == GPIO_In_PullHigh && (port != GPIOB || pin >= 8))
     {
-        _gpio_halt_fault();
+        bsp_halt_fault(BSP_Fault_GPIO_Pull);
     }
     if (pattern >= GPIO_Out && port == GPIOC && pin < 2)
     {
-        _gpio_halt_fault();
+        bsp_halt_fault(BSP_Fault_GPIO_Input);
     }
 
     /* Release the driver before changing the latch/attribute; enable output last. */

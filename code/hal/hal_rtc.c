@@ -1,20 +1,7 @@
 #include "hal_rtc.h"
+#include "..\bsp\bsp_global.h"
 
 static RTC_Handler volatile rtc_handler = null;
-
-/*
- *@ brief    : Halt on an invalid RTC request.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Does not return.
- *@ theme    : Fail explicitly without storing fault state in RAM.
- */
-static void _rtc_halt_fault(void)
-{
-    for (;;)
-    {
-    }
-}
 
 /*
  *@ brief    : Validate one hardware RTC frequency.
@@ -35,7 +22,7 @@ static void _rtc_check_freq(RTC_Freq freq)
     case RTC_Freq_4K:
         break;
     default:
-        _rtc_halt_fault();
+        bsp_halt_fault(BSP_Fault_RTC_Freq);
     }
 }
 
@@ -51,7 +38,7 @@ void rtc_init_module(RTC_Freq freq, RTC_Handler handler)
     _rtc_check_freq(freq);
     if (handler == null)
     {
-        _rtc_halt_fault();
+        bsp_halt_fault(BSP_Fault_RTC_Handler);
     }
 
     *P_INT2_Ctrl &= ~RTC_IRQ_MASK;
@@ -78,13 +65,13 @@ void rtc_disable_module(void)
 /*
  *@ brief    : Acknowledge and dispatch an enabled RTC interrupt.
  *@ type     : public
- *@ argu in  : mask: RTC_IRQ6_MASK or RTC_IRQ7_MASK, supplied by the IRQ wrapper.
+ *@ argu in  : None.
  *@ argu out : Invokes the installed callback once when an RTC tick is pending.
  *@ theme    : Called by IRQ6/IRQ7; never clear UART/CTS or disabled RTC flags.
  */
-void rtc_service_irq(unsigned mask)
+void rtc_service_irq(void)
 {
-    unsigned flags = *P_INT2_Status & *P_INT2_Ctrl & RTC_IRQ_MASK & mask;
+    unsigned flags = *P_INT2_Status & *P_INT2_Ctrl & ~*P_FIQ2_Sel & RTC_IRQ_MASK;
     RTC_Handler handler;
 
     if (flags == 0)
@@ -95,7 +82,7 @@ void rtc_service_irq(unsigned mask)
     handler = rtc_handler;
     if (handler == null)
     {
-        _rtc_halt_fault();
+        bsp_halt_fault(BSP_Fault_RTC_IRQ);
     }
     *P_INT2_Status = flags;
     handler();

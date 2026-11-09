@@ -1,6 +1,7 @@
 #include "hal_adc.h"
 #include "hal_gpio.h"
 #include "GPCE36_CE5.h"
+#include "..\bsp\bsp_global.h"
 
 /*
  *@ brief    : Stop and disable the ADC.
@@ -17,21 +18,6 @@ void adc_disable_module(void)
     *P_CMPADC_Ctrl0 &= ~C_CMPADC_Enable;
     *P_CMPADC_Status = ADC_FLAGS;
     *P_INT_Status = C_IRQ3_ADC;
-}
-
-/*
- *@ brief    : Disable ADC and halt on an invalid request or timeout.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Does not return.
- *@ theme    : Fail without storing persistent fault state.
- */
-static void _adc_halt_fault(void)
-{
-    adc_disable_module();
-    for (;;)
-    {
-    }
 }
 
 /*
@@ -74,7 +60,8 @@ unsigned adc_read_channel(ADC_Channel channel)
     if ((unsigned)channel > ADC_Ch_Ref || (*P_CMPADC_Ctrl0 & C_CMPADC_Enable) == 0 ||
         *P_CMPADC_Ctrl1 != ADC_MODE)
     {
-        _adc_halt_fault();
+        adc_disable_module();
+        bsp_halt_fault(BSP_Fault_ADC_State);
     }
     if (channel <= ADC_Ch_A7)
     {
@@ -91,7 +78,8 @@ unsigned adc_read_channel(ADC_Channel channel)
         status = *P_CMPADC_Status;
         if ((status & C_CMPADC_Timeout_Flag) != 0)
         {
-            _adc_halt_fault();
+            adc_disable_module();
+            bsp_halt_fault(BSP_Fault_ADC_Time);
         }
         if ((status & C_CMPADC_INT_Flag) != 0)
         {
@@ -99,7 +87,8 @@ unsigned adc_read_channel(ADC_Channel channel)
         }
         if (--timeout == 0)
         {
-            _adc_halt_fault();
+            adc_disable_module();
+            bsp_halt_fault(BSP_Fault_ADC_Wait);
         }
     }
     *P_CMPADC_Ctrl1 = ADC_MODE;

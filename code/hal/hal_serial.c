@@ -1,19 +1,6 @@
 #include "hal_serial.h"
 #include "System.h"
-
-/*
- *@ brief    : Halt before unsafe DMA register access.
- *@ type     : private
- *@ argu in  : None.
- *@ argu out : Does not return.
- *@ theme    : Invalid internal requests and failed DMA stop cannot continue safely.
- */
-static void _serial_halt_fault(void)
-{
-    for (;;)
-    {
-    }
-}
+#include "..\bsp\bsp_global.h"
 
 /*
  *@ brief    : Get a validated DMA register block.
@@ -32,7 +19,7 @@ static Serial_DMA *_serial_get_dma(DMA_Channel channel)
     {
         return (Serial_DMA *)P_DMA2_CTRL0;
     }
-    _serial_halt_fault();
+    bsp_halt_fault(BSP_Fault_DMA_Ch);
     return null;
 }
 
@@ -157,7 +144,7 @@ void serial_start_dma(DMA_Channel channel, unsigned request, const unsigned *src
         (inc & ~(C_DMA_Src_Inc_Enable | C_DMA_Dest_Inc_Enable)) != 0 ||
         SERIAL_ADDR(src) > 0xFFFFUL || SERIAL_ADDR(dst) > 0xFFFFUL)
     {
-        _serial_halt_fault();
+        bsp_halt_fault(BSP_Fault_DMA_Start);
     }
     dma->ctrl0 = 0;
     dma->ctrl1 = 0;
@@ -220,7 +207,7 @@ void serial_stop_dma(DMA_Channel channel)
     {
         if (--wait == 0)
         {
-            _serial_halt_fault();
+            bsp_halt_fault(BSP_Fault_DMA_Stop);
         }
     }
     dma->ctrl0 = 0;

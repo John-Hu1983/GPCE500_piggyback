@@ -54,6 +54,7 @@ typedef struct
  * DMA buffers use one 16-bit working-RAM word per serial byte (low eight bits).
  * DMA accepts working RAM below SERIAL_RAM_END, not Flash or active cache RAM.
  * All submission/reconfiguration calls must be serialized by the application.
+ * Unsafe internal DMA requests/stop failures call bsp_halt_fault with a DMA code.
  */
 unsigned long serial_read_clock(void);
 Serial_Result serial_check_bytes(const unsigned *buf, unsigned count);

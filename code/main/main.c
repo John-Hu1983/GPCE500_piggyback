@@ -1,10 +1,15 @@
 #include "System.h"
 #include "..\audio\audio_spu.h"
+#include "..\hal\hal_rtc.h"
+#include "..\hal\hal_gpio.h"
+
+#include "../bsp/bsp_global.h"
 
 unsigned key = 0;
 unsigned voice = 0;
 unsigned vol = 9; ////0 ~ 15
 
+void rtc_cb(void) { gpio_reverse_level(GPIOB, 0); }
 
 /*
  *@ brief    : Run the key-controlled SPU playback example.
@@ -16,16 +21,13 @@ unsigned vol = 9; ////0 ~ 15
 int main(void)
 {
     // add your code here
+    bsp_init_global();
     key = 0;
 
-    system_init_module(); // System initial
-
-    audio_set_pwm_dac(AUDIO_OUTMODE_PWM);
-
-    spu_init_audio();
-    spu_set_volume(AUDIO_VOLUME_DEFAULT);
-
     vol = AUDIO_VOLUME_DEFAULT;
+
+    gpio_init_pattern(GPIOB, 0, GPIO_Out);
+    rtc_init_module(RTC_Freq_2K, rtc_cb);
     while (1)
     {
         key = key_read_event();
