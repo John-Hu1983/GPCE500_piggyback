@@ -359,6 +359,29 @@ EXPORT=778269810
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "dev"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\dev\soft_timer.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465664
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\soft_timer.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778269696
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End SubItem
 #Name End GPCE500A-Debug
 #Name Begin GPCE500A-Release
@@ -711,6 +734,29 @@ USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=778269810
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "dev"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=6488167
+# Begin Source File
+SOURCE=..\dev\soft_timer.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=808465664
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\soft_timer.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=778269696
 SPECIFICFLAG=0
 # End Source File
 # End Group

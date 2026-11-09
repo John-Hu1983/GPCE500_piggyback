@@ -1,7 +1,8 @@
 #include "hal_rtc.h"
 #include "..\bsp\bsp_global.h"
+#include "..\dev\soft_timer.h"
 
-static RTC_Handler volatile rtc_handler = null;
+static const RTC_Handler rtc_handler[] = {swt_service_tick, bsp_service_rtc};
 
 /*
  *@ brief    : Validate one hardware RTC frequency.
@@ -29,22 +30,22 @@ static void _rtc_check_freq(RTC_Freq freq)
 /*
  *@ brief    : Select and enable a periodic RTC interrupt.
  *@ type     : public
- *@ argu in  : freq: RTC frequency; handler: non-null interrupt callback.
+ *@ argu in  : freq: RTC frequency.
  *@ argu out : None.
  *@ theme    : Configure with interrupts masked; preserve UART/CTS and divider phase.
  */
-void rtc_init_module(RTC_Freq freq, RTC_Handler handler)
+void rtc_init_module(RTC_Freq freq)
 {
     _rtc_check_freq(freq);
-    if (handler == null)
+    if (bsp_is_phy_init(BSP_phy_RTC))
     {
-        bsp_halt_fault(BSP_Fault_RTC_Handler);
+        return;
     }
 
     *P_INT2_Ctrl &= ~RTC_IRQ_MASK;
     *P_FIQ2_Sel &= ~RTC_IRQ_MASK;
-    rtc_handler = handler;
     *P_INT2_Status = RTC_IRQ_MASK;
+    bsp_set_phy_init(BSP_phy_RTC);
     *P_INT2_Ctrl |= (unsigned)freq;
 }
 
@@ -59,31 +60,39 @@ void rtc_disable_module(void)
 {
     *P_INT2_Ctrl &= ~RTC_IRQ_MASK;
     *P_INT2_Status = RTC_IRQ_MASK;
-    rtc_handler = null;
+    bsp_clear_phy_init(BSP_phy_RTC);
 }
 
 /*
  *@ brief    : Acknowledge and dispatch an enabled RTC interrupt.
  *@ type     : public
  *@ argu in  : None.
- *@ argu out : Invokes the installed callback once when an RTC tick is pending.
+ *@ argu out : Invokes every table callback once when an RTC tick is pending.
  *@ theme    : Called by IRQ6/IRQ7; never clear UART/CTS or disabled RTC flags.
  */
 void rtc_service_irq(void)
 {
     unsigned flags = *P_INT2_Status & *P_INT2_Ctrl & ~*P_FIQ2_Sel & RTC_IRQ_MASK;
-    RTC_Handler handler;
+    u16 i;
 
     if (flags == 0)
     {
         return;
     }
 
-    handler = rtc_handler;
-    if (handler == null)
+    if (!bsp_is_phy_init(BSP_phy_RTC))
     {
         bsp_halt_fault(BSP_Fault_RTC_IRQ);
     }
     *P_INT2_Status = flags;
-    handler();
+    for (i = 0; i < sizeof(rtc_handler) / sizeof(rtc_handler[0]); ++i)
+    {
+        RTC_Handler handler = rtc_handler[i];
+
+        if (handler == null)
+        {
+            bsp_halt_fault(BSP_Fault_RTC_Handler);
+        }
+        handler();
+    }
 }

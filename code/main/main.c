@@ -2,14 +2,13 @@
 #include "..\audio\audio_spu.h"
 #include "..\hal\hal_rtc.h"
 #include "..\hal\hal_gpio.h"
+#include "..\dev\soft_timer.h"
 
 #include "../bsp/bsp_global.h"
 
 unsigned key = 0;
 unsigned voice = 0;
 unsigned vol = 9; ////0 ~ 15
-
-void rtc_cb(void) { gpio_reverse_level(GPIOB, 0); }
 
 /*
  *@ brief    : Run the key-controlled SPU playback example.
@@ -26,8 +25,6 @@ int main(void)
 
     vol = AUDIO_VOLUME_DEFAULT;
 
-    gpio_init_pattern(GPIOB, 0, GPIO_Out);
-    rtc_init_module(RTC_Freq_2K, rtc_cb);
     while (1)
     {
         key = key_read_event();
@@ -81,6 +78,7 @@ int main(void)
             break;
         } // end of switch
 
+        swt_service_loop();
         system_service_loop();
     }
 

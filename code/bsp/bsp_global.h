@@ -23,7 +23,12 @@ typedef enum
     BSP_Fault_RTC_IRQ = 0x0403,
     BSP_Fault_DMA_Ch = 0x0501,
     BSP_Fault_DMA_Start = 0x0502,
-    BSP_Fault_DMA_Stop = 0x0503
+    BSP_Fault_DMA_Stop = 0x0503,
+    BSP_Fault_SWT_Node = 0x0601,
+    BSP_Fault_SWT_Ticks = 0x0602,
+    BSP_Fault_SWT_Mode = 0x0603,
+    BSP_Fault_SWT_Handler = 0x0604,
+    BSP_Fault_SWT_State = 0x0605
 } BSP_Fault;
 
 typedef enum
@@ -43,5 +48,6 @@ void bsp_halt_fault(volatile BSP_Fault fault);
 bool bsp_is_phy_init(BSP_phy_name phy);
 void bsp_set_phy_init(BSP_phy_name phy);
 void bsp_clear_phy_init(BSP_phy_name phy);
+void bsp_service_rtc(void);
 void bsp_init_global(void);
 #endif
