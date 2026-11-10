@@ -3,7 +3,7 @@
 
 static volatile u16 swt_tick = 0;
 static SWT_Timer *swt_head = null;
-static bool swt_busy = false;
+static bool swt_protect = false;
 
 /*
  *@ brief    : Find the link to a software timer or the end of the list.
@@ -65,7 +65,7 @@ static void _swt_remove_stopped(void)
  */
 void swt_init_module(void)
 {
-    if (swt_busy)
+    if (swt_protect)
     {
         bsp_halt_fault(BSP_Fault_SWT_State);
     }
@@ -133,7 +133,7 @@ void swt_stop_timer(SWT_Timer *timer)
     }
     timer->flags = 0;
     timer->handler = null;
-    if (!swt_busy)
+    if (!swt_protect)
     {
         *link = timer->next;
         timer->next = null;
@@ -171,7 +171,7 @@ void swt_service_loop(void)
     SWT_Timer *timer;
     bool due = false;
 
-    if (swt_busy)
+    if (swt_protect)
     {
         bsp_halt_fault(BSP_Fault_SWT_State);
     }
@@ -214,7 +214,7 @@ void swt_service_loop(void)
         return;
     }
 
-    swt_busy = true;
+    swt_protect = true;
     for (timer = swt_head; timer != null; timer = timer->next)
     {
         SWT_Handler handler;
@@ -236,5 +236,5 @@ void swt_service_loop(void)
         handler();
     }
     _swt_remove_stopped();
-    swt_busy = false;
+    swt_protect = false;
 }

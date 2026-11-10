@@ -70,25 +70,25 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: RAM in "SPI_Flash.obj" with 0 
 ;Locate: RAM in "dev_button.obj" at 13 
 ;Align: RAM in "dev_button.obj" with 0 
-;Locate: CODE in "Resource.obj" at CD5E 
+;Locate: CODE in "Resource.obj" at CD83 
 ;Align: CODE in "Resource.obj" with 0 
 ;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
 ;Align: BootCode_SEC in "BootCode_User.obj" with 0 
 ;Locate: CODE in "main.obj" at C6B3 
 ;Align: CODE in "main.obj" with 0 
-;Locate: CODE in "system.obj" at CCDF 
+;Locate: CODE in "system.obj" at CD04 
 ;Align: CODE in "system.obj" with 0 
 ;Locate: CODE in "gpce.obj" at C217 
 ;Align: CODE in "gpce.obj" with 0 
 ;Locate: CODE in "audio_spu.obj" at C48B 
 ;Align: CODE in "audio_spu.obj" with 0 
-;Locate: CODE in "spu_patch.obj" at CD79 
+;Locate: CODE in "spu_patch.obj" at CD9E 
 ;Align: CODE in "spu_patch.obj" with 0 
 ;Locate: CODE in "hal_gpio.obj" at BD03 
 ;Align: CODE in "hal_gpio.obj" with 0 
 ;Locate: CODE in "hal_adc.obj" at C7F9 
 ;Align: CODE in "hal_adc.obj" with 0 
-;Locate: CODE in "hal_iopwm.obj" at CA16 
+;Locate: CODE in "hal_iopwm.obj" at CA20 
 ;Align: CODE in "hal_iopwm.obj" with 0 
 ;Locate: CODE in "hal_spi.obj" at A613 
 ;Align: CODE in "hal_spi.obj" with 0 
@@ -96,9 +96,9 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: CODE in "hal_uart.obj" with 0 
 ;Locate: CODE in "hal_serial.obj" at BA59 
 ;Align: CODE in "hal_serial.obj" with 0 
-;Locate: CODE in "hal_rtc.obj" at CB0B 
+;Locate: CODE in "hal_rtc.obj" at CB15 
 ;Align: CODE in "hal_rtc.obj" with 0 
-;Locate: CODE in "bsp_global.obj" at CC74 
+;Locate: CODE in "bsp_global.obj" at CC07 
 ;Align: CODE in "bsp_global.obj" with 0 
 ;Locate: CODE in "soft_timer.obj" at B785 
 ;Align: CODE in "soft_timer.obj" with 0 
@@ -110,27 +110,27 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: CODE in "schedule.obj" with 0 
 ;Locate: CODE in "task_led.obj" at C91D 
 ;Align: CODE in "task_led.obj" with 0 
-;Locate: CODE in "divu2" of "CMacro1232.lib"  at CBFD 
+;Locate: CODE in "divu2" of "CMacro1232.lib"  at CC8D 
 ;Align: CODE in "divu2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "muliu2" of "CMacro1232.lib"  at CD4C 
+;Locate: CODE in "muliu2" of "CMacro1232.lib"  at CD71 
 ;Align: CODE in "muliu2" of "CMacro1232.lib"  with 0 
 ;Locate: CODE in "modu1" of "CMacro1232.lib"  at 9899 
 ;Align: CODE in "modu1" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__clz32" of "CMacro1232.lib"  at CD38 
+;Locate: CODE in "__clz32" of "CMacro1232.lib"  at CD5D 
 ;Align: CODE in "__clz32" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__divi32_n" of "CMacro1232.lib"  at CD10 
+;Locate: CODE in "__divi32_n" of "CMacro1232.lib"  at CD35 
 ;Align: CODE in "__divi32_n" of "CMacro1232.lib"  with 0 
 ;Locate: CODE in "lshiu2" of "CMacro1232.lib"  at 98F6 
 ;Align: CODE in "lshiu2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__clz16" of "CMacro1232.lib"  at CD6E 
+;Locate: CODE in "__clz16" of "CMacro1232.lib"  at CD93 
 ;Align: CODE in "__clz16" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__divi16_n" of "CMacro1232.lib"  at CD83 
+;Locate: CODE in "__divi16_n" of "CMacro1232.lib"  at CDA8 
 ;Align: CODE in "__divi16_n" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "lshiu1" of "CMacro1232.lib"  at CD8D 
+;Locate: CODE in "lshiu1" of "CMacro1232.lib"  at CDB2 
 ;Align: CODE in "lshiu1" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "rshu1" of "CMacro1232.lib"  at CD95 
+;Locate: CODE in "rshu1" of "CMacro1232.lib"  at CDBA 
 ;Align: CODE in "rshu1" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at CD9D 
+;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at CDC2 
 ;Align: CODE in "_GPTag" of "CMacro1232.lib"  with 0 
 ;Locate: _CODE_SPI_SEC in "SPI_Flash.obj" at 9800 
 ;Align: _CODE_SPI_SEC in "SPI_Flash.obj" with 0 

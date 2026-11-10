@@ -28,6 +28,7 @@ void led_init_task(void)
     gpio_init_pattern(LED_PORT, LED_PIN, (LED_ACTIVE_LEVEL != 0) ? GPIO_Out_Low : GPIO_Out_High);
     led_mode = LED_Mode_Off;
     led_ready = true;
+    led_set_mode(led_mode);
 }
 
 /*

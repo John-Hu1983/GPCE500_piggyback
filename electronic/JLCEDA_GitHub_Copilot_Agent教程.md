@@ -168,6 +168,12 @@ Developer: Reload Window
 
 ## 3.2 启动 Bridge Server
 
+### 方式一：双击一键启动脚本（推荐）
+
+直接双击当前目录下的 [start_bridge_server.bat](./start_bridge_server.bat)，脚本会自动打开 PowerShell 窗口、切换到 `easyeda-api` 目录并执行 `npm run server`。
+
+### 方式二：手动在 PowerShell 中启动
+
 打开 PowerShell，执行：
 
 ```powershell

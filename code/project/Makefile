@@ -1,6 +1,6 @@
 #####################################################################
 #																	 
-#	Created by u'nSP IDE V4.1.1		16:15:58	11/09/26
+#	Created by u'nSP IDE V4.1.1		15:53:43	11/10/26
 #
 #####################################################################
 
@@ -165,35 +165,35 @@ OBJFILES	= \
 "$(OUTDIR)\spu_patch.obj": "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
 	$(AS) $(ASFLAGS) $(INCLUDES) -o "$(OUTDIR)\spu_patch.obj" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\spu_patch.asm" 
 
-"$(OUTDIR)\hal_gpio.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+"$(OUTDIR)\hal_gpio.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_gpio.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_gpio.c" 
 
 "$(OUTDIR)\hal_gpio.obj": "$(OUTDIR)\hal_gpio.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_gpio.obj" "$(OUTDIR)\hal_gpio.asm" 
 
-"$(OUTDIR)\hal_adc.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+"$(OUTDIR)\hal_adc.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "GPCE36_CE5.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_adc.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_adc.c" 
 
 "$(OUTDIR)\hal_adc.obj": "$(OUTDIR)\hal_adc.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_adc.obj" "$(OUTDIR)\hal_adc.asm" 
 
-"$(OUTDIR)\hal_iopwm.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+"$(OUTDIR)\hal_iopwm.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "GPCE36_CE5.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_iopwm.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_iopwm.c" 
 
 "$(OUTDIR)\hal_iopwm.obj": "$(OUTDIR)\hal_iopwm.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_iopwm.obj" "$(OUTDIR)\hal_iopwm.asm" 
 
-"$(OUTDIR)\hal_spi.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+"$(OUTDIR)\hal_spi.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_spi.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_spi.c" 
 
 "$(OUTDIR)\hal_spi.obj": "$(OUTDIR)\hal_spi.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_spi.obj" "$(OUTDIR)\hal_spi.asm" 
 
-"$(OUTDIR)\hal_uart.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+"$(OUTDIR)\hal_uart.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_serial.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "..\Include\System.h" "GPCE36_CE5.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\hal_uart.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/hal/hal_uart.c" 
 
@@ -214,7 +214,7 @@ OBJFILES	= \
 "$(OUTDIR)\hal_rtc.obj": "$(OUTDIR)\hal_rtc.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\hal_rtc.obj" "$(OUTDIR)\hal_rtc.asm" 
 
-"$(OUTDIR)\bsp_global.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\soft_timer.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_rtc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\dev_button.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\message\message.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\schedule\schedule.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\task\task_led.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "..\Include\System.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "GPCE36_CE5.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
+"$(OUTDIR)\bsp_global.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_define.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\soft_timer.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_rtc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\dev_button.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\message\message.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\schedule\schedule.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\task\task_led.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "..\Include\System.h" "..\Include\user_config.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "GPCE36_CE5.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\bsp_global.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/bsp/bsp_global.c" 
 

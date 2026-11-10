@@ -1,7 +1,7 @@
 #ifndef _HAL_GPIO_H__
 #define _HAL_GPIO_H__
 
-#include "user_config.h"
+#include "../Include/user_config.h"
 
 typedef struct
 {
@@ -25,6 +25,12 @@ typedef enum
     GPIO_Out_High = 5,
     GPIO_Out_Inv_High = 6
 } GPIO_Pattern;
+
+typedef struct
+{
+    handle_t *port;
+    uint8_t pin;
+} gpio_pin_s;
 
 /*
  * port: GPIOA/GPIOB/GPIOC; pin is an index, not a mask.

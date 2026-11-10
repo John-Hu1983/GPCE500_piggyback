@@ -4,7 +4,7 @@
 
 static SCH_Task *sch_head = null;
 static SCH_Task *sch_cursor = null;
-static bool sch_busy = false;
+static bool sch_protect = false;
 
 /*
  *@ brief    : Find a task link or the tail link in the scheduler list.
@@ -109,7 +109,7 @@ static bool _sch_dispatch_range(SCH_Task *begin, SCH_Task *end, u16 start_tick)
  */
 void sch_init_module(void)
 {
-    if (sch_busy)
+    if (sch_protect)
     {
         bsp_halt_fault(BSP_Fault_SCH_State);
     }
@@ -173,7 +173,7 @@ void sch_stop_task(SCH_Task *task)
     }
     task->flags = 0;
     task->handler = null;
-    if (!sch_busy)
+    if (!sch_protect)
     {
         if (sch_cursor == task)
         {
@@ -266,7 +266,7 @@ void sch_service_loop(void)
     SCH_Task *start;
     bool ready = false;
 
-    if (sch_busy)
+    if (sch_protect)
     {
         bsp_halt_fault(BSP_Fault_SCH_State);
     }
@@ -304,12 +304,12 @@ void sch_service_loop(void)
         return;
     }
 
-    sch_busy = true;
+    sch_protect = true;
     start = (sch_cursor != null) ? sch_cursor : sch_head;
     if (!_sch_dispatch_range(start, null, now))
     {
         (void)_sch_dispatch_range(sch_head, start, now);
     }
     _sch_remove_stopped();
-    sch_busy = false;
+    sch_protect = false;
 }

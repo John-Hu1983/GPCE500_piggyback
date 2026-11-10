@@ -1,26 +1,19 @@
 {
   "configurations": [
     {
-      "name": "GPCE500-unSP",
+      "name": "windows-gcc-x64",
       "includePath": [
-        "${workspaceFolder}\\Include",
-        "${workspaceFolder}\\audio",
-        "${workspaceFolder}\\hal",
-        "${workspaceFolder}\\bsp",
-        "${workspaceFolder}\\dev",
-        "${workspaceFolder}\\project",
-        "C:\\Program Files (x86)\\Generalplus\\unSPIDE_4.1.1\\library\\include",
-        "C:\\Program Files (x86)\\Generalplus\\unSPIDE_4.1.1\\library\\include\\sys"
+        "${workspaceFolder}/**"
       ],
       "defines": [
         "unSP=1",
         "__POINTER_32__=1",
         "__CHAR_16__=1"
       ],
-      "compilerPath": "",
-      "cStandard": "c99",
-      "cppStandard": "c++17",
-      "intelliSenseMode": "windows-gcc-x86"
+      "compilerPath": "gcc",
+      "cStandard": "${default}",
+      "cppStandard": "${default}",
+      "intelliSenseMode": "windows-gcc-x64"
     }
   ],
   "version": 4

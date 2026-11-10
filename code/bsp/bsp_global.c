@@ -1,5 +1,6 @@
 #include "bsp_global.h"
 #include "System.h"
+#include "../Include/user_define.h"
 #include "..\audio\audio_spu.h"
 #include "..\dev\soft_timer.h"
 #include "..\hal\hal_gpio.h"
@@ -10,6 +11,8 @@
 #include "..\task\task_led.h"
 
 static u16 Bsp_phy_state = 0;
+const gpio_pin_s Power_Lock_Pin = POWER_LOCK_PIN;
+
 /*
  *@ brief    : Halt on a fatal driver fault.
  *@ type     : public
@@ -35,6 +38,9 @@ void bsp_clear_phy_init(BSP_phy_name phy) { Bsp_phy_state &= ~(1 << phy); }
 void bsp_init_global(void)
 {
     system_init_module();
+
+    gpio_init_pattern(Power_Lock_Pin.port, Power_Lock_Pin.pin, GPIO_Out_High);
+
     swt_init_module();
     sch_init_module();
     msg_init_module();

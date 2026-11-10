@@ -2,7 +2,7 @@
 #include "..\bsp\bsp_global.h"
 
 static MSG_Sub *msg_head = null;
-static u16 msg_depth = 0;
+static u16 msg_protect = 0;
 
 /*
  *@ brief    : Validate a message type or subscription filter.
@@ -92,7 +92,7 @@ static void _msg_remove_subs(void)
  */
 void msg_init_module(void)
 {
-    if (msg_depth != 0)
+    if (msg_protect != 0)
     {
         bsp_halt_fault(BSP_Fault_MSG_State);
     }
@@ -144,7 +144,7 @@ void msg_unsubscribe_node(MSG_Sub *sub)
         return;
     }
     sub->handler = null;
-    if (msg_depth == 0)
+    if (msg_protect == 0)
     {
         *link = sub->next;
         _msg_clear_sub(sub);
@@ -168,7 +168,7 @@ void msg_publish_message(const MSG_Message *message)
         bsp_halt_fault(BSP_Fault_MSG_Message);
     }
     _msg_check_type(message->type, false);
-    if (msg_depth == 0xFFFFU)
+    if (msg_protect == 0xFFFFU)
     {
         bsp_halt_fault(BSP_Fault_MSG_State);
     }
@@ -176,7 +176,7 @@ void msg_publish_message(const MSG_Message *message)
     {
         last = last->next;
     }
-    ++msg_depth;
+    ++msg_protect;
     for (sub = msg_head; sub != null; sub = sub->next)
     {
         MSG_Handler handler = sub->handler;
@@ -191,8 +191,8 @@ void msg_publish_message(const MSG_Message *message)
             break;
         }
     }
-    --msg_depth;
-    if (msg_depth == 0)
+    --msg_protect;
+    if (msg_protect == 0)
     {
         _msg_remove_subs();
     }
