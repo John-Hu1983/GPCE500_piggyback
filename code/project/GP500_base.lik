@@ -17,8 +17,8 @@ Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_uart.obj
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_serial.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\hal_rtc.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\bsp_global.obj"
-Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\soft_timer.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\dev_button.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\soft_timer.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\message.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\schedule.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\task_led.obj"
@@ -56,10 +56,10 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: IRAM in "hal_uart.obj" with 0 
 ;Locate: IRAM in "bsp_global.obj" at 11969  linkat 2B 
 ;Align: IRAM in "bsp_global.obj" with 0 
-;Locate: IRAM in "soft_timer.obj" at 11976  linkat 38 
-;Align: IRAM in "soft_timer.obj" with 0 
 ;Locate: IRAM in "dev_button.obj" at 1196A  linkat 2C 
 ;Align: IRAM in "dev_button.obj" with 0 
+;Locate: IRAM in "soft_timer.obj" at 11976  linkat 38 
+;Align: IRAM in "soft_timer.obj" with 0 
 ;Locate: IRAM in "message.obj" at 1196F  linkat 31 
 ;Align: IRAM in "message.obj" with 0 
 ;Locate: IRAM in "schedule.obj" at 1197A  linkat 3C 
@@ -100,10 +100,10 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: CODE in "hal_rtc.obj" with 0 
 ;Locate: CODE in "bsp_global.obj" at CC07 
 ;Align: CODE in "bsp_global.obj" with 0 
-;Locate: CODE in "soft_timer.obj" at B785 
-;Align: CODE in "soft_timer.obj" with 0 
 ;Locate: CODE in "dev_button.obj" at B340 
 ;Align: CODE in "dev_button.obj" with 0 
+;Locate: CODE in "soft_timer.obj" at B785 
+;Align: CODE in "soft_timer.obj" with 0 
 ;Locate: CODE in "message.obj" at BF9C 
 ;Align: CODE in "message.obj" with 0 
 ;Locate: CODE in "schedule.obj" at AEC8 

@@ -1,6 +1,4 @@
-#include "hal_serial.h"
-#include "System.h"
-#include "..\bsp\bsp_global.h"
+#include "..\Include\spinmaster.h"
 
 /*
  *@ brief    : Get a validated DMA register block.

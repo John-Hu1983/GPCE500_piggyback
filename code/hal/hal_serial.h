@@ -1,10 +1,6 @@
 #ifndef HAL_SERIAL_H
 #define HAL_SERIAL_H
 
-#include "hal_gpio.h"
-#include "GPCE36_CE5.h"
-#include "user_config.h"
-
 #define SERIAL_OSC_HZ 81920000UL
 #define SERIAL_RAM_END 0x1000UL
 #define SERIAL_BYTE_MASK 0x00FFU

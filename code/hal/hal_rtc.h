@@ -1,9 +1,6 @@
 #ifndef _HAL_RTC_H_
 #define _HAL_RTC_H_
 
-#include "GPCE36_CE5.h"
-#include "user_config.h"
-
 #define RTC_IRQ_MASK                                                                               \
     (C_IRQ7_2Hz | C_IRQ7_16Hz | C_IRQ7_64Hz | C_IRQ6_512Hz | C_IRQ6_2048Hz | C_IRQ6_4096Hz)
 

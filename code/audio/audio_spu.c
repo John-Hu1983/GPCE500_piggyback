@@ -1,7 +1,4 @@
-#include "audio_spu.h"
-#include "GPCE36_CE5.h"
-#include "Resource.h"
-#include "System.h"
+#include "..\Include\spinmaster.h"
 
 /*
  * SPU 初始化、输出模式、资源配置和播放控制集中在本文件。

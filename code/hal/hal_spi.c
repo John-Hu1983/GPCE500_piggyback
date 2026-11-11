@@ -1,5 +1,4 @@
-#include "hal_spi.h"
-#include "System.h"
+#include "..\Include\spinmaster.h"
 
 /* Native startup copies initialized data but does not clear ordinary .RAM. */
 static SPI_Job *volatile spi_job = null;

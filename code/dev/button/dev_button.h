@@ -1,8 +1,6 @@
 #ifndef _DEV_BUTTON_H__
 #define _DEV_BUTTON_H__
 
-#include "..\hal\hal_gpio.h"
-
 /*
  * Button hardware configuration macros.
  * Define each button's GPIO port, pin, input pattern, and active level here.

@@ -1,8 +1,6 @@
 #ifndef _BSP_GLOBAL_H__
 #define _BSP_GLOBAL_H__
 
-#include "../Include/user_config.h"
-
 /* High byte identifies the driver; low byte identifies the failing check. */
 typedef enum
 {

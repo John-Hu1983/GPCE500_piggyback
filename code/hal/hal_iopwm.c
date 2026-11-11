@@ -1,7 +1,4 @@
-#include "hal_iopwm.h"
-#include "hal_gpio.h"
-#include "GPCE36_CE5.h"
-#include "..\bsp\bsp_global.h"
+#include "..\Include\spinmaster.h"
 
 /*
  *@ brief    : Get the selected IOPWM control register.

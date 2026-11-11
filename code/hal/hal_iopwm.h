@@ -1,8 +1,6 @@
 #ifndef _HAL_IOPWM_H__
 #define _HAL_IOPWM_H__
 
-#include "GPCE36_CE5.h"
-
 #define IOPWM_CONFIG (C_IOPWM_Enable | C_IOPWM_Mask | C_IOPWM_CLK_SRC | C_IOPWM_Duty)
 
 typedef enum

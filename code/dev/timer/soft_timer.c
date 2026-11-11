@@ -1,5 +1,4 @@
-#include "soft_timer.h"
-#include "..\bsp\bsp_global.h"
+#include "..\Include\spinmaster.h"
 
 static volatile u16 swt_tick = 0;
 static SWT_Timer *swt_head = null;

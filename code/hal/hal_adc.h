@@ -1,8 +1,6 @@
 #ifndef _HAL_ADC_H__
 #define _HAL_ADC_H__
 
-#include "GPCE36_CE5.h"
-
 #define ADC_MODE (C_CMPADC_Auto_Enable | C_CMPADC_Manual)
 #define ADC_FLAGS (C_CMPADC_INT_Flag | C_CMPADC_Timeout_Flag)
 

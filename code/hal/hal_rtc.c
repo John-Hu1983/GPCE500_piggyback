@@ -1,6 +1,4 @@
-#include "hal_rtc.h"
-#include "..\bsp\bsp_global.h"
-#include "..\dev\soft_timer.h"
+#include "..\Include\spinmaster.h"
 
 static const RTC_Handler rtc_handler[] = {swt_service_tick};
 

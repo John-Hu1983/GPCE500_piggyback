@@ -1,5 +1,4 @@
-#include "hal_uart.h"
-#include "System.h"
+#include "..\Include\spinmaster.h"
 
 /* Native startup copies initialized data but does not clear ordinary .RAM. */
 static UART_Job *volatile uart_tx = null;

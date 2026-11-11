@@ -1,7 +1,4 @@
-#include "dev_button.h"
-#include "soft_timer.h"
-#include "..\bsp\bsp_global.h"
-#include "..\message\message.h"
+#include "..\Include\spinmaster.h"
 
 static const BTN_Config btn_configs[BTN_Key_Count] = {
     {GPIOA, 0, BTN_INPUT_PATTERN, BTN_ACTIVE_LEVEL},

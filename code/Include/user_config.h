@@ -1,8 +1,6 @@
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
 
-#include <stddef.h>
-
 #if defined(SUNPLUS) || defined(unSP) || defined(__CHAR_16__)
 /* GPCE500A native int/long/long long are 16/32/64 bits; char occupies 16 bits. */
 typedef unsigned int u16;
@@ -22,9 +20,6 @@ typedef enum
 } bool;
 #endif
 #else
-#include <stdint.h>
-#include <stdbool.h>
-
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;

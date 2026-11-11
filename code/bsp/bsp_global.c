@@ -1,14 +1,4 @@
-#include "bsp_global.h"
-#include "System.h"
-#include "../Include/user_define.h"
-#include "..\audio\audio_spu.h"
-#include "..\dev\soft_timer.h"
-#include "..\hal\hal_gpio.h"
-#include "..\hal\hal_rtc.h"
-#include "..\dev\dev_button.h"
-#include "..\message\message.h"
-#include "..\schedule\schedule.h"
-#include "..\task\task_led.h"
+#include "..\Include\spinmaster.h"
 
 static u16 Bsp_phy_state = 0;
 const gpio_pin_s Power_Lock_Pin = POWER_LOCK_PIN;

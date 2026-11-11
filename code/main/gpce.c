@@ -11,8 +11,7 @@
  * C 循环开销与原汇编不同，声音渐变和休眠唤醒仍需在实机上验证。
  */
 
-#include "GPCE36_CE5.h"
-#include "System.h"
+#include "..\Include\spinmaster.h"
 
 /*
  *@ brief    : Enable CPU IRQ.

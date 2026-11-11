@@ -1,8 +1,6 @@
 #ifndef _TASK_LED_H__
 #define _TASK_LED_H__
 
-#include "..\hal\hal_gpio.h"
-
 #ifndef LED_PORT
 #define LED_PORT GPIOB
 #endif

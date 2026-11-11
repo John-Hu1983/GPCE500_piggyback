@@ -1,8 +1,6 @@
 #ifndef SOFT_TIMER_H
 #define SOFT_TIMER_H
 
-#include "user_config.h"
-
 // clang-format off
 #define SWT_RUN                 0x0001U
 #define SWT_REPEAT              0x0002U

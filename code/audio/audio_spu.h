@@ -1,8 +1,6 @@
 #ifndef AUDIO_SPU_H
 #define AUDIO_SPU_H
 
-#include "user_config.h"
-
 #define AUDIO_SPU_SOURCE_ROM_TABLE 0
 #define AUDIO_SPU_SOURCE_FILEMERGER_VERSION1 1
 #define AUDIO_SPU_CHANNEL_STRIDE 0x10U

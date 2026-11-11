@@ -1,6 +1,4 @@
-#include "schedule.h"
-#include "..\bsp\bsp_global.h"
-#include "..\dev\soft_timer.h"
+#include "..\Include\spinmaster.h"
 
 static SCH_Task *sch_head = null;
 static SCH_Task *sch_cursor = null;

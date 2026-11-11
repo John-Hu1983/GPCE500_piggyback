@@ -1,8 +1,6 @@
 #ifndef _HAL_GPIO_H__
 #define _HAL_GPIO_H__
 
-#include "../Include/user_config.h"
-
 typedef struct
 {
     volatile unsigned data; /* Read-only pad level in hardware. */

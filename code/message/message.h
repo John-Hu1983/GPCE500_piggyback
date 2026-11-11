@@ -1,8 +1,6 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include "user_config.h"
-
 typedef enum
 {
     MSG_Any = 0,

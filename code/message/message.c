@@ -1,5 +1,4 @@
-#include "message.h"
-#include "..\bsp\bsp_global.h"
+#include "..\Include\spinmaster.h"
 
 static MSG_Sub *msg_head = null;
 static u16 msg_protect = 0;

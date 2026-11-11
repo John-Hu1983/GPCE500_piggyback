@@ -1,8 +1,6 @@
 #ifndef _HAL_UART_H_
 #define _HAL_UART_H_
 
-#include "hal_serial.h"
-
 typedef union
 {
     const unsigned *tx;

@@ -1,8 +1,6 @@
 #ifndef _HAL_SPI_H_
 #define _HAL_SPI_H_
 
-#include "hal_serial.h"
-
 typedef enum
 {
     SPI_Mode_0 = 0x0000,

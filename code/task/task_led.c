@@ -1,6 +1,4 @@
-#include "task_led.h"
-#include "..\bsp\bsp_global.h"
-#include "..\schedule\schedule.h"
+#include "..\Include\spinmaster.h"
 
 static SCH_Task led_task = SCH_TASK_INIT;
 static LED_Mode led_mode = LED_Mode_Off;

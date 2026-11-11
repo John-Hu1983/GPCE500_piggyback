@@ -1,5 +1,4 @@
-#include "hal_gpio.h"
-#include "..\bsp\bsp_global.h"
+#include "..\Include\spinmaster.h"
 
 /*
  *@ brief    : Validate a port and pin, then get its bit mask.

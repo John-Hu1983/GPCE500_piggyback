@@ -1,14 +1,4 @@
-#include "System.h"
-#include "..\audio\audio_spu.h"
-#include "..\hal\hal_rtc.h"
-#include "..\hal\hal_gpio.h"
-#include "..\dev\soft_timer.h"
-#include "..\message\message.h"
-#include "..\dev\dev_button.h"
-#include "..\schedule\schedule.h"
-#include "..\task\task_led.h"
-
-#include "../bsp/bsp_global.h"
+#include "..\Include\spinmaster.h"
 
 unsigned voice = 0;
 unsigned vol = 9; ////0 ~ 15

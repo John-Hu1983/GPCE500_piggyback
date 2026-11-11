@@ -1,8 +1,6 @@
 #ifndef SCHEDULE_H
 #define SCHEDULE_H
 
-#include "user_config.h"
-
 /*
  * Maximum RTC ticks a single sch_service_loop() pass may spend executing ready tasks
  * before yielding back to the main loop (at 2048Hz, 2 ticks ~= 0.98ms).
