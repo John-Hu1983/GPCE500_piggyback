@@ -43,4 +43,5 @@ void bsp_init_global(void)
     led_init_task();
 
     rtc_init_module(RTC_Freq_2K);
+    lcd_init_module();
 }

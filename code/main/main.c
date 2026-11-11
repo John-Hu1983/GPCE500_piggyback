@@ -92,6 +92,9 @@ int main(void)
         swt_service_loop();
         sch_service_loop();
         system_clear_watchdog();
+
+        send_st7735_command(0xaa);
+        send_st7735_data_u8(0x8D);
     }
 
     return 0;

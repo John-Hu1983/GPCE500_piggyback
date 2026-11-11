@@ -27,6 +27,7 @@
 #include "../hal/hal_adc.h"
 #include "../hal/hal_iopwm.h"
 #include "../hal/hal_rtc.h"
+#include "../hal/hal_exisr.h"
 #include "../hal/hal_serial.h"
 #include "../hal/hal_spi.h"
 #include "../hal/hal_uart.h"
@@ -36,6 +37,7 @@
 #include "../dev/timer/soft_timer.h"
 #include "../message/message.h"
 #include "../dev/button/dev_button.h"
+#include "../dev/lcd/st7735p3.h"
 
 #include "../schedule/schedule.h"
 #include "../task/task_led.h"

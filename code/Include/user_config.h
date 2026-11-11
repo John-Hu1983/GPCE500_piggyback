@@ -12,6 +12,11 @@ typedef signed long long s64;
 
 /* Keep the existing GPIO pin-index alias; it is not an 8-bit storage type. */
 typedef unsigned char uint8_t;
+typedef unsigned char u8;
+typedef unsigned int uint16_t;
+typedef signed int int16_t;
+typedef unsigned long uint32_t;
+typedef signed long int32_t;
 #ifndef __cplusplus
 typedef enum
 {
@@ -20,6 +25,7 @@ typedef enum
 } bool;
 #endif
 #else
+typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
