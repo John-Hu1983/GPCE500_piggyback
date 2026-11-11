@@ -1,4 +1,4 @@
-#include "..\Include\spinmaster.h"
+#include "..\..\Include\spinmaster.h"
 
 static volatile u16 swt_tick = 0;
 static SWT_Timer *swt_head = null;

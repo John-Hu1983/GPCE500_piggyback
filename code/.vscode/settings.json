@@ -29,7 +29,7 @@
     "project/GP500_base.rc": true,
     "project/GP500_base.set": true
   },
-  "C_Cpp_Runner.cCompilerPath": "gcc",
+  "C_Cpp_Runner.cCompilerPath": "C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/toolchain/gcc.exe",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
   "C_Cpp_Runner.cStandard": "",
@@ -67,7 +67,13 @@
   "C_Cpp_Runner.warningsAsError": false,
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
-  "C_Cpp_Runner.includePaths": [],
+  "C_Cpp_Runner.includePaths": [
+    "${workspaceFolder}",
+    "${workspaceFolder}/Include",
+    "${workspaceFolder}/project",
+    "C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include",
+    "C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include/sys"
+  ],
   "C_Cpp_Runner.includeSearch": [
     "*",
     "**/*"

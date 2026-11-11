@@ -1,4 +1,4 @@
-#include "..\Include\spinmaster.h"
+#include "..\..\Include\spinmaster.h"
 
 static const BTN_Config btn_configs[BTN_Key_Count] = {
     {GPIOA, 0, BTN_INPUT_PATTERN, BTN_ACTIVE_LEVEL},

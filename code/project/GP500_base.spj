@@ -128,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1701601131
+EXPORT=7759104
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -175,7 +175,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6579052
+EXPORT=6911232
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -336,22 +336,6 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\hal\hal_serial.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\hal\hal_serial.h
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
 SOURCE=..\hal\hal_rtc.c
 USEPARAM=FALSE
 PARAM=
@@ -475,6 +459,52 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\dev\lcd\st7735p3.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\lcd\lcd_monitor.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\lcd\lcd_monitor.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# End Group
+# Begin Group "gui"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Group "common"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\common\gui_common.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\common\gui_common.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -676,7 +706,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1701601131
+EXPORT=7759104
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -723,7 +753,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6579052
+EXPORT=6911232
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -884,22 +914,6 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\hal\hal_serial.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\hal\hal_serial.h
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
 SOURCE=..\hal\hal_rtc.c
 USEPARAM=FALSE
 PARAM=
@@ -1023,6 +1037,52 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\dev\lcd\st7735p3.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\lcd\lcd_monitor.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\lcd\lcd_monitor.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# End Group
+# Begin Group "gui"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Group "common"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\common\gui_common.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\common\gui_common.h
 USEPARAM=FALSE
 PARAM=
 ID=
