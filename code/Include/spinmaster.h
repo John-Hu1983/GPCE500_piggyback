@@ -21,6 +21,7 @@
 #include "../Include/user_config.h"
 
 #include "../bsp/bsp_global.h"
+#include "../ram_heap/ram_heap.h"
 
 #include "../hal/hal_gpio.h"
 #include "../Include/user_define.h"

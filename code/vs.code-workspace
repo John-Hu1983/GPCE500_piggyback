@@ -13,10 +13,39 @@
 			"rules": {
 				"variable": "#9CDCFE",
 				"variable.global": "#4FC1FF",
+				"variable.static": "#4FC1FF",
 				"variable.readonly": "#4FC1FF",
 				"property": "#9CDCFE",
-				"parameter": "#9CDCFE"
+				"parameter": "#9CDCFE",
+				"macro": "#569CD6",
+				"enumMember": "#4FC1FF"
 			}
+		},
+		"editor.tokenColorCustomizations": {
+			"textMateRules": [
+				{
+					"scope": [
+						"variable.other.C",
+						"variable.other.c",
+						"variable.other.readwrite.c",
+						"variable.other.member.c",
+						"variable.other.property.c",
+						"meta.Indexed-name.c"
+					],
+					"settings": {
+						"foreground": "#9CDCFE"
+					}
+				},
+				{
+					"scope": [
+						"constant.other.c",
+						"entity.name.constant.c"
+					],
+					"settings": {
+						"foreground": "#4FC1FF"
+					}
+				}
+			]
 		},
 		"C_Cpp.default.compilerPath": "",
 		"C_Cpp.default.cStandard": "c99",
@@ -38,6 +67,7 @@
 			"${workspaceFolder}/main",
 			"${workspaceFolder}/hal",
 			"${workspaceFolder}/bsp",
+			"${workspaceFolder}/ram_heap",
 			"${workspaceFolder}/audio",
 			"${workspaceFolder}/dev/button",
 			"${workspaceFolder}/dev/timer",

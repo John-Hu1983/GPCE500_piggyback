@@ -31,6 +31,7 @@ void bsp_init_global(void)
 
     gpio_init_pattern(Power_Lock_Pin.port, Power_Lock_Pin.pin, GPIO_Out_High);
 
+    heap_init_module();
     swt_init_module();
     sch_init_module();
     msg_init_module();

@@ -45,7 +45,10 @@ typedef enum
     BSP_Fault_LCD_SPI = 0x0B03,
     BSP_Fault_EXISR_Ch = 0x0C01,
     BSP_Fault_EXISR_Edge = 0x0C02,
-    BSP_Fault_EXISR_Handler = 0x0C03
+    BSP_Fault_EXISR_Handler = 0x0C03,
+    BSP_Fault_HEAP_Arg = 0x0D01,
+    BSP_Fault_HEAP_State = 0x0D02,
+    BSP_Fault_HEAP_Corrupt = 0x0D03
 } BSP_Fault;
 
 typedef enum

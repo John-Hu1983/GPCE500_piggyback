@@ -32,6 +32,7 @@ Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\gui_switch.o
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\message.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\schedule.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\task_led.obj"
+Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\ram_heap.obj"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\aintworried_12K_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\GIRL_SKY_wav_se4.res"
 Obj: "D:\JohnHu\Github_private\GPCE500_piggyback\code\project\Debug\FileMerger_ROM_bin.res"
@@ -56,67 +57,71 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: SPIFC_RAMCode_SEC in "SPI_Flash.obj" with 0 
 ;Locate: TEXT in "isr.obj" at 9818 
 ;Align: TEXT in "isr.obj" with 0 
-;Locate: IRAM in "main.obj" at 1198B  linkat 45 
+;Locate: IRAM in "main.obj" at 11990  linkat 46 
 ;Align: IRAM in "main.obj" with 0 
-;Locate: IRAM in "audio_spu.obj" at 11974  linkat 2E 
+;Locate: IRAM in "audio_spu.obj" at 11979  linkat 2F 
 ;Align: IRAM in "audio_spu.obj" with 0 
-;Locate: IRAM in "hal_exisr.obj" at 1197E  linkat 38 
+;Locate: IRAM in "hal_exisr.obj" at 11983  linkat 39 
 ;Align: IRAM in "hal_exisr.obj" with 0 
-;Locate: IRAM in "bsp_global.obj" at 11971  linkat 2B 
+;Locate: IRAM in "bsp_global.obj" at 11975  linkat 2B 
 ;Align: IRAM in "bsp_global.obj" with 0 
-;Locate: IRAM in "dev_button.obj" at 11972  linkat 2C 
+;Locate: IRAM in "dev_button.obj" at 11976  linkat 2C 
 ;Align: IRAM in "dev_button.obj" with 0 
-;Locate: IRAM in "soft_timer.obj" at 11982  linkat 3C 
+;Locate: IRAM in "soft_timer.obj" at 11987  linkat 3D 
 ;Align: IRAM in "soft_timer.obj" with 0 
-;Locate: IRAM in "st7735p3.obj" at 11973  linkat 2D 
+;Locate: IRAM in "st7735p3.obj" at 11977  linkat 2D 
 ;Align: IRAM in "st7735p3.obj" with 0 
-;Locate: IRAM in "lcd_monitor.obj" at 11978  linkat 32 
+;Locate: IRAM in "lcd_monitor.obj" at 1197D  linkat 33 
 ;Align: IRAM in "lcd_monitor.obj" with 0 
-;Locate: IRAM in "gui_font.obj" at 11976  linkat 30 
+;Locate: IRAM in "gui_font.obj" at 1197B  linkat 31 
 ;Align: IRAM in "gui_font.obj" with 0 
-;Locate: IRAM in "message.obj" at 1197B  linkat 35 
+;Locate: IRAM in "message.obj" at 11980  linkat 36 
 ;Align: IRAM in "message.obj" with 0 
-;Locate: IRAM in "schedule.obj" at 11986  linkat 40 
+;Locate: IRAM in "schedule.obj" at 1198B  linkat 41 
 ;Align: IRAM in "schedule.obj" with 0 
-;Locate: IRAM in "task_led.obj" at 11994  linkat 4E 
+;Locate: IRAM in "task_led.obj" at 11999  linkat 4F 
 ;Align: IRAM in "task_led.obj" with 0 
+;Locate: IRAM in "ram_heap.obj" at 11978  linkat 2E 
+;Align: IRAM in "ram_heap.obj" with 0 
 ;Locate: RAM in "SPI_Flash.obj" at 10 
 ;Align: RAM in "SPI_Flash.obj" with 0 
 ;Locate: RAM in "dev_button.obj" at 13 
 ;Align: RAM in "dev_button.obj" with 0 
-;Locate: CODE in "Resource.obj" at 10FD1 
+;Locate: RAM in "ram_heap.obj" at 40F 
+;Align: RAM in "ram_heap.obj" with 0 
+;Locate: CODE in "Resource.obj" at 112B2 
 ;Align: CODE in "Resource.obj" with 0 
 ;Locate: BootCode_SEC in "BootCode_User.obj" at 8100 
 ;Align: BootCode_SEC in "BootCode_User.obj" with 0 
-;Locate: CODE in "main.obj" at 10860 
+;Locate: CODE in "main.obj" at 10AD4 
 ;Align: CODE in "main.obj" with 0 
-;Locate: CODE in "system.obj" at 10F26 
+;Locate: CODE in "system.obj" at 11207 
 ;Align: CODE in "system.obj" with 0 
-;Locate: CODE in "gpce.obj" at FC8D 
+;Locate: CODE in "gpce.obj" at 10094 
 ;Align: CODE in "gpce.obj" with 0 
-;Locate: CODE in "audio_spu.obj" at 102E2 
+;Locate: CODE in "audio_spu.obj" at 10556 
 ;Align: CODE in "audio_spu.obj" with 0 
-;Locate: CODE in "spu_patch.obj" at 10FF6 
+;Locate: CODE in "spu_patch.obj" at 112E1 
 ;Align: CODE in "spu_patch.obj" with 0 
-;Locate: CODE in "hal_gpio.obj" at F779 
+;Locate: CODE in "hal_gpio.obj" at FA5E 
 ;Align: CODE in "hal_gpio.obj" with 0 
-;Locate: CODE in "hal_adc.obj" at 109A6 
+;Locate: CODE in "hal_adc.obj" at 10C1A 
 ;Align: CODE in "hal_adc.obj" with 0 
-;Locate: CODE in "hal_iopwm.obj" at FF01 
+;Locate: CODE in "hal_iopwm.obj" at 10E41 
 ;Align: CODE in "hal_iopwm.obj" with 0 
-;Locate: CODE in "hal_spi.obj" at F20F 
+;Locate: CODE in "hal_spi.obj" at F4F4 
 ;Align: CODE in "hal_spi.obj" with 0 
-;Locate: CODE in "hal_uart.obj" at 10094 
+;Locate: CODE in "hal_uart.obj" at 10308 
 ;Align: CODE in "hal_uart.obj" with 0 
-;Locate: CODE in "hal_rtc.obj" at 10BCD 
+;Locate: CODE in "hal_rtc.obj" at 10F36 
 ;Align: CODE in "hal_rtc.obj" with 0 
-;Locate: CODE in "hal_exisr.obj" at 1050A 
+;Locate: CODE in "hal_exisr.obj" at 1077E 
 ;Align: CODE in "hal_exisr.obj" with 0 
-;Locate: CODE in "bsp_global.obj" at 10D5E 
+;Locate: CODE in "bsp_global.obj" at FF72 
 ;Align: CODE in "bsp_global.obj" with 0 
 ;Locate: CODE in "dev_button.obj" at DB9B 
 ;Align: CODE in "dev_button.obj" with 0 
-;Locate: CODE in "soft_timer.obj" at EF3B 
+;Locate: CODE in "soft_timer.obj" at F220 
 ;Align: CODE in "soft_timer.obj" with 0 
 ;Locate: CODE in "st7735p3.obj" at D11E 
 ;Align: CODE in "st7735p3.obj" with 0 
@@ -126,55 +131,57 @@ Locate: SPIFC_RAMCode_SEC in "SPI_Flash.obj" at 9900 linkat 100
 ;Align: CODE in "gui_common.obj" with 0 
 ;Locate: CODE in "gui_font.obj" at 9CB7 
 ;Align: CODE in "gui_font.obj" with 0 
-;Locate: CODE in "gui_button.obj" at E6A9 
+;Locate: CODE in "gui_button.obj" at E98E 
 ;Align: CODE in "gui_button.obj" with 0 
-;Locate: CODE in "gui_textbox.obj" at E987 
+;Locate: CODE in "gui_textbox.obj" at EC6C 
 ;Align: CODE in "gui_textbox.obj" with 0 
 ;Locate: CODE in "gui_bar.obj" at E35D 
 ;Align: CODE in "gui_bar.obj" with 0 
-;Locate: CODE in "gui_checkbox.obj" at EC64 
+;Locate: CODE in "gui_checkbox.obj" at EF49 
 ;Align: CODE in "gui_checkbox.obj" with 0 
-;Locate: CODE in "gui_slider.obj" at F4D3 
+;Locate: CODE in "gui_slider.obj" at F7B8 
 ;Align: CODE in "gui_slider.obj" with 0 
-;Locate: CODE in "gui_switch.obj" at 106BA 
+;Locate: CODE in "gui_switch.obj" at 1092E 
 ;Align: CODE in "gui_switch.obj" with 0 
-;Locate: CODE in "message.obj" at FA12 
+;Locate: CODE in "message.obj" at FCF7 
 ;Align: CODE in "message.obj" with 0 
 ;Locate: CODE in "schedule.obj" at D723 
 ;Align: CODE in "schedule.obj" with 0 
-;Locate: CODE in "task_led.obj" at 10ACA 
+;Locate: CODE in "task_led.obj" at 10D3E 
 ;Align: CODE in "task_led.obj" with 0 
-;Locate: CODE in "muliu2" of "CMacro1232.lib"  at 10FBF 
+;Locate: CODE in "ram_heap.obj" at E6A9 
+;Align: CODE in "ram_heap.obj" with 0 
+;Locate: CODE in "muliu2" of "CMacro1232.lib"  at 112A0 
 ;Align: CODE in "muliu2" of "CMacro1232.lib"  with 0 
 ;Locate: CODE in "modu1" of "CMacro1232.lib"  at 989B 
 ;Align: CODE in "modu1" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "divu2" of "CMacro1232.lib"  at 10DE6 
+;Locate: CODE in "divu2" of "CMacro1232.lib"  at 110C7 
 ;Align: CODE in "divu2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "divi2" of "CMacro1232.lib"  at 10CBF 
+;Locate: CODE in "divi2" of "CMacro1232.lib"  at 11028 
 ;Align: CODE in "divi2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "modu2" of "CMacro1232.lib"  at 10E5D 
+;Locate: CODE in "modu2" of "CMacro1232.lib"  at 1113E 
 ;Align: CODE in "modu2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "divu1" of "CMacro1232.lib"  at 10ED3 
+;Locate: CODE in "divu1" of "CMacro1232.lib"  at 111B4 
 ;Align: CODE in "divu1" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__clz16" of "CMacro1232.lib"  at 10FE1 
+;Locate: CODE in "__clz16" of "CMacro1232.lib"  at 112C2 
 ;Align: CODE in "__clz16" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__divi16_n" of "CMacro1232.lib"  at FFF6 
+;Locate: CODE in "__divi16_n" of "CMacro1232.lib"  at 112CD 
 ;Align: CODE in "__divi16_n" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "lshiu1" of "CMacro1232.lib"  at 1100A 
+;Locate: CODE in "lshiu1" of "CMacro1232.lib"  at 112F5 
 ;Align: CODE in "lshiu1" of "CMacro1232.lib"  with 0 
 ;Locate: CODE in "rshu1" of "CMacro1232.lib"  at 98F8 
 ;Align: CODE in "rshu1" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__clz32" of "CMacro1232.lib"  at 10FAB 
+;Locate: CODE in "__clz32" of "CMacro1232.lib"  at 1128C 
 ;Align: CODE in "__clz32" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__divi32_n" of "CMacro1232.lib"  at 10F83 
+;Locate: CODE in "__divi32_n" of "CMacro1232.lib"  at 11264 
 ;Align: CODE in "__divi32_n" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "lshiu2" of "CMacro1232.lib"  at 10FEC 
+;Locate: CODE in "lshiu2" of "CMacro1232.lib"  at 112D7 
 ;Align: CODE in "lshiu2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "__modi32_n" of "CMacro1232.lib"  at 10F57 
+;Locate: CODE in "__modi32_n" of "CMacro1232.lib"  at 11238 
 ;Align: CODE in "__modi32_n" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "rshu2" of "CMacro1232.lib"  at 11000 
+;Locate: CODE in "rshu2" of "CMacro1232.lib"  at 112EB 
 ;Align: CODE in "rshu2" of "CMacro1232.lib"  with 0 
-;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 11012 
+;Locate: CODE in "_GPTag" of "CMacro1232.lib"  at 112FD 
 ;Align: CODE in "_GPTag" of "CMacro1232.lib"  with 0 
 ;Locate: _CODE_SPI_SEC in "SPI_Flash.obj" at 9800 
 ;Align: _CODE_SPI_SEC in "SPI_Flash.obj" with 0 
