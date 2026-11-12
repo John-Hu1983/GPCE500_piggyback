@@ -6,16 +6,31 @@
         "${workspaceFolder}",
         "${workspaceFolder}/Include",
         "${workspaceFolder}/project",
-        "${workspaceFolder}/**",
+        "${workspaceFolder}/project/voice/FileMergerVersion1",
+        "${workspaceFolder}/main",
+        "${workspaceFolder}/hal",
+        "${workspaceFolder}/bsp",
+        "${workspaceFolder}/audio",
+        "${workspaceFolder}/dev/button",
+        "${workspaceFolder}/dev/timer",
+        "${workspaceFolder}/dev/lcd",
+        "${workspaceFolder}/gui/common",
+        "${workspaceFolder}/message",
+        "${workspaceFolder}/schedule",
+        "${workspaceFolder}/task",
         "C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include",
         "C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include/sys"
+      ],
+      "forcedInclude": [
+        "${workspaceFolder}/Include/spinmaster.h"
       ],
       "defines": [
         "unSP=1",
         "__POINTER_32__=1",
-        "__CHAR_16__=1"
+        "__CHAR_16__=1",
+        "GPCE500A=1"
       ],
-      "compilerPath": "C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/toolchain/gcc.exe",
+      "compilerPath": "",
       "cStandard": "c99",
       "cppStandard": "c++11",
       "intelliSenseMode": "windows-gcc-x86"
