@@ -224,3 +224,17 @@ void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq fr
     *(P_SPU_Ch0_Filter_S2 + offset) = 0;
     *(P_SPU_Ch0_Filter_S1 + offset) = 0;
 }
+
+/*
+ *@ brief    : Select a voice resource and immediately start playback on the specified SPU channel.
+ *@ type     : public
+ *@ argu in  : channel: SPU_Channel_0..7; format: SPU_Format; freq: SPU_Sample_Freq; inx: voice index.
+ *@ argu out : Channel configured and opened for playback.
+ *@ theme    : Convenience wrapper combining spu_select_voice and spu_open_channel.
+ */
+void spu_play_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx)
+{
+    spu_select_voice(channel, format, freq, inx);
+    spu_open_channel(channel);
+}
+

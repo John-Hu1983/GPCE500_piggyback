@@ -19,14 +19,87 @@ static const GUI_Btn_Icon desktop_btn_icons[DESKTOP_BTN_COUNT] = {GUI_Icon_Music
                                                                   GUI_Icon_Volume, GUI_Icon_Light,
                                                                   GUI_Icon_Timer,  GUI_Icon_Setup};
 
-/* Status hints shown on the bottom bar when each button is focused */
-static const char *const desktop_status_hints[DESKTOP_BTN_COUNT] = {
-    "< [1/6] Music >", "< [2/6] Voice >", "< [3/6] Volume >",
-    "< [4/6] Light >", "< [5/6] Timer >", "< [6/6] Setup >"};
-
 static GUI_Desktop_Page *desktop_page = null;
 static HEAP_Mark desktop_heap_mark = 0U;
 static MSG_Sub desktop_btn_sub = MSG_SUB_INIT;
+
+/*
+ *@ brief    : Append an unsigned 16-bit decimal integer into a char buffer.
+ *@ type     : private
+ *@ argu in  : dst: output buffer; val: unsigned value.
+ *@ argu out : Pointer to the null-terminated end of `dst`.
+ *@ theme    : Lightweight string builder for heap status formatting.
+ */
+static char *_desktop_append_u16(char *dst, u16 val)
+{
+    char tmp[6];
+    u8 n = 0U;
+
+    do
+    {
+        tmp[n++] = (char)('0' + (val % 10U));
+        val /= 10U;
+    } while (val != 0U);
+
+    while (n > 0U)
+    {
+        *dst++ = tmp[--n];
+    }
+    *dst = '\0';
+    return dst;
+}
+
+/*
+ *@ brief    : Append a literal C string into a char buffer.
+ *@ type     : private
+ *@ argu in  : dst: output buffer; src: source literal string.
+ *@ argu out : Pointer to the null-terminated end of `dst`.
+ *@ theme    : Lightweight string builder helper.
+ */
+static char *_desktop_append_str(char *dst, const char *src)
+{
+    while (*src != '\0')
+    {
+        *dst++ = *src++;
+    }
+    *dst = '\0';
+    return dst;
+}
+
+/*
+ *@ brief    : Query ram_heap statistics and refresh the bottom bar GUI_Label with free percentage.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Bottom bar displays "m: **%" and top divider line.
+ *@ theme    : Compact RAM pool free-percentage indicator via GUI_Label widget.
+ */
+void gui_desktop_refresh_heap_bar(void)
+{
+    HEAP_Stats st;
+    u16 pct = 0U;
+    char *p;
+
+    if (desktop_page == null)
+    {
+        return;
+    }
+
+    heap_get_stats(&st);
+    if (st.total_words > 0U)
+    {
+        pct = (u16)(((u32)st.free_words * 100UL + (u32)(st.total_words / 2U)) /
+                    (u32)st.total_words);
+    }
+
+    p = desktop_page->heap_info_str;
+    p = _desktop_append_str(p, "M:");
+    p = _desktop_append_u16(p, pct);
+    _desktop_append_str(p, "%");
+
+    gui_label_set_text(&desktop_page->bottom_bar, desktop_page->heap_info_str);
+    gui_draw_hline(0, (s16)(LCD_WIDTH - 1U), (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H),
+                   GUI_RGB565(52, 72, 110));
+}
 
 /*
  *@ brief    : Handle button messages while the desktop page is active.
@@ -92,8 +165,6 @@ static void _desktop_set_focus(u8 new_idx)
     desktop_page->selected_idx = new_idx;
     desktop_page->buttons[new_idx].state = GUI_Btn_Focused;
     gui_button_draw(&desktop_page->buttons[new_idx]);
-
-    gui_textbox_set_text(&desktop_page->bottom_bar, desktop_status_hints[new_idx]);
 }
 
 /*
@@ -148,16 +219,16 @@ void gui_desktop_select_next(void)
 /*
  *@ brief    : Draw the PyQt-style top status bar with title and battery indicator icon.
  *@ type     : private
- *@ argu in  : top_bar: pointer to top bar textbox.
+ *@ argu in  : top_bar: pointer to top bar label.
  *@ argu out : Top bar, battery icon, and bottom accent line drawn.
  *@ theme    : Modern PyQt status header dynamically positioned for any LCD_WIDTH.
  */
-static void _desktop_draw_top_bar(const GUI_Textbox *top_bar)
+static void _desktop_draw_top_bar(const GUI_Label *top_bar)
 {
     s16 bat_x = (s16)(LCD_WIDTH - 22U);
     s16 cy = (s16)(DESKTOP_TOP_BAR_H / 2U);
 
-    gui_textbox_draw(top_bar);
+    gui_label_draw(top_bar);
 
     /* Small green status LED dot on the left */
     gui_fill_circle(8, cy, 3U, GUI_RGB565(0, 230, 118));
@@ -175,25 +246,11 @@ static void _desktop_draw_top_bar(const GUI_Textbox *top_bar)
 }
 
 /*
- *@ brief    : Draw the PyQt-style bottom navigation bar with active hint.
- *@ type     : private
- *@ argu in  : bottom_bar: pointer to bottom bar textbox.
- *@ argu out : Top divider and bottom bar drawn.
- *@ theme    : Modern PyQt footer bar.
- */
-static void _desktop_draw_bottom_bar(const GUI_Textbox *bottom_bar)
-{
-    gui_textbox_draw(bottom_bar);
-    gui_draw_hline(0, (s16)(LCD_WIDTH - 1U), (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H),
-                   GUI_RGB565(52, 72, 110));
-}
-
-/*
  *@ brief    : Enter the desktop UI: allocate widgets from ram_heap, draw layout, and subscribe
  * keys.
  *@ type     : public
  *@ argu in  : None.
- *@ argu out : Top bar, 2x3 PyQt card grid, and bottom bar rendered on LCD.
+ *@ argu out : Top bar, 2x3 PyQt card grid, and bottom heap bar rendered on LCD.
  *@ theme    : Dynamic widget allocation from ram_heap with watermark tracking.
  */
 void gui_desktop_enter(void)
@@ -215,21 +272,21 @@ void gui_desktop_enter(void)
 
     desktop_page->selected_idx = 0U;
 
-    /* 2. Configure Top Bar (0, 0, 128 x 20) */
-    gui_textbox_init(&desktop_page->top_bar, 0, 0, LCD_WIDTH, DESKTOP_TOP_BAR_H, "Spinmaster",
-                     GUI_Font_8x16);
+    /* 2. Configure Top Bar using GUI_Label with smallest font (GUI_Font_6x8) */
+    gui_label_init(&desktop_page->top_bar, 0, 0, LCD_WIDTH, DESKTOP_TOP_BAR_H, "Spinmaster OS",
+                   GUI_Font_6x8);
     desktop_page->top_bar.align = GUI_Align_Center;
     desktop_page->top_bar.bg_color = DESKTOP_TOPBAR_BG;
     desktop_page->top_bar.text_color = GUI_COLOR_WHITE;
-    desktop_page->top_bar.has_border = false;
+    desktop_page->top_bar.transparent = false;
 
-    /* 3. Configure Bottom Bar (0, 140, 128 x 20) */
-    gui_textbox_init(&desktop_page->bottom_bar, 0, (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H),
-                     LCD_WIDTH, DESKTOP_BOTTOM_BAR_H, desktop_status_hints[0], GUI_Font_8x16);
-    desktop_page->bottom_bar.align = GUI_Align_Center;
+    /* 3. Configure Bottom Bar using GUI_Label to display ram_heap free percentage on the left */
+    gui_label_init(&desktop_page->bottom_bar, 0, (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H),
+                   LCD_WIDTH, DESKTOP_BOTTOM_BAR_H, desktop_page->heap_info_str, GUI_Font_6x8);
+    desktop_page->bottom_bar.align = GUI_Align_Left;
     desktop_page->bottom_bar.bg_color = DESKTOP_BOTBAR_BG;
     desktop_page->bottom_bar.text_color = GUI_RGB565(120, 220, 255);
-    desktop_page->bottom_bar.has_border = false;
+    desktop_page->bottom_bar.transparent = false;
 
     /* 4. Configure 2 rows x 3 columns of PyQt-style icon card buttons in the middle area */
     for (r = 0U; r < DESKTOP_BTN_ROWS; ++r)
@@ -258,7 +315,7 @@ void gui_desktop_enter(void)
         gui_button_draw(&desktop_page->buttons[idx]);
     }
 
-    _desktop_draw_bottom_bar(&desktop_page->bottom_bar);
+    gui_desktop_refresh_heap_bar();
 
     /* 6. Subscribe to button messages for left/right selection */
     msg_subscribe_type(&desktop_btn_sub, MSG_Button, null, _desktop_on_button_msg);

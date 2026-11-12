@@ -76,6 +76,7 @@
 			"${workspaceFolder}/gui/font",
 			"${workspaceFolder}/gui/button",
 			"${workspaceFolder}/gui/textbox",
+			"${workspaceFolder}/gui/label",
 			"${workspaceFolder}/gui/bar",
 			"${workspaceFolder}/gui/checkbox",
 			"${workspaceFolder}/gui/slider",
@@ -83,7 +84,6 @@
 			"${workspaceFolder}/gui/desktop",
 			"${workspaceFolder}/message",
 			"${workspaceFolder}/schedule",
-			"${workspaceFolder}/task",
 			"C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include",
 			"C:/Program Files (x86)/Generalplus/unSPIDE_4.1.1/library/include/sys"
 		]

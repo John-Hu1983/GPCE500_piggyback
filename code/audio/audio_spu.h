@@ -74,6 +74,7 @@ void spu_init_audio(void);
 void spu_service_irq(void);
 void spu_select_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx);
 void spu_open_channel(SPU_Channel channel);
+void spu_play_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq, unsigned inx);
 void spu_set_volume(unsigned vol);
 void spu_stop_channel(SPU_Channel channel);
 void spu_read_pcm(unsigned inx);

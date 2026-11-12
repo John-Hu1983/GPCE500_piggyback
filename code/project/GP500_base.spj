@@ -3,8 +3,10 @@
 #**DO NOT EDIT**
 #TARTYPE (GPCE500A)Application
 CFG=Debug
-
-VER=4.1.1 
+
+
+VER=4.1.1 
+
 # Begin Project
 #Name Begin GPCE500A-Debug
 # Begin SubItem "GPCE3100_ROMCode  files"
@@ -128,7 +130,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1936942336
+EXPORT=1701601131
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -183,7 +185,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1684630528
+EXPORT=1954047232
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -589,6 +591,29 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "label"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\label\gui_label.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\label\gui_label.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # Begin Group "bar"
 #PROP Default_Filter=
 USEPARAM=FALSE
@@ -744,29 +769,6 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\schedule\schedule.h
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# End Group
-# Begin Group "task"
-#PROP Default_Filter=
-USEPARAM=FALSE
-PARAM=
-EXPORT=3
-SPECIFICFLAG=0
-# Begin Source File
-SOURCE=..\task\task_led.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\task\task_led.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -921,7 +923,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1936942336
+EXPORT=1701601131
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -976,7 +978,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1684630528
+EXPORT=1954047232
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -1382,6 +1384,29 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "label"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\label\gui_label.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\label\gui_label.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # Begin Group "bar"
 #PROP Default_Filter=
 USEPARAM=FALSE
@@ -1537,29 +1562,6 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\schedule\schedule.h
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# End Group
-# Begin Group "task"
-#PROP Default_Filter=
-USEPARAM=FALSE
-PARAM=
-EXPORT=3
-SPECIFICFLAG=0
-# Begin Source File
-SOURCE=..\task\task_led.c
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\task\task_led.h
 USEPARAM=FALSE
 PARAM=
 ID=

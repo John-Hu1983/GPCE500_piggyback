@@ -172,7 +172,8 @@ bool lcd_take_te_flag(void)
 }
 
 /*
- *@ brief    : Initialize the active LCD_Device, enter the default desktop UI, and turn on backlight.
+ *@ brief    : Initialize the active LCD_Device, enter the default desktop UI, and turn on
+ * backlight.
  *@ type     : public
  *@ argu in  : None.
  *@ argu out : Active LCD initialized, desktop UI rendered, and backlight set to 65%.
@@ -181,10 +182,7 @@ bool lcd_take_te_flag(void)
 void lcd_init_module(void)
 {
     const LCD_Device *dev = _lcd_check_dev(false);
-
     dev->init();
     lcd_ready = true;
-
-    gui_desktop_enter();
     lcd_set_backlight(LCD_BL_DEFAULT_PERCENT);
 }

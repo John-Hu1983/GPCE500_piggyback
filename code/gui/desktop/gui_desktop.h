@@ -31,8 +31,9 @@
 
 typedef struct
 {
-    GUI_Textbox top_bar;
-    GUI_Textbox bottom_bar;
+    GUI_Label top_bar;
+    GUI_Label bottom_bar;
+    char heap_info_str[32];
     GUI_Button buttons[DESKTOP_BTN_COUNT];
     u8 selected_idx;
 } GUI_Desktop_Page;
@@ -42,5 +43,6 @@ void gui_desktop_exit(void);
 bool gui_desktop_is_active(void);
 void gui_desktop_select_prev(void);
 void gui_desktop_select_next(void);
+void gui_desktop_refresh_heap_bar(void);
 
 #endif /* _GUI_DESKTOP_H__ */

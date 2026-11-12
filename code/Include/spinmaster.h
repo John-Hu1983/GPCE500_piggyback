@@ -43,6 +43,7 @@
 #include "../gui/font/gui_font.h"
 #include "../gui/button/gui_button.h"
 #include "../gui/textbox/gui_textbox.h"
+#include "../gui/label/gui_label.h"
 #include "../gui/bar/gui_bar.h"
 #include "../gui/checkbox/gui_checkbox.h"
 #include "../gui/slider/gui_slider.h"
@@ -50,7 +51,6 @@
 #include "../gui/desktop/gui_desktop.h"
 
 #include "../schedule/schedule.h"
-#include "../task/task_led.h"
 
 #endif // _SPINMASTER_H__
 
