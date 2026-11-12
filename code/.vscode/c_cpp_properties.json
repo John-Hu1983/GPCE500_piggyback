@@ -15,6 +15,7 @@
         "${workspaceFolder}/dev/timer",
         "${workspaceFolder}/dev/lcd",
         "${workspaceFolder}/gui/common",
+        "${workspaceFolder}/gui/font",
         "${workspaceFolder}/message",
         "${workspaceFolder}/schedule",
         "${workspaceFolder}/task",

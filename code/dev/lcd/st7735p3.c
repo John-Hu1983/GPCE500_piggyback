@@ -163,11 +163,11 @@ void send_st7735_data_u16(u16 data)
 }
 
 /*
- *@ brief    : Send a buffer of 8-bit parameter bytes to ST7735P3.
+ *@ brief    : Send a buffer of 8-bit parameter bytes to ST7735P3 under a single CS frame.
  *@ type     : public
  *@ argu in  : buf: parameter byte array; count: number of bytes.
- *@ argu out : All parameter bytes transmitted.
- *@ theme    : Sequential parameter byte write using send_st7735_data_u8.
+ *@ argu out : All parameter bytes transmitted continuously with CS asserted once.
+ *@ theme    : Batch 8-bit SPI2 FIFO write without per-byte CS/A0 GPIO toggling.
  */
 void send_st7735_buf_u8(const u8 *buf, u16 count)
 {
@@ -177,10 +177,95 @@ void send_st7735_buf_u8(const u8 *buf, u16 count)
     {
         bsp_halt_fault(BSP_Fault_LCD_Arg);
     }
+
+    st7735_set_cs_level(false);
+    st7735_set_data_format(ST7735_DATA_E);
     for (i = 0U; i < count; ++i)
     {
-        send_st7735_data_u8(buf[i]);
+        *P_SPI2_TX_Data = buf[i];
+        while ((*P_SPI2_TX_Status & 0x0FU) > 6U)
+        {
+        }
+        if ((i & 0x00FFU) == 0U)
+        {
+            system_clear_watchdog();
+        }
     }
+    SPI_SEND_BUSY;
+    *P_SPI2_Misc = 0;
+    st7735_set_cs_level(true);
+}
+
+/*
+ *@ brief    : Send a buffer of 16-bit words (big-endian) to ST7735P3 under a single CS frame.
+ *@ type     : public
+ *@ argu in  : buf: 16-bit word array; count: number of 16-bit words.
+ *@ argu out : All 16-bit words transmitted continuously with CS asserted once.
+ *@ theme    : Batch 16-bit SPI2 FIFO streaming without per-word CS/A0 GPIO toggling.
+ */
+void send_st7735_buf_u16(const u16 *buf, u32 count)
+{
+    u32 i;
+
+    if (buf == null || count == 0UL)
+    {
+        bsp_halt_fault(BSP_Fault_LCD_Arg);
+    }
+
+    st7735_set_cs_level(false);
+    st7735_set_data_format(ST7735_DATA_E);
+    for (i = 0UL; i < count; ++i)
+    {
+        u16 word = buf[i];
+        *P_SPI2_TX_Data = (u8)(word >> 8);
+        *P_SPI2_TX_Data = (u8)(word & 0x00FFU);
+        while ((*P_SPI2_TX_Status & 0x0FU) > 6U)
+        {
+        }
+        if ((i & 0x00FFUL) == 0UL)
+        {
+            system_clear_watchdog();
+        }
+    }
+    SPI_SEND_BUSY;
+    *P_SPI2_Misc = 0;
+    st7735_set_cs_level(true);
+}
+
+/*
+ *@ brief    : Repeatedly send one 16-bit word (big-endian) to ST7735P3 under a single CS frame.
+ *@ type     : public
+ *@ argu in  : data: 16-bit RGB565 value; count: number of repetitions.
+ *@ argu out : 16-bit word repeated count times with CS asserted once.
+ *@ theme    : High-speed solid color SPI2 FIFO streaming without per-pixel CS/A0 GPIO toggling.
+ */
+void send_st7735_repeat_u16(u16 data, u32 count)
+{
+    u8 hi = (u8)(data >> 8);
+    u8 lo = (u8)(data & 0x00FFU);
+
+    if (count == 0UL)
+    {
+        return;
+    }
+
+    st7735_set_cs_level(false);
+    st7735_set_data_format(ST7735_DATA_E);
+    while (count-- != 0UL)
+    {
+        *P_SPI2_TX_Data = hi;
+        *P_SPI2_TX_Data = lo;
+        while ((*P_SPI2_TX_Status & 0x0FU) > 6U)
+        {
+        }
+        if ((count & 0x00FFUL) == 0UL)
+        {
+            system_clear_watchdog();
+        }
+    }
+    SPI_SEND_BUSY;
+    *P_SPI2_Misc = 0;
+    st7735_set_cs_level(true);
 }
 
 /*
@@ -237,7 +322,8 @@ bool st7735_take_te_flag(void)
 void st7735_te_irq_callback(void) { st7735_msg_bit.bits.te_flag = 1; }
 
 /*
- *@ brief    : Initialize ST7735P3 GPIO control pins, backlight PWM, TE interrupt, and SPI2 interface.
+ *@ brief    : Initialize ST7735P3 GPIO control pins, backlight PWM, TE interrupt, and SPI2
+ * interface.
  *@ type     : public
  *@ argu in  : None.
  *@ argu out : CS, A0, RESET initialized high, IOA8 PWM & IOB10 EXT2 configured, SPI2 at Div2.
@@ -302,4 +388,3 @@ void st7735_init_device(void)
     exisr_enable_channel(EXISR_Ch_2);
     st7735_msg_bit.bits.ready = 1;
 }
-

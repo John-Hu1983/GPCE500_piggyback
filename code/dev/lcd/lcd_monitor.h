@@ -47,7 +47,9 @@ typedef struct
     void (*write_cmd)(u8 cmd);
     void (*write_data_u8)(u8 data);
     void (*write_data_u16)(u16 data);
-    void (*write_buf)(const u8 *buf, u16 count);
+    void (*write_buf_u8)(const u8 *buf, u16 count);
+    void (*write_buf_u16)(const u16 *buf, u32 count);
+    void (*write_repeat_u16)(u16 data, u32 count);
     void (*set_backlight)(u16 percent);
     bool (*take_te_flag)(void);
 } LCD_Device;
@@ -56,11 +58,6 @@ void lcd_register_device(const LCD_Device *dev);
 const LCD_Device *lcd_get_device(void);
 
 void lcd_init_module(void);
-void lcd_reset_hardware(void);
-void lcd_write_cmd(u8 cmd);
-void lcd_write_data_u8(u8 data);
-void lcd_write_data_u16(u16 data);
-void lcd_write_buf(const u8 *buf, u16 count);
 void lcd_set_window(u16 x0, u16 y0, u16 x1, u16 y1);
 void lcd_fill_rect(u16 x0, u16 y0, u16 w, u16 h, u16 color);
 void lcd_fill_color(u16 color);

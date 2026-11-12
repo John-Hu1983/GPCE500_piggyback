@@ -128,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=7759104
+EXPORT=1701601024
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -171,11 +171,19 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
+SOURCE=..\gui\font\gui_font.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
 SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6911232
+EXPORT=778661888
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -505,6 +513,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\common\gui_common.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "font"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\font\gui_font.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\font\gui_font.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -706,7 +737,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=7759104
+EXPORT=1701601024
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -749,11 +780,19 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
+SOURCE=..\gui\font\gui_font.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
 SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=6911232
+EXPORT=778661888
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -1083,6 +1122,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\common\gui_common.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "font"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\font\gui_font.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\font\gui_font.h
 USEPARAM=FALSE
 PARAM=
 ID=

@@ -136,7 +136,7 @@ void gui_draw_point(s16 x, s16 y, u16 color)
         return;
     }
     lcd_set_window((u16)x, (u16)y, (u16)x, (u16)y);
-    lcd_write_data_u16(color);
+    lcd_get_device()->write_data_u16(color);
 }
 
 /*
@@ -1430,11 +1430,9 @@ uint8_t gui_set_window(uint8_t x0, uint8_t x1, uint8_t y0, uint8_t y1)
  */
 void gui_send_rgb565(uint16_t color, uint16_t count)
 {
-    lcd_write_cmd(LCD_CMD_RAMWR);
-    while (count--)
-    {
-        lcd_write_data_u16(color);
-    }
+    const LCD_Device *dev = lcd_get_device();
+    dev->write_cmd(LCD_CMD_RAMWR);
+    dev->write_repeat_u16(color, count);
 }
 
 /*

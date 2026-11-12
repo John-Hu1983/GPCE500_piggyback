@@ -120,6 +120,8 @@ void send_st7735_command(u8 cmd);
 void send_st7735_data_u8(u8 data);
 void send_st7735_data_u16(u16 data);
 void send_st7735_buf_u8(const u8 *buf, u16 count);
+void send_st7735_buf_u16(const u16 *buf, u32 count);
+void send_st7735_repeat_u16(u16 data, u32 count);
 void st7735_set_backlight(u16 percent);
 bool st7735_take_te_flag(void);
 void st7735_te_irq_callback(void);

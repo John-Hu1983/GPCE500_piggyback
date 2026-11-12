@@ -39,6 +39,7 @@
 #include "../dev/lcd/st7735p3.h"
 #include "../dev/lcd/lcd_monitor.h"
 #include "../gui/common/gui_common.h"
+#include "../gui/font/gui_font.h"
 
 #include "../schedule/schedule.h"
 #include "../task/task_led.h"
