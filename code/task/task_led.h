@@ -1,15 +1,9 @@
 #ifndef _TASK_LED_H__
 #define _TASK_LED_H__
 
-#ifndef LED_PORT
-#define LED_PORT GPIOB
-#endif
-#ifndef LED_PIN
-#define LED_PIN 2U
-#endif
-#ifndef LED_ACTIVE_LEVEL
-#define LED_ACTIVE_LEVEL 1
-#endif
+#define LED_PORT            GPIOB
+#define LED_PIN             2U
+#define LED_ACTIVE_LEVEL    1
 
 /*
  * Toggle half-periods in RTC ticks (at RTC_Freq_2K = 2048Hz):
@@ -17,15 +11,9 @@
  * - 1Hz   (1.0s period -> toggle every 0.5s):  1024 ticks
  * - 2Hz   (0.5s period -> toggle every 0.25s):  512 ticks
  */
-#ifndef LED_SLICE_0_5HZ
-#define LED_SLICE_0_5HZ 2048U
-#endif
-#ifndef LED_SLICE_1HZ
-#define LED_SLICE_1HZ 1024U
-#endif
-#ifndef LED_SLICE_2HZ
-#define LED_SLICE_2HZ 512U
-#endif
+#define LED_SLICE_0_5HZ     2048U
+#define LED_SLICE_1HZ       1024U
+#define LED_SLICE_2HZ       512U
 
 #if LED_ACTIVE_LEVEL != 0 && LED_ACTIVE_LEVEL != 1
 #error LED_ACTIVE_LEVEL must be 0 or 1

@@ -10,6 +10,16 @@
   "C_Cpp.intelliSenseEngine": "default",
   "C_Cpp.enhancedColorization": "enabled",
   "editor.semanticHighlighting.enabled": true,
+  "editor.semanticTokenColorCustomizations": {
+    "enabled": true,
+    "rules": {
+      "variable": "#9CDCFE",
+      "variable.global": "#4FC1FF",
+      "variable.readonly": "#4FC1FF",
+      "property": "#9CDCFE",
+      "parameter": "#9CDCFE"
+    }
+  },
   "C_Cpp.default.compilerPath": "",
   "C_Cpp.default.cStandard": "c99",
   "C_Cpp.default.intelliSenseMode": "windows-gcc-x86",

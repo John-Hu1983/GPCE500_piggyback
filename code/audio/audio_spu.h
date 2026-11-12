@@ -7,9 +7,7 @@
 #define AUDIO_SPU_CHANNEL_MASK 0x00FFU
 
 /* Preserve the original default; select ROM_TABLE here or with a compiler define. */
-#ifndef AUDIO_SPU_SPEECH_SOURCE_TYPE
 #define AUDIO_SPU_SPEECH_SOURCE_TYPE AUDIO_SPU_SOURCE_FILEMERGER_VERSION1
-#endif
 
 #if AUDIO_SPU_SPEECH_SOURCE_TYPE != AUDIO_SPU_SOURCE_ROM_TABLE &&                                  \
     AUDIO_SPU_SPEECH_SOURCE_TYPE != AUDIO_SPU_SOURCE_FILEMERGER_VERSION1

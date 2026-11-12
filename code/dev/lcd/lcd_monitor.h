@@ -7,24 +7,14 @@
  * - Binds panel driver operations into a function-pointer device structure (LCD_Device).
  * - Owns panel-agnostic TE synchronization (IOB10 / EXT2) and backlight PWM control (IOA8).
  */
-#ifndef LCD_WIDTH
-#define LCD_WIDTH ST7735P3_WIDTH
-#endif
-#ifndef LCD_HEIGHT
-#define LCD_HEIGHT ST7735P3_HEIGHT
-#endif
-#ifndef LCD_X_OFFSET
-#define LCD_X_OFFSET ST7735P3_X_OFFSET
-#endif
-#ifndef LCD_Y_OFFSET
-#define LCD_Y_OFFSET ST7735P3_Y_OFFSET
-#endif
-
-#ifndef LCD_BL_DEFAULT_PERCENT
-#define LCD_BL_DEFAULT_PERCENT 65U
-#endif
-
 // clang-format off
+#define LCD_WIDTH               ST7735P3_WIDTH
+#define LCD_HEIGHT              ST7735P3_HEIGHT
+#define LCD_X_OFFSET            ST7735P3_X_OFFSET
+#define LCD_Y_OFFSET            ST7735P3_Y_OFFSET
+
+#define LCD_BL_DEFAULT_PERCENT  65U
+
 #define MAX_X               LCD_WIDTH
 #define MAX_Y               LCD_HEIGHT
 #define SIZE_X              (MAX_X - 1U)

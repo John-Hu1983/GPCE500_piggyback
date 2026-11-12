@@ -50,12 +50,8 @@ typedef int64_t s64;
 #define SERIAL_PORT_A           0
 #define SERIAL_PORT_B           1
 
-#ifndef UART_PORT
 #define UART_PORT               SERIAL_PORT_A
-#endif
-#ifndef SPI_PORT
 #define SPI_PORT                SERIAL_PORT_B
-#endif
 
 /** Blocking waits are bounded by polling iterations, not milliseconds. */
 #define SERIAL_WAIT_LIMIT       0x0001FFFFUL

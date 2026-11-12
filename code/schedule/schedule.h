@@ -6,9 +6,7 @@
  * before yielding back to the main loop (at 2048Hz, 2 ticks ~= 0.98ms).
  * Remaining ready tasks are dispatched on the next pass starting from the round-robin cursor.
  */
-#ifndef SCH_QUOTA_TICKS
 #define SCH_QUOTA_TICKS 2U
-#endif
 
 #if SCH_QUOTA_TICKS < 1 || SCH_QUOTA_TICKS > 32767U
 #error SCH_QUOTA_TICKS must be 1..32767 RTC ticks

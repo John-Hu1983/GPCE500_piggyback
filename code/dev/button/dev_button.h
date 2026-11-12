@@ -6,12 +6,8 @@
  * Define each button's GPIO port, pin, input pattern, and active level here.
  * The hardware table itself lives in Flash/ROM (const), consuming 0 bytes of RAM.
  */
-#ifndef BTN_ACTIVE_LEVEL
-#define BTN_ACTIVE_LEVEL 1
-#endif
-#ifndef BTN_INPUT_PATTERN
-#define BTN_INPUT_PATTERN GPIO_In_PullLow
-#endif
+#define BTN_ACTIVE_LEVEL    1
+#define BTN_INPUT_PATTERN   GPIO_In_PullLow
 
 /*
  * Scan period in RTC ticks (at 2048Hz, 16 ticks = 7.8125ms).
@@ -20,21 +16,11 @@
  * - BTN_DOUBLE_SCANS   = 32  (250ms)
  * - BTN_HOLD_SCANS     = 64  (500ms)
  */
-#ifndef BTN_SCAN_TICKS
-#define BTN_SCAN_TICKS 16U
-#endif
-#ifndef BTN_DEBOUNCE_SCANS
-#define BTN_DEBOUNCE_SCANS 3U
-#endif
-#ifndef BTN_DOUBLE_SCANS
-#define BTN_DOUBLE_SCANS 32U
-#endif
-#ifndef BTN_HOLD_SCANS
-#define BTN_HOLD_SCANS 64U
-#endif
-#ifndef BTN_ALLOW_DOUBLE
-#define BTN_ALLOW_DOUBLE false
-#endif
+#define BTN_SCAN_TICKS      16U
+#define BTN_DEBOUNCE_SCANS  3U
+#define BTN_DOUBLE_SCANS    32U
+#define BTN_HOLD_SCANS      64U
+#define BTN_ALLOW_DOUBLE    false
 
 #if BTN_ACTIVE_LEVEL != 0 && BTN_ACTIVE_LEVEL != 1
 #error BTN_ACTIVE_LEVEL must be 0 or 1

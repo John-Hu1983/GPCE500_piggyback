@@ -9,18 +9,10 @@
  * - SPI_CLK / SCK  : IOB13 (SPI2 Port B SCK)
  * - SPI_MOSI / SDA : IOB15 (SPI2 Port B MOSI)
  */
-#ifndef ST7735P3_WIDTH
-#define ST7735P3_WIDTH 128U
-#endif
-#ifndef ST7735P3_HEIGHT
-#define ST7735P3_HEIGHT 160U
-#endif
-#ifndef ST7735P3_X_OFFSET
-#define ST7735P3_X_OFFSET 0U
-#endif
-#ifndef ST7735P3_Y_OFFSET
-#define ST7735P3_Y_OFFSET 0U
-#endif
+#define ST7735P3_WIDTH      128U
+#define ST7735P3_HEIGHT     160U
+#define ST7735P3_X_OFFSET   0U
+#define ST7735P3_Y_OFFSET   0U
 
 // clang-format off
 #define ST7735_SUCCESS      0
