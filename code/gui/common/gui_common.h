@@ -11,6 +11,21 @@
     ((u16)((((u16)(r) & 0xF8U) << 8) | (((u16)(g) & 0xFCU) << 3) | (((u16)(b) & 0xF8U) >> 3)))
 
 // clang-format off
+/* Standard RGB565 GUI color palette */
+#define GUI_COLOR_BLACK         LCD_COLOR_BLACK
+#define GUI_COLOR_WHITE         LCD_COLOR_WHITE
+#define GUI_COLOR_RED           LCD_COLOR_RED
+#define GUI_COLOR_GREEN         LCD_COLOR_GREEN
+#define GUI_COLOR_BLUE          LCD_COLOR_BLUE
+#define GUI_COLOR_YELLOW        LCD_COLOR_YELLOW
+#define GUI_COLOR_CYAN          LCD_COLOR_CYAN
+#define GUI_COLOR_MAGENTA       LCD_COLOR_MAGENTA
+#define GUI_COLOR_GRAY          0x8410U
+#define GUI_COLOR_DARKGRAY      0x4208U
+#define GUI_COLOR_LIGHTGRAY     0xC618U
+#define GUI_COLOR_NAVY          0x000FU
+#define GUI_COLOR_ORANGE        0xFD20U
+
 /* Quadrant mask bits for quarter-circle arcs and rounded corners */
 #define GUI_QUAD_TOP_RIGHT      0x01U   /* 0..90 deg    (x >= xc, y <= yc) */
 #define GUI_QUAD_TOP_LEFT       0x02U   /* 90..180 deg  (x <= xc, y <= yc) */

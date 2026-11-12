@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "d:/JohnHu/Github_private/GPCE500_piggyback/code/project",
-      "program": "d:/JohnHu/Github_private/GPCE500_piggyback/code/project/build/Debug/outDebug",
+      "cwd": "d:/JohnHu/Github_private/GPCE500_piggyback/code/hal",
+      "program": "d:/JohnHu/Github_private/GPCE500_piggyback/code/hal/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

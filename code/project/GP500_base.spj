@@ -128,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1701601024
+EXPORT=778661888
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -183,7 +183,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=778661888
+EXPORT=1936942336
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -536,6 +536,144 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\font\gui_font.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "button"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\button\gui_button.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\button\gui_button.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "textbox"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\textbox\gui_textbox.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\textbox\gui_textbox.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "bar"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\bar\gui_bar.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\bar\gui_bar.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "checkbox"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\checkbox\gui_checkbox.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\checkbox\gui_checkbox.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "slider"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\slider\gui_slider.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\slider\gui_slider.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "switch"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\switch\gui_switch.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\switch\gui_switch.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -737,7 +875,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1701601024
+EXPORT=778661888
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -792,7 +930,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=778661888
+EXPORT=1936942336
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -1145,6 +1283,144 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\font\gui_font.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "button"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\button\gui_button.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\button\gui_button.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "textbox"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\textbox\gui_textbox.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\textbox\gui_textbox.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "bar"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\bar\gui_bar.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\bar\gui_bar.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "checkbox"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\checkbox\gui_checkbox.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\checkbox\gui_checkbox.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "slider"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\slider\gui_slider.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\slider\gui_slider.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "switch"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\switch\gui_switch.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\switch\gui_switch.h
 USEPARAM=FALSE
 PARAM=
 ID=

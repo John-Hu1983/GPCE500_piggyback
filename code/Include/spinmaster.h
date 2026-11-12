@@ -40,6 +40,12 @@
 #include "../dev/lcd/lcd_monitor.h"
 #include "../gui/common/gui_common.h"
 #include "../gui/font/gui_font.h"
+#include "../gui/button/gui_button.h"
+#include "../gui/textbox/gui_textbox.h"
+#include "../gui/bar/gui_bar.h"
+#include "../gui/checkbox/gui_checkbox.h"
+#include "../gui/slider/gui_slider.h"
+#include "../gui/switch/gui_switch.h"
 
 #include "../schedule/schedule.h"
 #include "../task/task_led.h"
