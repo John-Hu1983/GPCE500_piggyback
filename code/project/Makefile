@@ -123,6 +123,7 @@ OBJFILES	= \
 	"$(OUTDIR)\gui_checkbox.obj" \
 	"$(OUTDIR)\gui_slider.obj" \
 	"$(OUTDIR)\gui_switch.obj" \
+	"$(OUTDIR)\gui_desktop.obj" \
 	"$(OUTDIR)\message.obj" \
 	"$(OUTDIR)\schedule.obj" \
 	"$(OUTDIR)\task_led.obj" \
@@ -316,6 +317,13 @@ OBJFILES	= \
 "$(OUTDIR)\gui_switch.obj": "$(OUTDIR)\gui_switch.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gui_switch.obj" "$(OUTDIR)\gui_switch.asm" 
 
+"$(OUTDIR)\gui_desktop.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\desktop\gui_desktop.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\spinmaster.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\desktop\gui_desktop.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\gui_desktop.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/gui/desktop/gui_desktop.c" 
+
+"$(OUTDIR)\gui_desktop.obj": "$(OUTDIR)\gui_desktop.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gui_desktop.obj" "$(OUTDIR)\gui_desktop.asm" 
+
 "$(OUTDIR)\message.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\message\message.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\spinmaster.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\System.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\SPI_Flash.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\ram_heap\ram_heap.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_define.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_rtc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_exisr.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\audio_spu.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\timer\soft_timer.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\message\message.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\button\dev_button.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\lcd\st7735p3.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\lcd\lcd_monitor.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\common\gui_common.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\font\gui_font.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\button\gui_button.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\textbox\gui_textbox.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\bar\gui_bar.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\checkbox\gui_checkbox.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\slider\gui_slider.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\switch\gui_switch.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\schedule\schedule.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\task\task_led.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\string.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdio.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\_ansi.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdarg.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdlib.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\reent.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\sys\reent.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\machine/_types.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\assert.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\limits.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdarg.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\math.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\machine\ieeefp.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\message.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/message/message.c" 
@@ -470,6 +478,9 @@ CLEANFILES = \
 	"$(OUTDIR)\gui_switch.obj" \
 	"$(OUTDIR)\gui_switch.lst" \
 	"$(OUTDIR)\gui_switch.asm" \
+	"$(OUTDIR)\gui_desktop.obj" \
+	"$(OUTDIR)\gui_desktop.lst" \
+	"$(OUTDIR)\gui_desktop.asm" \
 	"$(OUTDIR)\message.obj" \
 	"$(OUTDIR)\message.lst" \
 	"$(OUTDIR)\message.asm" \

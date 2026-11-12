@@ -47,6 +47,7 @@
 #include "../gui/checkbox/gui_checkbox.h"
 #include "../gui/slider/gui_slider.h"
 #include "../gui/switch/gui_switch.h"
+#include "../gui/desktop/gui_desktop.h"
 
 #include "../schedule/schedule.h"
 #include "../task/task_led.h"

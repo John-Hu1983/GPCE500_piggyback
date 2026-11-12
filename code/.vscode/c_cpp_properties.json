@@ -24,6 +24,7 @@
         "${workspaceFolder}/gui/checkbox",
         "${workspaceFolder}/gui/slider",
         "${workspaceFolder}/gui/switch",
+        "${workspaceFolder}/gui/desktop",
         "${workspaceFolder}/message",
         "${workspaceFolder}/schedule",
         "${workspaceFolder}/task",

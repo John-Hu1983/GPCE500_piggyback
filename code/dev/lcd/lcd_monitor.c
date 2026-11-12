@@ -172,24 +172,19 @@ bool lcd_take_te_flag(void)
 }
 
 /*
- *@ brief    : Initialize the active LCD_Device, show welcome screen, and turn on backlight.
+ *@ brief    : Initialize the active LCD_Device, enter the default desktop UI, and turn on backlight.
  *@ type     : public
  *@ argu in  : None.
- *@ argu out : Active LCD initialized, "wellcom spinmaster" displayed, and backlight set to 65%.
+ *@ argu out : Active LCD initialized, desktop UI rendered, and backlight set to 65%.
  *@ theme    : Panel-agnostic monitor startup entry called from bsp_init_global.
  */
 void lcd_init_module(void)
 {
     const LCD_Device *dev = _lcd_check_dev(false);
-    s16 x_wellcom, x_spinmaster;
 
     dev->init();
     lcd_ready = true;
 
-    lcd_fill_color(LCD_COLOR_BLACK);
-    x_wellcom = (s16)((dev->width - gui_font_get_str_width("wellcom", GUI_Font_12x24)) / 2U);
-    x_spinmaster = (s16)((dev->width - gui_font_get_str_width("spinmaster", GUI_Font_12x24)) / 2U);
-    gui_draw_str_at(x_wellcom, 52, "wellcom", LCD_COLOR_WHITE, GUI_Font_12x24);
-    gui_draw_str_at(x_spinmaster, 82, "spinmaster", LCD_COLOR_YELLOW, GUI_Font_12x24);
+    gui_desktop_enter();
     lcd_set_backlight(LCD_BL_DEFAULT_PERCENT);
 }

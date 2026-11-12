@@ -681,6 +681,29 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "desktop"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\desktop\gui_desktop.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\desktop\gui_desktop.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End Group
 # Begin Group "message"
 #PROP Default_Filter=
@@ -1444,6 +1467,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\switch\gui_switch.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "desktop"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\desktop\gui_desktop.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\desktop\gui_desktop.h
 USEPARAM=FALSE
 PARAM=
 ID=

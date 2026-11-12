@@ -9,6 +9,17 @@ typedef enum
     GUI_Btn_Disabled = 3
 } GUI_Btn_State;
 
+typedef enum
+{
+    GUI_Icon_None = 0,
+    GUI_Icon_Music = 1,
+    GUI_Icon_Voice = 2,
+    GUI_Icon_Volume = 3,
+    GUI_Icon_Light = 4,
+    GUI_Icon_Timer = 5,
+    GUI_Icon_Setup = 6
+} GUI_Btn_Icon;
+
 typedef struct
 {
     s16 x;
@@ -18,10 +29,14 @@ typedef struct
     u8 radius;
     const char *label;
     GUI_Font_Size font;
+    GUI_Btn_Icon icon;
+    u16 icon_bg_color;
     u16 bg_normal;
+    u16 bg_focused;
     u16 bg_pressed;
     u16 border_color;
     u16 focus_color;
+    u16 shadow_color;
     u16 text_color;
     GUI_Btn_State state;
 } GUI_Button;
