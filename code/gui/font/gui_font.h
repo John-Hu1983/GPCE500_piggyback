@@ -18,26 +18,34 @@ enum Size
 /* Extended multi-size font selector */
 typedef enum
 {
-    GUI_Font_6x8 = 0,   /* 1x width, 1x height (5x8 glyph, 6x8 cell) */
-    GUI_Font_6x16 = 1,  /* 1x width, 2x height (5x16 glyph, 6x16 cell) */
-    GUI_Font_12x16 = 2, /* 2x width, 2x height (10x16 glyph, 12x16 cell) */
-    GUI_Font_18x24 = 3, /* 3x width, 3x height (15x24 glyph, 18x24 cell) */
-    GUI_Font_24x32 = 4  /* 4x width, 4x height (20x32 glyph, 24x32 cell) */
+    GUI_Font_6x8 = 0,   /* Compact 6x8  (5x8 native bitmap) */
+    GUI_Font_8x16 = 1,  /* Crisp   8x16 (Consolas Bold 8x16 native bitmap) */
+    GUI_Font_12x24 = 2, /* Crisp  12x24 (Consolas Bold 12x24 native bitmap) */
+    GUI_Font_16x32 = 3, /* Large  16x32 (2x scaled from 8x16 native bitmap) */
+    GUI_Font_24x48 = 4  /* Title  24x48 (2x scaled from 12x24 native bitmap) */
 } GUI_Font_Size;
+
+/* Backward-compatible size aliases */
+#define GUI_Font_6x16   GUI_Font_8x16
+#define GUI_Font_12x16  GUI_Font_8x16
+#define GUI_Font_18x24  GUI_Font_12x24
+#define GUI_Font_24x32  GUI_Font_16x32
 
 /* Extensible bitmap font descriptor */
 typedef struct
 {
-    u8 width;      /* Glyph bitmap columns (e.g., 5) */
-    u8 height;     /* Glyph bitmap rows (e.g., 8) */
-    u8 spacing_x;  /* Inter-character horizontal spacing in base pixels (e.g., 1) */
-    u8 spacing_y;  /* Inter-line vertical spacing in base pixels (e.g., 1) */
+    u8 width;      /* Glyph bitmap columns */
+    u8 height;     /* Glyph bitmap rows */
+    u8 spacing_x;  /* Inter-character horizontal spacing in pixels */
+    u8 spacing_y;  /* Inter-line vertical spacing in pixels */
     u8 first_char; /* First supported ASCII code (0x20) */
     u8 last_char;  /* Last supported ASCII code (0x7F) */
     const u8 *table;
 } GUI_Font_Desc;
 
 extern const unsigned char FONTS[][CHARS_COLS_LENGTH];
+extern const u8 FONT_8X16[96][16];
+extern const u16 FONT_12X24[96][24];
 extern const GUI_Font_Desc gui_font_5x8;
 
 /* Cursor-based legacy APIs */

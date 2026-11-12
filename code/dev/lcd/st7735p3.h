@@ -9,81 +9,61 @@
  * - SPI_CLK / SCK  : IOB13 (SPI2 Port B SCK)
  * - SPI_MOSI / SDA : IOB15 (SPI2 Port B MOSI)
  */
-#define ST7735P3_WIDTH      128U
-#define ST7735P3_HEIGHT     160U
-#define ST7735P3_X_OFFSET   0U
-#define ST7735P3_Y_OFFSET   0U
-
 // clang-format off
-#define ST7735_SUCCESS      0
-#define ST7735_ERROR        1
+/*
+ * ST7735P3 (HFB0177ATFT 1.77" 128x160 TFT, 4-line SPI) display orientation & MADCTL (0x36) macros:
+ * - Bit 7 (MY) : Row Address Order
+ * - Bit 6 (MX) : Column Address Order
+ * - Bit 5 (MV) : Row/Column Exchange (0 = Portrait 128x160, 1 = Landscape 160x128)
+ * - Bit 3 (RGB): RGB/BGR Order (0 = RGB, 1 = BGR)
+ */
+#define ST7735P3_MADCTL_0       0xC0U   /* 0 deg   : Portrait          (128x160) */
+#define ST7735P3_MADCTL_90      0xA0U   /* 90 deg  : Landscape         (160x128) */
+#define ST7735P3_MADCTL_180     0x00U   /* 180 deg : Portrait Inverted (128x160) */
+#define ST7735P3_MADCTL_270     0x60U   /* 270 deg : Landscape Flipped (160x128) */
 
-/* ST7735P3 command definitions */
-#define LCD_CMD_NOP         0x00U
-#define LCD_CMD_SWRESET     0x01U
-#define LCD_CMD_RDDID       0x04U
-#define LCD_CMD_RDDST       0x09U
-#define LCD_CMD_SLPIN       0x10U
-#define LCD_CMD_SLPOUT      0x11U
-#define LCD_CMD_PTLON       0x12U
-#define LCD_CMD_NORON       0x13U
-#define LCD_CMD_INVOFF      0x20U
-#define LCD_CMD_INVON       0x21U
-#define LCD_CMD_DISPOFF     0x28U
-#define LCD_CMD_DISPON      0x29U
-#define LCD_CMD_CASET       0x2AU
-#define LCD_CMD_RASET       0x2BU
-#define LCD_CMD_RAMWR       0x2CU
-#define LCD_CMD_RAMRD       0x2EU
-#define LCD_CMD_PTLAR       0x30U
-#define LCD_CMD_TEON        0x35U
-#define LCD_CMD_MADCTL      0x36U
-#define LCD_CMD_COLMOD      0x3AU
-#define LCD_CMD_FRMCTR1     0xB1U
-#define LCD_CMD_FRMCTR2     0xB2U
-#define LCD_CMD_FRMCTR3     0xB3U
-#define LCD_CMD_INVCTR      0xB4U
-#define LCD_CMD_DISSET5     0xB6U
-#define LCD_CMD_PWCTR1      0xC0U
-#define LCD_CMD_PWCTR2      0xC1U
-#define LCD_CMD_PWCTR3      0xC2U
-#define LCD_CMD_PWCTR4      0xC3U
-#define LCD_CMD_PWCTR5      0xC4U
-#define LCD_CMD_VMCTR1      0xC5U
-#define LCD_CMD_RDID1       0xDAU
-#define LCD_CMD_RDID2       0xDBU
-#define LCD_CMD_RDID3       0xDCU
-#define LCD_CMD_RDID4       0xDDU
-#define LCD_CMD_GMCTRP1     0xE0U
-#define LCD_CMD_GMCTRN1     0xE1U
-#define LCD_CMD_PWCTR6      0xFCU
+/* Select default display orientation here (one of ST7735P3_MADCTL_0 / 90 / 180 / 270) */
+#define ST7735P3_MADCTL_DEFAULT ST7735P3_MADCTL_90
 
-/* Short command aliases */
-#define NOP                 LCD_CMD_NOP
-#define SWRESET             LCD_CMD_SWRESET
-#define SLPOUT              LCD_CMD_SLPOUT
-#define INVOFF              LCD_CMD_INVOFF
-#define INVON               LCD_CMD_INVON
-#define DISPOFF             LCD_CMD_DISPOFF
-#define DISPON              LCD_CMD_DISPON
-#define CASET               LCD_CMD_CASET
-#define RASET               LCD_CMD_RASET
-#define RAMWR               LCD_CMD_RAMWR
-#define TEON                LCD_CMD_TEON
-#define MADCTL              LCD_CMD_MADCTL
-#define COLMOD              LCD_CMD_COLMOD
-#define FRMCTR1             LCD_CMD_FRMCTR1
-#define FRMCTR2             LCD_CMD_FRMCTR2
-#define FRMCTR3             LCD_CMD_FRMCTR3
-#define INVCTR              LCD_CMD_INVCTR
-#define PWCTR1              LCD_CMD_PWCTR1
-#define PWCTR2              LCD_CMD_PWCTR2
-#define PWCTR3              LCD_CMD_PWCTR3
-#define PWCTR4              LCD_CMD_PWCTR4
-#define PWCTR5              LCD_CMD_PWCTR5
-#define VMCTR1              LCD_CMD_VMCTR1
-#define GMCTRP1             LCD_CMD_GMCTRP1
-#define GMCTRN1             LCD_CMD_GMCTRN1
+#if (ST7735P3_MADCTL_DEFAULT & 0x20U)
+#define ST7735P3_WIDTH          160U
+#define ST7735P3_HEIGHT         128U
+#else
+#define ST7735P3_WIDTH          128U
+#define ST7735P3_HEIGHT         160U
+#endif
+#define ST7735P3_X_OFFSET       0U
+#define ST7735P3_Y_OFFSET       0U
+
+#define ST7735_SUCCESS          0
+#define ST7735_ERROR            1
+
+/* ST7735P3 active command definitions */
+#define LCD_CMD_SWRESET         0x01U
+#define LCD_CMD_SLPIN           0x10U
+#define LCD_CMD_SLPOUT          0x11U
+#define LCD_CMD_INVOFF          0x20U
+#define LCD_CMD_INVON           0x21U
+#define LCD_CMD_DISPOFF         0x28U
+#define LCD_CMD_DISPON          0x29U
+#define LCD_CMD_CASET           0x2AU
+#define LCD_CMD_RASET           0x2BU
+#define LCD_CMD_RAMWR           0x2CU
+#define LCD_CMD_TEON            0x35U
+#define LCD_CMD_MADCTL          0x36U
+#define LCD_CMD_COLMOD          0x3AU
+#define LCD_CMD_FRMCTR1         0xB1U
+#define LCD_CMD_FRMCTR2         0xB2U
+#define LCD_CMD_FRMCTR3         0xB3U
+#define LCD_CMD_INVCTR          0xB4U
+#define LCD_CMD_PWCTR1          0xC0U
+#define LCD_CMD_PWCTR2          0xC1U
+#define LCD_CMD_PWCTR3          0xC2U
+#define LCD_CMD_PWCTR4          0xC3U
+#define LCD_CMD_PWCTR5          0xC4U
+#define LCD_CMD_VMCTR1          0xC5U
+#define LCD_CMD_GMCTRP1         0xE0U
+#define LCD_CMD_GMCTRN1         0xE1U
 // clang-format on
 
 typedef union

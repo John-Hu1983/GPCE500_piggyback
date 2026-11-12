@@ -181,12 +181,15 @@ bool lcd_take_te_flag(void)
 void lcd_init_module(void)
 {
     const LCD_Device *dev = _lcd_check_dev(false);
+    s16 x_wellcom, x_spinmaster;
 
     dev->init();
     lcd_ready = true;
 
     lcd_fill_color(LCD_COLOR_BLACK);
-    gui_draw_str_at(10, 60, "wellcom", LCD_COLOR_WHITE, GUI_Font_12x16);
-    gui_draw_str_at(4, 84, "spinmaster", LCD_COLOR_YELLOW, GUI_Font_12x16);
+    x_wellcom = (s16)((dev->width - gui_font_get_str_width("wellcom", GUI_Font_12x24)) / 2U);
+    x_spinmaster = (s16)((dev->width - gui_font_get_str_width("spinmaster", GUI_Font_12x24)) / 2U);
+    gui_draw_str_at(x_wellcom, 52, "wellcom", LCD_COLOR_WHITE, GUI_Font_12x24);
+    gui_draw_str_at(x_spinmaster, 82, "spinmaster", LCD_COLOR_YELLOW, GUI_Font_12x24);
     lcd_set_backlight(LCD_BL_DEFAULT_PERCENT);
 }
