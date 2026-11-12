@@ -87,8 +87,8 @@ void gui_desktop_refresh_heap_bar(void)
     heap_get_stats(&st);
     if (st.total_words > 0U)
     {
-        pct = (u16)(((u32)st.free_words * 100UL + (u32)(st.total_words / 2U)) /
-                    (u32)st.total_words);
+        pct =
+            (u16)(((u32)st.free_words * 100UL + (u32)(st.total_words / 2U)) / (u32)st.total_words);
     }
 
     p = desktop_page->heap_info_str;
@@ -105,7 +105,7 @@ void gui_desktop_refresh_heap_bar(void)
  *@ brief    : Handle button messages while the desktop page is active.
  *@ type     : private
  *@ argu in  : message: generic MSG_Button message with BTN_Message payload.
- *@ argu out : BTN_Key_5 moves focus left/previous; BTN_Key_6 moves focus right/next.
+ *@ argu out : Btn_A4_Left/Btn_A5_Down move focus prev; Btn_A6_Right/Btn_A1_Up move focus next.
  *@ theme    : Message-bus-driven desktop navigation.
  */
 static void _desktop_on_button_msg(const MSG_Message *message)
@@ -127,13 +127,17 @@ static void _desktop_on_button_msg(const MSG_Message *message)
         return;
     }
 
-    if (btn->key == BTN_Key_5)
+    if (btn->key == Btn_A4_Left && btn->event == BTN_Click)
     {
         gui_desktop_select_prev();
     }
-    else if (btn->key == BTN_Key_6)
+    else if (btn->key == Btn_A6_Right && btn->event == BTN_Click)
     {
         gui_desktop_select_next();
+    }
+    else if (btn->key == Btn_A0_Back && btn->event == BTN_Hold)
+    {
+        bsp_power_off();
     }
 }
 

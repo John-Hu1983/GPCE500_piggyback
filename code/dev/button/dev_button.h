@@ -58,14 +58,12 @@ typedef struct
  */
 typedef enum
 {
-    BTN_Key_0 = 0,
-    BTN_Key_1,
-    BTN_Key_2,
-    BTN_Key_3,
-    BTN_Key_4,
-    BTN_Key_5,
-    BTN_Key_6,
-    BTN_Key_7,
+    Btn_A0_Back = 0,
+    Btn_A1_Up,
+    Btn_A4_Left,
+    Btn_A5_Down,
+    Btn_A6_Right,
+    Btn_A7_Enter,
     BTN_Key_Count
 } BTN_Id;
 

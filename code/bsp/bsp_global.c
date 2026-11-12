@@ -47,6 +47,30 @@ void bsp_set_phy_init(BSP_phy_name phy) { Bsp_phy_state |= (1 << phy); }
 void bsp_clear_phy_init(BSP_phy_name phy) { Bsp_phy_state &= ~(1 << phy); }
 
 /*
+ *@ brief    : Latch the board power hold pin (GPIOB.0) high to keep system powered on.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Power_Lock_Pin configured and driven high.
+ *@ theme    : Hardware power-latch enable.
+ */
+void bsp_power_on(void)
+{
+    gpio_init_pattern(Power_Lock_Pin.port, Power_Lock_Pin.pin, GPIO_Out_High);
+}
+
+/*
+ *@ brief    : Release the board power hold pin (GPIOB.0) low to shut down system power.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Power_Lock_Pin driven low.
+ *@ theme    : Hardware power-off control.
+ */
+void bsp_power_off(void)
+{
+    gpio_init_pattern(Power_Lock_Pin.port, Power_Lock_Pin.pin, GPIO_Out_Low);
+}
+
+/*
  *@ brief    : Initialize all board-level hardware peripherals, runtime services, and default UI.
  *@ type     : public
  *@ argu in  : None.
@@ -58,7 +82,7 @@ void bsp_init_global(void)
 {
     system_init_module();
 
-    gpio_init_pattern(Power_Lock_Pin.port, Power_Lock_Pin.pin, GPIO_Out_High);
+    bsp_power_on();
 
     heap_init_module();
     swt_init_module();

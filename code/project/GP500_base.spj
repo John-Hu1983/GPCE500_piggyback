@@ -3,10 +3,8 @@
 #**DO NOT EDIT**
 #TARTYPE (GPCE500A)Application
 CFG=Debug
-
-
-VER=4.1.1 
-
+
+VER=4.1.1 
 # Begin Project
 #Name Begin GPCE500A-Debug
 # Begin SubItem "GPCE3100_ROMCode  files"
@@ -130,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1701601131
+EXPORT=1954047232
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -185,7 +183,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1954047232
+EXPORT=1835888384
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -923,7 +921,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1701601131
+EXPORT=1954047232
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -978,7 +976,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1954047232
+EXPORT=1835888384
 SPECIFICFLAG=0
 # End Source File
 # End Group
