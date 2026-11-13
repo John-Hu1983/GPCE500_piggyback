@@ -60,7 +60,7 @@ u16 gui_game_rand(void)
  *@ argu out : Chiptune pulse wave triggered on SPU_Channel_1.
  *@ theme    : Shared sound-effect helper for all game modules.
  */
-void gui_game_sfx(unsigned freq) { spu_play_tone(freq, 0x7FFFU); }
+void gui_game_sfx(unsigned freq) { spu_play_tone(freq, 0xFFFFU); }
 
 /*
  *@ brief    : Draw the top HUD bar showing the active game's title and initial score.

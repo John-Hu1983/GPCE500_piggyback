@@ -43,7 +43,7 @@ typedef int64_t s64;
 #define AUDIO_OUTMODE_PWM       1
 
 #define AUDIO_VOLUME_MUTE       0
-#define AUDIO_VOLUME_DEFAULT    9        
+#define AUDIO_VOLUME_DEFAULT    15       
 #define AUDIO_VOLUME_MAX        15
 
 /** UART/SPI2 pin selection; choose SERIAL_PORT_A or SERIAL_PORT_B. */
