@@ -49,6 +49,13 @@
 #include "../gui/slider/gui_slider.h"
 #include "../gui/switch/gui_switch.h"
 #include "../gui/desktop/gui_desktop.h"
+#include "../gui/game/gui_game.h"
+#include "../gui/game/snake/game_snake.h"
+#include "../gui/game/tetris/game_tetris.h"
+#include "../gui/game/brick/game_brick.h"
+#include "../gui/game/flappy/game_flappy.h"
+#include "../gui/game/shooter/game_shooter.h"
+#include "../gui/game/g2048/game_2048.h"
 
 #include "../schedule/schedule.h"
 

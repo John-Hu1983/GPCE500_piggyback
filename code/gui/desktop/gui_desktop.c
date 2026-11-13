@@ -1,8 +1,8 @@
 #include "..\..\Include\spinmaster.h"
 
-/* Desktop 2x3 (2 rows x 3 cols) button captions stored in Flash/ROM */
+/* Desktop 2x3 (2 rows x 3 cols) button captions stored in Flash/ROM (slot 4 is Game) */
 static const char *const desktop_btn_labels[DESKTOP_BTN_COUNT] = {"Music", "Voice", "Vol",
-                                                                  "Light", "Timer", "Setup"};
+                                                                  "Light", "Game",  "Setup"};
 
 /* PyQt-style circular badge accent colors for each app card */
 static const u16 desktop_icon_colors[DESKTOP_BTN_COUNT] = {
@@ -10,18 +10,19 @@ static const u16 desktop_icon_colors[DESKTOP_BTN_COUNT] = {
     GUI_RGB565(46, 144, 255), /* Voice : Dodger Blue */
     GUI_RGB565(0, 196, 140),  /* Vol   : Emerald Green */
     GUI_RGB565(255, 168, 0),  /* Light : Amber Gold */
-    GUI_RGB565(156, 88, 255), /* Timer : Royal Purple */
+    GUI_RGB565(156, 88, 255), /* Game  : Royal Purple */
     GUI_RGB565(0, 184, 212)   /* Setup : Cyan Teal */
 };
 
 /* Vector icon types for each of the 6 desktop cards */
 static const GUI_Btn_Icon desktop_btn_icons[DESKTOP_BTN_COUNT] = {GUI_Icon_Music,  GUI_Icon_Voice,
                                                                   GUI_Icon_Volume, GUI_Icon_Light,
-                                                                  GUI_Icon_Timer,  GUI_Icon_Setup};
+                                                                  GUI_Icon_Game,   GUI_Icon_Setup};
 
 static GUI_Desktop_Page *desktop_page = null;
 static HEAP_Mark desktop_heap_mark = 0U;
 static MSG_Sub desktop_btn_sub = MSG_SUB_INIT;
+static u8 desktop_saved_idx = 0U;
 
 /*
  *@ brief    : Append an unsigned 16-bit decimal integer into a char buffer.
@@ -102,6 +103,37 @@ void gui_desktop_refresh_heap_bar(void)
 }
 
 /*
+ *@ brief    : Move focus from the current button to `new_idx` and redraw only the changed widgets.
+ *@ type     : private
+ *@ argu in  : new_idx: target button index (0..DESKTOP_BTN_COUNT-1).
+ *@ argu out : Old button redrawn as Normal, new button as Focused, bottom bar updated.
+ *@ theme    : Partial dirty-widget redraw to avoid full-screen flicker.
+ */
+static void _desktop_set_focus(u8 new_idx)
+{
+    u8 old_idx;
+
+    if (desktop_page == null || new_idx >= DESKTOP_BTN_COUNT)
+    {
+        return;
+    }
+
+    old_idx = desktop_page->selected_idx;
+    if (old_idx == new_idx)
+    {
+        return;
+    }
+
+    desktop_page->buttons[old_idx].state = GUI_Btn_Normal;
+    gui_button_draw(&desktop_page->buttons[old_idx]);
+
+    desktop_page->selected_idx = new_idx;
+    desktop_saved_idx = new_idx;
+    desktop_page->buttons[new_idx].state = GUI_Btn_Focused;
+    gui_button_draw(&desktop_page->buttons[new_idx]);
+}
+
+/*
  *@ brief    : Handle button messages while the desktop page is active.
  *@ type     : private
  *@ argu in  : message: generic MSG_Button message with BTN_Message payload.
@@ -129,46 +161,38 @@ static void _desktop_on_button_msg(const MSG_Message *message)
 
     if (btn->key == Btn_A4_Left && btn->event == BTN_Click)
     {
+        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
         gui_desktop_select_prev();
     }
     else if (btn->key == Btn_A6_Right && btn->event == BTN_Click)
     {
+        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
         gui_desktop_select_next();
+    }
+    else if ((btn->key == Btn_A1_Up || btn->key == Btn_A5_Down) && btn->event == BTN_Click)
+    {
+        u8 next = (u8)((desktop_page->selected_idx + DESKTOP_BTN_COLS) % DESKTOP_BTN_COUNT);
+        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        desktop_saved_idx = next;
+        _desktop_set_focus(next);
+    }
+    else if (btn->key == Btn_A7_Enter && btn->event == BTN_Click)
+    {
+        desktop_saved_idx = desktop_page->selected_idx;
+        if (desktop_page->selected_idx == 4U)
+        {
+            spu_play_tone(GAME_TONE_SCORE, 0x7FFFU);
+            gui_game_menu_enter();
+        }
+        else
+        {
+            spu_play_tone(GAME_TONE_HIT, 0x5FFFU);
+        }
     }
     else if (btn->key == Btn_A0_Back && btn->event == BTN_Hold)
     {
         bsp_power_off();
     }
-}
-
-/*
- *@ brief    : Move focus from the current button to `new_idx` and redraw only the changed widgets.
- *@ type     : private
- *@ argu in  : new_idx: target button index (0..DESKTOP_BTN_COUNT-1).
- *@ argu out : Old button redrawn as Normal, new button as Focused, bottom bar updated.
- *@ theme    : Partial dirty-widget redraw to avoid full-screen flicker.
- */
-static void _desktop_set_focus(u8 new_idx)
-{
-    u8 old_idx;
-
-    if (desktop_page == null || new_idx >= DESKTOP_BTN_COUNT)
-    {
-        return;
-    }
-
-    old_idx = desktop_page->selected_idx;
-    if (old_idx == new_idx)
-    {
-        return;
-    }
-
-    desktop_page->buttons[old_idx].state = GUI_Btn_Normal;
-    gui_button_draw(&desktop_page->buttons[old_idx]);
-
-    desktop_page->selected_idx = new_idx;
-    desktop_page->buttons[new_idx].state = GUI_Btn_Focused;
-    gui_button_draw(&desktop_page->buttons[new_idx]);
 }
 
 /*
@@ -274,7 +298,11 @@ void gui_desktop_enter(void)
         bsp_halt_fault(BSP_Fault_HEAP_State);
     }
 
-    desktop_page->selected_idx = 0U;
+    if (desktop_saved_idx >= DESKTOP_BTN_COUNT)
+    {
+        desktop_saved_idx = 0U;
+    }
+    desktop_page->selected_idx = desktop_saved_idx;
 
     /* 2. Configure Top Bar using GUI_Label with smallest font (GUI_Font_6x8) */
     gui_label_init(&desktop_page->top_bar, 0, 0, LCD_WIDTH, DESKTOP_TOP_BAR_H, "Spinmaster OS",
@@ -306,7 +334,8 @@ void gui_desktop_enter(void)
             desktop_page->buttons[idx].radius = 6U;
             desktop_page->buttons[idx].icon = desktop_btn_icons[idx];
             desktop_page->buttons[idx].icon_bg_color = desktop_icon_colors[idx];
-            desktop_page->buttons[idx].state = (idx == 0U) ? GUI_Btn_Focused : GUI_Btn_Normal;
+            desktop_page->buttons[idx].state =
+                (idx == desktop_page->selected_idx) ? GUI_Btn_Focused : GUI_Btn_Normal;
         }
     }
 

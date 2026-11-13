@@ -72,6 +72,65 @@ static void _gui_button_draw_icon(GUI_Btn_Icon icon, s16 cx, s16 cy, u16 badge_b
         gui_fill_circle(cx, cy, 2U, badge_bg);
         break;
 
+    case GUI_Icon_Snake:
+        /* S-shaped coiled snake + apple dot */
+        gui_fill_rect((s16)(cx - 5), (s16)(cy - 5), (s16)(cx + 2), (s16)(cy - 3), fg);
+        gui_fill_rect((s16)(cx - 5), (s16)(cy - 3), (s16)(cx - 3), (s16)(cy + 1), fg);
+        gui_fill_rect((s16)(cx - 5), (s16)(cy - 1), (s16)(cx + 4), (s16)(cy + 1), fg);
+        gui_fill_rect((s16)(cx + 2), (s16)(cy + 1), (s16)(cx + 4), (s16)(cy + 5), fg);
+        gui_fill_rect((s16)(cx - 4), (s16)(cy + 3), (s16)(cx + 4), (s16)(cy + 5), fg);
+        gui_fill_circle((s16)(cx + 5), (s16)(cy - 4), 2U, GUI_COLOR_YELLOW);
+        break;
+
+    case GUI_Icon_Tetris:
+        /* Classic T-tetromino blocks */
+        gui_fill_rect((s16)(cx - 6), (s16)(cy - 4), (s16)(cx - 3), (s16)(cy - 1), fg);
+        gui_fill_rect((s16)(cx - 1), (s16)(cy - 4), (s16)(cx + 2), (s16)(cy - 1), fg);
+        gui_fill_rect((s16)(cx + 4), (s16)(cy - 4), (s16)(cx + 7), (s16)(cy - 1), fg);
+        gui_fill_rect((s16)(cx - 1), (s16)(cy + 1), (s16)(cx + 2), (s16)(cy + 4), fg);
+        break;
+
+    case GUI_Icon_Brick:
+        /* Bricks on top + ball + paddle at bottom */
+        gui_fill_rect((s16)(cx - 6), (s16)(cy - 6), (s16)(cx - 1), (s16)(cy - 4), fg);
+        gui_fill_rect((s16)(cx + 1), (s16)(cy - 6), (s16)(cx + 6), (s16)(cy - 4), fg);
+        gui_fill_circle(cx, (s16)cy, 2U, GUI_COLOR_YELLOW);
+        gui_fill_rect((s16)(cx - 5), (s16)(cy + 4), (s16)(cx + 5), (s16)(cy + 6), fg);
+        break;
+
+    case GUI_Icon_Flappy:
+        /* Bird body + wing + eye + beak */
+        gui_fill_circle((s16)(cx - 1), cy, 5U, fg);
+        gui_fill_circle((s16)(cx - 3), (s16)(cy + 1), 2U, badge_bg);
+        gui_draw_point((s16)(cx + 1), (s16)(cy - 2), badge_bg);
+        gui_fill_triangle((s16)(cx + 4), (s16)(cy - 1), (s16)(cx + 7), cy, (s16)(cx + 4),
+                          (s16)(cy + 2), GUI_COLOR_YELLOW);
+        break;
+
+    case GUI_Icon_Shooter:
+        /* Starfighter delta wings + fuselage + laser */
+        gui_fill_triangle(cx, (s16)(cy - 6), (s16)(cx - 6), (s16)(cy + 4), (s16)(cx + 6),
+                          (s16)(cy + 4), fg);
+        gui_fill_rect((s16)(cx - 1), (s16)(cy - 7), (s16)(cx + 1), (s16)(cy + 6), GUI_COLOR_YELLOW);
+        break;
+
+    case GUI_Icon_2048:
+        /* 2x2 puzzle number tiles */
+        gui_fill_rect((s16)(cx - 6), (s16)(cy - 6), (s16)(cx - 1), (s16)(cy - 1), fg);
+        gui_fill_rect((s16)(cx + 1), (s16)(cy - 6), (s16)(cx + 6), (s16)(cy - 1), GUI_COLOR_YELLOW);
+        gui_fill_rect((s16)(cx - 6), (s16)(cy + 1), (s16)(cx - 1), (s16)(cy + 6), GUI_COLOR_YELLOW);
+        gui_fill_rect((s16)(cx + 1), (s16)(cy + 1), (s16)(cx + 6), (s16)(cy + 6), fg);
+        break;
+
+    case GUI_Icon_Game:
+        /* Handheld gamepad body + D-pad + A/B buttons */
+        gui_fill_round_rect((s16)(cx - 7), (s16)(cy - 4), (s16)(cx + 7), (s16)(cy + 4), 3U, fg);
+        gui_draw_hline((s16)(cx - 5), (s16)(cx - 1), cy, badge_bg);
+        gui_draw_vline((s16)(cx - 3), (s16)(cy - 2), (s16)(cy + 2), badge_bg);
+        gui_draw_point((s16)(cx + 4), (s16)(cy - 1), GUI_COLOR_RED);
+        gui_draw_point((s16)(cx + 2), (s16)(cy + 1), GUI_COLOR_BLUE);
+        break;
+
     case GUI_Icon_None:
     default:
         break;

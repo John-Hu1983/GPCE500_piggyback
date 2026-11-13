@@ -17,7 +17,14 @@ typedef enum
     GUI_Icon_Volume = 3,
     GUI_Icon_Light = 4,
     GUI_Icon_Timer = 5,
-    GUI_Icon_Setup = 6
+    GUI_Icon_Setup = 6,
+    GUI_Icon_Snake = 7,
+    GUI_Icon_Tetris = 8,
+    GUI_Icon_Brick = 9,
+    GUI_Icon_Flappy = 10,
+    GUI_Icon_Shooter = 11,
+    GUI_Icon_2048 = 12,
+    GUI_Icon_Game = 13
 } GUI_Btn_Icon;
 
 typedef struct
