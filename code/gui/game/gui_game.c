@@ -60,7 +60,10 @@ u16 gui_game_rand(void)
  *@ argu out : Chiptune pulse wave triggered on SPU_Channel_1.
  *@ theme    : Shared sound-effect helper for all game modules.
  */
-void gui_game_sfx(unsigned freq) { spu_play_tone(freq, 0xFFFFU); }
+void gui_game_sfx(unsigned freq)
+{
+    spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, freq, TONE_VOL_MAX);
+}
 
 /*
  *@ brief    : Draw the top HUD bar showing the active game's title and initial score.
@@ -217,7 +220,7 @@ static void _game_menu_on_button_msg(const MSG_Message *message)
         }
         else if (btn->event == BTN_Click)
         {
-            spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
             gui_game_menu_exit();
             gui_desktop_enter();
         }
@@ -234,19 +237,19 @@ static void _game_menu_on_button_msg(const MSG_Message *message)
         u8 next = (game_menu_page->selected_idx == 0U)
                       ? (u8)(GUI_Game_Count - 1U)
                       : (u8)(game_menu_page->selected_idx - 1U);
-        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         _game_menu_set_focus(next);
     }
     else if (btn->key == Btn_A6_Right)
     {
         u8 next = (u8)((game_menu_page->selected_idx + 1U) % GUI_Game_Count);
-        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         _game_menu_set_focus(next);
     }
     else if (btn->key == Btn_A1_Up || btn->key == Btn_A5_Down)
     {
         u8 next = (u8)((game_menu_page->selected_idx + DESKTOP_BTN_COLS) % GUI_Game_Count);
-        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         _game_menu_set_focus(next);
     }
     else if (btn->key == Btn_A7_Enter)

@@ -32,9 +32,11 @@
 #include "../hal/hal_spi.h"
 #include "../hal/hal_uart.h"
 
-#include "../audio/audio_spu.h"
+#include "../audio/core/audio_spu.h"
+#include "../audio/tone/audio_tone.h"
 
 #include "../dev/timer/soft_timer.h"
+#include "../audio/demo/audio_demo.h"
 #include "../message/message.h"
 #include "../dev/button/dev_button.h"
 #include "../dev/lcd/st7735p3.h"

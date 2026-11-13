@@ -3,8 +3,10 @@
 #**DO NOT EDIT**
 #TARTYPE (GPCE500A)Application
 CFG=Debug
-
-VER=4.1.1 
+
+
+VER=4.1.1 
+
 # Begin Project
 #Name Begin GPCE500A-Debug
 # Begin SubItem "GPCE3100_ROMCode  files"
@@ -232,8 +234,14 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
+# Begin Group "core"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\audio\audio_spu.c
+SOURCE=..\audio\core\audio_spu.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -241,7 +249,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\audio\audio_spu.h
+SOURCE=..\audio\core\audio_spu.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -249,13 +257,60 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\audio\spu_patch.asm
+SOURCE=..\audio\core\spu_patch.asm
 USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=3
 SPECIFICFLAG=0
 # End Source File
+# End Group
+# Begin Group "tone"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\audio\tone\audio_tone.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\tone\audio_tone.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "demo"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\audio\demo\audio_demo.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\demo\audio_demo.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End Group
 # Begin Group "hal"
 #PROP Default_Filter=
@@ -1216,8 +1271,14 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
+# Begin Group "core"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\audio\audio_spu.c
+SOURCE=..\audio\core\audio_spu.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1225,7 +1286,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\audio\audio_spu.h
+SOURCE=..\audio\core\audio_spu.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1233,13 +1294,60 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\audio\spu_patch.asm
+SOURCE=..\audio\core\spu_patch.asm
 USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=3
 SPECIFICFLAG=0
 # End Source File
+# End Group
+# Begin Group "tone"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\audio\tone\audio_tone.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\tone\audio_tone.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "demo"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\audio\demo\audio_demo.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\audio\demo\audio_demo.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End Group
 # Begin Group "hal"
 #PROP Default_Filter=

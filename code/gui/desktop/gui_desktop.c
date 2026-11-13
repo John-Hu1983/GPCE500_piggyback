@@ -161,32 +161,46 @@ static void _desktop_on_button_msg(const MSG_Message *message)
 
     if (btn->key == Btn_A4_Left && btn->event == BTN_Click)
     {
-        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         gui_desktop_select_prev();
     }
     else if (btn->key == Btn_A6_Right && btn->event == BTN_Click)
     {
-        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         gui_desktop_select_next();
     }
     else if ((btn->key == Btn_A1_Up || btn->key == Btn_A5_Down) && btn->event == BTN_Click)
     {
         u8 next = (u8)((desktop_page->selected_idx + DESKTOP_BTN_COLS) % DESKTOP_BTN_COUNT);
-        spu_play_tone(GAME_TONE_MOVE, 0x5FFFU);
+        spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         desktop_saved_idx = next;
         _desktop_set_focus(next);
     }
     else if (btn->key == Btn_A7_Enter && btn->event == BTN_Click)
     {
         desktop_saved_idx = desktop_page->selected_idx;
-        if (desktop_page->selected_idx == 4U)
+        if (desktop_page->selected_idx == 0U)
         {
-            spu_play_tone(GAME_TONE_SCORE, 0x7FFFU);
+            /* Music card: cycle polyphonic chiptune demo songs (Ode -> Mario -> Twinkle -> Off) */
+            audio_demo_cycle_next();
+        }
+        else if (desktop_page->selected_idx == 1U)
+        {
+            /* Voice card: play A3400 speech/music from FileMerger on SPU_Channel_0 */
+            static u8 voice_idx = 0U;
+            audio_demo_stop();
+            spu_play_voice(SPU_Channel_0, SPU_A3400_4BIT, SPU_Freq_12K, voice_idx);
+            voice_idx = (u8)((voice_idx + 1U) % 5U);
+        }
+        else if (desktop_page->selected_idx == 4U)
+        {
+            /* Game card: enter 1st-level Game Center submenu */
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
             gui_game_menu_enter();
         }
         else
         {
-            spu_play_tone(GAME_TONE_HIT, 0x5FFFU);
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_HIT, TONE_VOL_HIGH);
         }
     }
     else if (btn->key == Btn_A0_Back && btn->event == BTN_Hold)

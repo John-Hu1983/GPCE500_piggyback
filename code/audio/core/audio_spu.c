@@ -1,4 +1,4 @@
-#include "..\Include\spinmaster.h"
+#include "..\..\Include\spinmaster.h"
 
 /*
  * SPU 初始化、输出模式、资源配置和播放控制集中在本文件。
@@ -240,47 +240,23 @@ void spu_play_voice(SPU_Channel channel, SPU_Format format, SPU_Sample_Freq freq
 }
 
 /*
- * 16-sample-per-cycle chiptune pulse/triangle waveform with high-amplitude decay envelope,
- * terminated by 0x8000 (16-bit PCM end marker). Used by spu_play_tone() on SPU_Channel_1.
- */
-static const unsigned spu_tone_wave[193] = {
-    0x6800U, 0x7800U, 0x7800U, 0x7800U, 0x6800U, 0x4800U, 0x2400U, 0x0000U, 0x9800U, 0x8800U,
-    0x8800U, 0x8800U, 0x9800U, 0xB800U, 0xDC00U, 0x0000U, 0x6800U, 0x7800U, 0x7800U, 0x7800U,
-    0x6800U, 0x4800U, 0x2400U, 0x0000U, 0x9800U, 0x8800U, 0x8800U, 0x8800U, 0x9800U, 0xB800U,
-    0xDC00U, 0x0000U, 0x6000U, 0x7000U, 0x7000U, 0x7000U, 0x6000U, 0x4000U, 0x2000U, 0x0000U,
-    0xA000U, 0x9000U, 0x9000U, 0x9000U, 0xA000U, 0xC000U, 0xE000U, 0x0000U, 0x5800U, 0x6800U,
-    0x6800U, 0x6800U, 0x5800U, 0x3C00U, 0x1E00U, 0x0000U, 0xA800U, 0x9800U, 0x9800U, 0x9800U,
-    0xA800U, 0xC400U, 0xE200U, 0x0000U, 0x5000U, 0x6000U, 0x6000U, 0x6000U, 0x5000U, 0x3400U,
-    0x1A00U, 0x0000U, 0xB000U, 0xA000U, 0xA000U, 0xA000U, 0xB000U, 0xCC00U, 0xE600U, 0x0000U,
-    0x4800U, 0x5400U, 0x5400U, 0x5400U, 0x4800U, 0x3000U, 0x1800U, 0x0000U, 0xB800U, 0xAC00U,
-    0xAC00U, 0xAC00U, 0xB800U, 0xD000U, 0xE800U, 0x0000U, 0x3C00U, 0x4800U, 0x4800U, 0x4800U,
-    0x3C00U, 0x2800U, 0x1400U, 0x0000U, 0xC400U, 0xB800U, 0xB800U, 0xB800U, 0xC400U, 0xD800U,
-    0xEC00U, 0x0000U, 0x3000U, 0x3C00U, 0x3C00U, 0x3C00U, 0x3000U, 0x2000U, 0x1000U, 0x0000U,
-    0xD000U, 0xC400U, 0xC400U, 0xC400U, 0xD000U, 0xE000U, 0xF000U, 0x0000U, 0x2400U, 0x3000U,
-    0x3000U, 0x3000U, 0x2400U, 0x1800U, 0x0C00U, 0x0000U, 0xDC00U, 0xD000U, 0xD000U, 0xD000U,
-    0xDC00U, 0xE800U, 0xF400U, 0x0000U, 0x1C00U, 0x2400U, 0x2400U, 0x2400U, 0x1C00U, 0x1200U,
-    0x0800U, 0x0000U, 0xE400U, 0xDC00U, 0xDC00U, 0xDC00U, 0xE400U, 0xEE00U, 0xF800U, 0x0000U,
-    0x1200U, 0x1800U, 0x1800U, 0x1800U, 0x1200U, 0x0C00U, 0x0600U, 0x0000U, 0xEE00U, 0xE800U,
-    0xE800U, 0xE800U, 0xEE00U, 0xF400U, 0xFA00U, 0x0000U, 0x0800U, 0x0C00U, 0x0C00U, 0x0C00U,
-    0x0800U, 0x0600U, 0x0200U, 0x0000U, 0xF800U, 0xF400U, 0xF400U, 0xF400U, 0xF800U, 0xFA00U,
-    0xFE00U, 0x0000U, 0x8000U};
-
-/*
- *@ brief    : Synthesize a retro chiptune tone on SPU_Channel_1 at the given sample frequency.
+ *@ brief    : Configure a wavetable tone resource, frequency, and volume on the specified SPU channel.
  *@ type     : public
- *@ argu in  : sample_freq: SPU_Sample_Freq or raw phase-adder value (e.g., 0x0800..0x4800);
- *             vol_mask: channel volume register value (e.g., 0x7FFF).
- *@ argu out : SPU_Channel_1 plays the decaying pulse wave and auto-stops at the 0x8000 end tag.
- *@ theme    : Zero-asset procedural game sound effects using hardware SPU 16-bit PCM.
+ *@ argu in  : channel: SPU_Channel_0..7; wave_id: TONE_Wave_Id resource index;
+ *             sample_freq: SPU frequency register value; vol_mask: channel volume (0x0000..0xFFFF).
+ *@ argu out : Channel registers loaded with the selected 16-bit PCM tone resource.
+ *@ theme    : Mirror spu_select_voice for procedural wavetable tones.
  */
-void spu_play_tone(unsigned sample_freq, unsigned vol_mask)
+void spu_select_tone(SPU_Channel channel, unsigned wave_id, unsigned sample_freq,
+                     unsigned vol_mask)
 {
-    unsigned offset = AUDIO_SPU_CHANNEL_STRIDE * SPU_Channel_1;
-    unsigned long addr = ((unsigned long)spu_tone_wave << 1) - 1UL;
+    unsigned offset = AUDIO_SPU_CHANNEL_STRIDE * channel;
+    const unsigned *wave_ptr = tone_get_wave_resource((TONE_Wave_Id)wave_id);
+    unsigned long addr = ((unsigned long)wave_ptr << 1) - 1UL;
     unsigned lo = (unsigned)addr;
     unsigned hi = (unsigned)(addr >> 16) | ((unsigned)SPU_PCM_16BIT << 14);
 
-    spu_stop_channel(SPU_Channel_1);
+    *P_SPU_Mixer_Ctrl |= (C_SPU_Mixer_Ch0_En << channel);
     *(P_SPU_Ch0_Volume_Ctrl + offset) = vol_mask;
     *(P_SPU_Ch0_SampleFreq + offset) = sample_freq;
     *(P_SPU_Ch0_DPTR_L + offset) = lo;
@@ -290,5 +266,24 @@ void spu_play_tone(unsigned sample_freq, unsigned vol_mask)
     *(P_SPU_Ch0_NextDPTR_H + offset) = 0;
     *(P_SPU_Ch0_Filter_S2 + offset) = 0;
     *(P_SPU_Ch0_Filter_S1 + offset) = 0;
-    spu_open_channel(SPU_Channel_1);
+}
+
+/*
+ *@ brief    : Select and immediately play a wavetable tone on the specified SPU channel.
+ *@ type     : public
+ *@ argu in  : channel: SPU_Channel_0..7; wave_id: TONE_Wave_Id resource index;
+ *             sample_freq: SPU frequency register value (0 = rest/silence);
+ *             vol_mask: channel volume (0x0000..0xFFFF).
+ *@ argu out : Selected SPU channel plays the tone resource and auto-stops at 0x8000 end tag.
+ *@ theme    : Convenience wrapper combining spu_select_tone and spu_open_channel.
+ */
+void spu_play_tone(SPU_Channel channel, unsigned wave_id, unsigned sample_freq, unsigned vol_mask)
+{
+    spu_stop_channel(channel);
+    if (sample_freq == 0U || vol_mask == 0U)
+    {
+        return;
+    }
+    spu_select_tone(channel, wave_id, sample_freq, vol_mask);
+    spu_open_channel(channel);
 }
