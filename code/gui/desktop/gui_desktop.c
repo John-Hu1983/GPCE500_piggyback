@@ -262,11 +262,7 @@ static void _desktop_draw_top_bar(const GUI_Label *top_bar)
     gui_fill_circle(8, cy, 3U, GUI_RGB565(0, 230, 118));
 
     /* Battery icon anchored to the right edge of the top bar */
-    gui_draw_rect(bat_x, (s16)(cy - 4), (s16)(bat_x + 14), (s16)(cy + 3), GUI_COLOR_WHITE);
-    gui_fill_rect((s16)(bat_x + 15), (s16)(cy - 2), (s16)(bat_x + 16), (s16)(cy + 1),
-                  GUI_COLOR_WHITE);
-    gui_fill_rect((s16)(bat_x + 2), (s16)(cy - 2), (s16)(bat_x + 11), (s16)(cy + 1),
-                  GUI_RGB565(0, 230, 118));
+    gui_icon_draw_battery(bat_x, cy, 90U, GUI_COLOR_WHITE, GUI_RGB565(0, 230, 118));
 
     /* Subtle bottom divider line */
     gui_draw_hline(0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 1U),

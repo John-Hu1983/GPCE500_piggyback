@@ -1,5 +1,5 @@
-#ifndef _GUI_COMMON_H__
-#define _GUI_COMMON_H__
+#ifndef _GUI_GEOMETRY_H__
+#define _GUI_GEOMETRY_H__
 
 /*
  * Common 2D graphics primitives over ST7735P3 (128x160 RGB565):
@@ -103,4 +103,4 @@ uint8_t gui_set_window(uint8_t x0, uint8_t x1, uint8_t y0, uint8_t y1);
 void gui_send_rgb565(uint16_t color, uint16_t count);
 void gui_draw_rectangle(uint8_t xs, uint8_t xe, uint8_t ys, uint8_t ye, uint16_t color);
 
-#endif /* _GUI_COMMON_H__ */
+#endif /* _GUI_GEOMETRY_H__ */

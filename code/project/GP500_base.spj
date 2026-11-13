@@ -3,10 +3,8 @@
 #**DO NOT EDIT**
 #TARTYPE (GPCE500A)Application
 CFG=Debug
-
-
-VER=4.1.1 
-
+
+VER=4.1.1 
 # Begin Project
 #Name Begin GPCE500A-Debug
 # Begin SubItem "GPCE3100_ROMCode  files"
@@ -130,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1954047232
+EXPORT=875573760
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -185,7 +183,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1835888384
+EXPORT=778269696
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -499,14 +497,14 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
-# Begin Group "common"
+# Begin Group "geometry"
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\gui\common\gui_common.c
+SOURCE=..\gui\geometry\gui_geometry.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -514,7 +512,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\gui\common\gui_common.h
+SOURCE=..\gui\geometry\gui_geometry.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -538,6 +536,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\font\gui_font.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "icon"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\icon\gui_icon.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\icon\gui_icon.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -620,14 +641,14 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
-# Begin Group "bar"
+# Begin Group "progressbar"
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\gui\widget\bar\gui_bar.c
+SOURCE=..\gui\widget\progressbar\gui_progressbar.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -635,7 +656,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\gui\widget\bar\gui_bar.h
+SOURCE=..\gui\widget\progressbar\gui_progressbar.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1091,7 +1112,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1954047232
+EXPORT=875573760
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -1146,7 +1167,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1835888384
+EXPORT=778269696
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -1460,14 +1481,14 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
-# Begin Group "common"
+# Begin Group "geometry"
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\gui\common\gui_common.c
+SOURCE=..\gui\geometry\gui_geometry.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1475,7 +1496,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\gui\common\gui_common.h
+SOURCE=..\gui\geometry\gui_geometry.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1499,6 +1520,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\gui\font\gui_font.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "icon"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\gui\icon\gui_icon.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\gui\icon\gui_icon.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1581,14 +1625,14 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
-# Begin Group "bar"
+# Begin Group "progressbar"
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\gui\widget\bar\gui_bar.c
+SOURCE=..\gui\widget\progressbar\gui_progressbar.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1596,7 +1640,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\gui\widget\bar\gui_bar.h
+SOURCE=..\gui\widget\progressbar\gui_progressbar.h
 USEPARAM=FALSE
 PARAM=
 ID=
