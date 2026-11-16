@@ -68,6 +68,5 @@ void bsp_set_phy_init(BSP_phy_name phy);
 void bsp_clear_phy_init(BSP_phy_name phy);
 void bsp_power_on(void);
 void bsp_power_off(void);
-void bsp_init_global(void);
-void bsp_run_app(void);
+
 #endif

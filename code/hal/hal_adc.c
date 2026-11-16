@@ -22,15 +22,15 @@ void adc_disable_module(void)
  *@ type     : public
  *@ argu in  : None.
  *@ argu out : None.
- *@ theme    : Float INP and set defaults; leave ADC disabled.
+ *@ theme    : Float INP and set manual-mode discharge defaults; leave ADC disabled.
  */
 void adc_init_module(void)
 {
     adc_disable_module();
     gpio_init_pattern(GPIOA, 12, GPIO_In_Float);
-    /* SH_SEL=3 is 4us at 81.92MHz; the SDK's SH_*us names use another clock. */
-    *P_CMPADC_Ctrl0 = C_CMPADC_IBIAS_70uA | C_CMPADC_SH_Sel;
+    *P_CMPADC_Ctrl0 = ADC_CTRL0_BASE;
     *P_CMPADC_Ctrl1 = ADC_MODE;
+    *P_CMPADC_Status = ADC_FLAGS;
 }
 
 /*
@@ -38,24 +38,30 @@ void adc_init_module(void)
  *@ type     : public
  *@ argu in  : None.
  *@ argu out : None.
- *@ theme    : Enable the comparator without starting a conversion.
+ *@ theme    : Enable comparator with discharge held active until conversion starts.
  */
-void adc_enable_module(void) { *P_CMPADC_Ctrl0 |= C_CMPADC_Enable; }
+void adc_enable_module(void)
+{
+    *P_CMPADC_Ctrl0 |= C_CMPADC_Discharge_Enable | C_CMPADC_Enable;
+    *P_CMPADC_Ctrl1 = ADC_MODE;
+    *P_CMPADC_Status = ADC_FLAGS;
+}
 
 /*
- *@ brief    : Convert one selected ADC input.
+ *@ brief    : Convert one selected ADC input with atomic interrupt protection.
  *@ type     : public
  *@ argu in  : channel: external input, PGA, VDD/2 or reference.
- *@ argu out : Full 16-bit raw slope count.
- *@ theme    : Blocking conversion; clear stale flags and halt on timeout.
+ *@ argu out : Full 16-bit raw slope count (0 if input is 0V or conversion times out).
+ *@ theme    : Atomic manual slope conversion via C_CMPADC_Discharge_Enable release.
  */
 unsigned adc_read_channel(ADC_Channel channel)
 {
     unsigned status;
-    unsigned timeout = 0xFFFFU;
+    unsigned data = 0U;
+    unsigned timeout = 512U;
+    volatile unsigned dly;
 
-    if ((unsigned)channel > ADC_Ch_Ref || (*P_CMPADC_Ctrl0 & C_CMPADC_Enable) == 0 ||
-        *P_CMPADC_Ctrl1 != ADC_MODE)
+    if ((unsigned)channel > ADC_Ch_Ref || (*P_CMPADC_Ctrl0 & C_CMPADC_Enable) == 0)
     {
         adc_disable_module();
         bsp_halt_fault(BSP_Fault_ADC_State);
@@ -64,33 +70,44 @@ unsigned adc_read_channel(ADC_Channel channel)
     {
         gpio_init_pattern(GPIOA, (uint8_t)(11 - channel), GPIO_In_Float);
     }
-    *P_CMPADC_Ctrl0 = (*P_CMPADC_Ctrl0 & ~C_CMPADC_INN_Sel) | ((unsigned)channel << 10);
-    /* Flags are W1C. STS is the comparator level, not a conversion busy flag. */
+
+    /* Lock CPU interrupts during the ~25us discharge + slope ramp critical window */
+    System_DisableInterrupts();
+
+    /* 1. Select channel while holding Discharge_Enable to discharge INP (IOA12) capacitor */
+    *P_CMPADC_Ctrl0 = (*P_CMPADC_Ctrl0 & ~C_CMPADC_INN_Sel) | ((unsigned)channel << 10) |
+                      C_CMPADC_Discharge_Enable;
+    *P_CMPADC_Ctrl1 = ADC_MODE;
+    for (dly = 0U; dly < 80U; ++dly)
+    {
+    }
+
+    /* 2. Clear flags and release Discharge_Enable to start ramp charging & counter */
     *P_CMPADC_Status = ADC_FLAGS;
     *P_INT_Status = C_IRQ3_ADC;
-    *P_CMPADC_Ctrl1 = ADC_MODE | C_CMPADC_Start;
+    *P_CMPADC_Ctrl0 &= ~C_CMPADC_Discharge_Enable;
 
+    /* 3. Wait exclusively for C_CMPADC_INT_Flag latch (never break early on raw STS bit) */
     for (;;)
     {
         status = *P_CMPADC_Status;
-        if ((status & C_CMPADC_Timeout_Flag) != 0)
+        if ((status & C_CMPADC_INT_Flag) != 0U)
         {
-            adc_disable_module();
-            bsp_halt_fault(BSP_Fault_ADC_Time);
-        }
-        if ((status & C_CMPADC_INT_Flag) != 0)
-        {
+            data = *P_CMPADC_Data;
             break;
         }
-        if (--timeout == 0)
+        if ((status & C_CMPADC_Timeout_Flag) != 0U || --timeout == 0U)
         {
-            adc_disable_module();
-            bsp_halt_fault(BSP_Fault_ADC_Wait);
+            data = 0U;
+            break;
         }
     }
-    *P_CMPADC_Ctrl1 = ADC_MODE;
-    status = *P_CMPADC_Data;
+
+    /* 4. Re-assert Discharge_Enable immediately and restore CPU IRQ */
+    *P_CMPADC_Ctrl0 |= C_CMPADC_Discharge_Enable;
     *P_CMPADC_Status = ADC_FLAGS;
     *P_INT_Status = C_IRQ3_ADC;
-    return status;
+
+    System_CPU_EnableIRQ();
+    return data;
 }

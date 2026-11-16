@@ -3,10 +3,8 @@
 #**DO NOT EDIT**
 #TARTYPE (GPCE500A)Application
 CFG=Debug
-
-
-VER=4.1.1 
-
+
+VER=4.1.1 
 # Begin Project
 #Name Begin GPCE500A-Debug
 # Begin SubItem "GPCE3100_ROMCode  files"
@@ -130,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=875573760
+EXPORT=1936942445
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -181,11 +179,27 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
+SOURCE=..\dev\battery\dev_battery.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\backend_service\backend_service.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
 SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=778269696
+EXPORT=1885432832
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -213,14 +227,6 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\main\system.asm
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\main\gpce.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -476,6 +482,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\dev\button\dev_button.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "battery"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\dev\battery\dev_battery.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\battery\dev_battery.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -796,6 +825,29 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
+# Begin Group "backend_service"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\backend_service\backend_service.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\backend_service\backend_service.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # Begin Group "desktop"
 #PROP Default_Filter=
 USEPARAM=FALSE
@@ -1174,7 +1226,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=875573760
+EXPORT=1936942445
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -1225,11 +1277,27 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
+SOURCE=..\dev\battery\dev_battery.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\backend_service\backend_service.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
 SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=778269696
+EXPORT=1885432832
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -1257,14 +1325,6 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\main\system.asm
-USEPARAM=FALSE
-PARAM=
-ID=
-EXPORT=3
-SPECIFICFLAG=0
-# End Source File
-# Begin Source File
-SOURCE=..\main\gpce.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1520,6 +1580,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\dev\button\dev_button.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "battery"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\dev\battery\dev_battery.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\dev\battery\dev_battery.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1840,6 +1923,29 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
+# Begin Group "backend_service"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\backend_service\backend_service.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\backend_service\backend_service.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # Begin Group "desktop"
 #PROP Default_Filter=
 USEPARAM=FALSE

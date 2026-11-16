@@ -136,6 +136,10 @@ void gui_icon_draw(GUI_Icon icon, s16 cx, s16 cy, u16 bg_color, u16 fg_color)
         gui_draw_point((s16)(cx + 2), (s16)(cy + 1), GUI_COLOR_BLUE);
         break;
 
+    case GUI_Icon_Lightning:
+        gui_icon_draw_lightning(cx, cy, fg_color);
+        break;
+
     case GUI_Icon_None:
     default:
         break;
@@ -181,4 +185,17 @@ void gui_icon_draw_battery(s16 x, s16 cy, u8 percent, u16 border_color, u16 fill
         gui_fill_rect((s16)(x + 2), (s16)(cy - 2), (s16)(x + 1 + fill_w), (s16)(cy + 1),
                       fill_color);
     }
+}
+
+/*
+ *@ brief    : Draw a status-bar charging lightning bolt icon centered at (cx, cy).
+ *@ type     : public
+ *@ argu in  : cx, cy: icon center coordinates; color: lightning bolt fill color.
+ *@ argu out : 7x11px vector lightning bolt rendered on LCD.
+ *@ theme    : Compact top-bar USB charging indicator.
+ */
+void gui_icon_draw_lightning(s16 cx, s16 cy, u16 color)
+{
+    gui_fill_triangle((s16)(cx + 2), (s16)(cy - 5), (s16)(cx - 3), cy, cx, cy, color);
+    gui_fill_triangle((s16)(cx - 2), (s16)(cy + 5), (s16)(cx + 3), cy, cx, cy, color);
 }

@@ -1,4 +1,4 @@
-// CPU primitives, calibrated delays and RAM sleep for gpce500a.c.
+// CPU primitives, calibrated delays and RAM sleep for bsp_global.c.
 .include GPCE36_CE5.inc
 
 .external _spi_read_words

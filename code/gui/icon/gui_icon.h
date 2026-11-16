@@ -20,7 +20,8 @@ typedef enum
     GUI_Icon_Flappy = 10,
     GUI_Icon_Shooter = 11,
     GUI_Icon_2048 = 12,
-    GUI_Icon_Game = 13
+    GUI_Icon_Game = 13,
+    GUI_Icon_Lightning = 14
 } GUI_Icon;
 
 typedef GUI_Icon GUI_Btn_Icon;
@@ -28,5 +29,6 @@ typedef GUI_Icon GUI_Btn_Icon;
 void gui_icon_draw(GUI_Icon icon, s16 cx, s16 cy, u16 bg_color, u16 fg_color);
 void gui_icon_draw_badge(GUI_Icon icon, s16 cx, s16 cy, u16 badge_bg, u16 fg_color);
 void gui_icon_draw_battery(s16 x, s16 cy, u8 percent, u16 border_color, u16 fill_color);
+void gui_icon_draw_lightning(s16 cx, s16 cy, u16 color);
 
 #endif /* _GUI_ICON_H__ */

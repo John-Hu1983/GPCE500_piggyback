@@ -259,24 +259,94 @@ void gui_desktop_select_next(void)
 }
 
 /*
- *@ brief    : Draw the PyQt-style top status bar with title and battery indicator icon.
+ *@ brief    : Refresh the right-side power status cluster (charging bolt, voltage, battery icon)
+ *             in the Desktop top bar when Desktop is active.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Charging lightning bolt, "X.XXV" voltage text, and battery level bar updated.
+ *@ theme    : Flicker-free partial redraw of top bar power region on Desktop only.
+ */
+void gui_desktop_refresh_battery_bar(void)
+{
+    const BAT_Info *info;
+    u16 centi_v;
+    u16 fill_color;
+    u16 text_color;
+    s16 cy = (s16)((DESKTOP_TOP_BAR_H - 1U) / 2U);
+    s16 text_y = (s16)(((DESKTOP_TOP_BAR_H - 1U) - 8U) / 2U);
+    char volt_str[6];
+
+    if (desktop_page == null)
+    {
+        return;
+    }
+
+    info = battery_get_info();
+    centi_v = (u16)((info->bat_mv + 5U) / 10U);
+    if (centi_v > 999U)
+    {
+        centi_v = 999U;
+    }
+
+    volt_str[0] = (char)('0' + (centi_v / 100U));
+    volt_str[1] = '.';
+    volt_str[2] = (char)('0' + ((centi_v / 10U) % 10U));
+    volt_str[3] = (char)('0' + (centi_v % 10U));
+    volt_str[4] = 'V';
+    volt_str[5] = '\0';
+
+    if (info->usb_online)
+    {
+        fill_color = GUI_RGB565(0, 240, 180);
+        text_color = GUI_RGB565(120, 255, 190);
+    }
+    else if (info->percent <= 20U)
+    {
+        fill_color = GUI_RGB565(255, 80, 80);
+        text_color = GUI_RGB565(255, 120, 100);
+    }
+    else
+    {
+        fill_color = GUI_RGB565(0, 230, 118);
+        text_color = GUI_RGB565(180, 225, 255);
+    }
+
+    /* Clear only the right-side power indicator area above the divider line */
+    gui_fill_rect(DESKTOP_POWER_AREA_X0, 0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 2U),
+                  DESKTOP_TOPBAR_BG);
+
+    /* 1. Charging lightning bolt icon when USB charger is connected */
+    if (info->usb_online)
+    {
+        gui_icon_draw_lightning(DESKTOP_CHG_ICON_CX, cy, GUI_COLOR_YELLOW);
+    }
+
+    /* 2. Compact battery voltage readout ("X.XXV") */
+    gui_draw_str_at(DESKTOP_VOLT_TEXT_X, text_y, volt_str, text_color, GUI_Font_6x8);
+
+    /* 3. Proportional battery icon anchored to the right edge */
+    gui_icon_draw_battery(DESKTOP_BAT_ICON_X, cy, info->percent, GUI_COLOR_WHITE, fill_color);
+}
+
+/*
+ *@ brief    : Draw the PyQt-style top status bar with title, charging bolt, voltage, and battery.
  *@ type     : private
  *@ argu in  : top_bar: pointer to top bar label.
- *@ argu out : Top bar, battery icon, and bottom accent line drawn.
+ *@ argu out : Top bar, status dot, power status cluster, and bottom accent line drawn.
  *@ theme    : Modern PyQt status header dynamically positioned for any LCD_WIDTH.
  */
 static void _desktop_draw_top_bar(const GUI_Label *top_bar)
 {
-    s16 bat_x = (s16)(LCD_WIDTH - 22U);
-    s16 cy = (s16)(DESKTOP_TOP_BAR_H / 2U);
+    s16 cy = (s16)((DESKTOP_TOP_BAR_H - 1U) / 2U);
 
+    gui_fill_rect(0, 0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 2U), DESKTOP_TOPBAR_BG);
     gui_label_draw(top_bar);
 
     /* Small green status LED dot on the left */
-    gui_fill_circle(8, cy, 3U, GUI_RGB565(0, 230, 118));
+    gui_fill_circle(7, cy, 2U, GUI_RGB565(0, 230, 118));
 
-    /* Battery icon anchored to the right edge of the top bar */
-    gui_icon_draw_battery(bat_x, cy, 90U, GUI_COLOR_WHITE, GUI_RGB565(0, 230, 118));
+    /* Render charging bolt, battery voltage, and battery icon on the right */
+    gui_desktop_refresh_battery_bar();
 
     /* Subtle bottom divider line */
     gui_draw_hline(0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 1U),
@@ -314,10 +384,11 @@ void gui_desktop_enter(void)
     }
     desktop_page->selected_idx = desktop_saved_idx;
 
-    /* 2. Configure Top Bar using GUI_Label with smallest font (GUI_Font_6x8) */
-    gui_label_init(&desktop_page->top_bar, 0, 0, LCD_WIDTH, DESKTOP_TOP_BAR_H, "Spinmaster OS",
-                   GUI_Font_6x8);
-    desktop_page->top_bar.align = GUI_Align_Center;
+    /* 2. Configure Top Bar using GUI_Label with smallest font (GUI_Font_6x8) on the left */
+    gui_label_init(&desktop_page->top_bar, DESKTOP_TITLE_X0, 0,
+                   (u16)(DESKTOP_POWER_AREA_X0 - DESKTOP_TITLE_X0), (u16)(DESKTOP_TOP_BAR_H - 1U),
+                   "Spinmaster OS", GUI_Font_6x8);
+    desktop_page->top_bar.align = GUI_Align_Left;
     desktop_page->top_bar.bg_color = DESKTOP_TOPBAR_BG;
     desktop_page->top_bar.text_color = GUI_COLOR_WHITE;
     desktop_page->top_bar.transparent = false;

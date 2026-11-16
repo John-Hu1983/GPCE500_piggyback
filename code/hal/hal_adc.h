@@ -1,7 +1,10 @@
 #ifndef _HAL_ADC_H__
 #define _HAL_ADC_H__
 
-#define ADC_MODE (C_CMPADC_Auto_Enable | C_CMPADC_Manual)
+#define ADC_CTRL0_BASE                                                                             \
+    (C_CMPADC_Discharge_Enable | C_CMPADC_SH_8us | C_CMPADC_Hysteresis_Enable |                    \
+     C_CMPADC_IBIAS_60uA)
+#define ADC_MODE (C_CMPADC_Auto_Disable | C_CMPADC_CMPO_None | C_CMPADC_Manual | C_CMPADC_Start)
 #define ADC_FLAGS (C_CMPADC_INT_Flag | C_CMPADC_Timeout_Flag)
 
 typedef enum

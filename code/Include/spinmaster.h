@@ -39,6 +39,7 @@
 #include "../audio/demo/audio_demo.h"
 #include "../message/message.h"
 #include "../dev/button/dev_button.h"
+#include "../dev/battery/dev_battery.h"
 #include "../dev/lcd/st7735p3.h"
 #include "../dev/lcd/lcd_monitor.h"
 #include "../gui/geometry/gui_geometry.h"
@@ -52,6 +53,7 @@
 #include "../gui/widget/slider/gui_slider.h"
 #include "../gui/widget/switch/gui_switch.h"
 
+#include "../application/backend_service/backend_service.h"
 #include "../application/desktop/gui_desktop.h"
 #include "../application/game/gui_game.h"
 #include "../application/game/snake/game_snake.h"
