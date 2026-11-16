@@ -22,6 +22,7 @@ static const GUI_Btn_Icon desktop_btn_icons[DESKTOP_BTN_COUNT] = {GUI_Icon_Music
 static GUI_Desktop_Page *desktop_page = null;
 static HEAP_Mark desktop_heap_mark = 0U;
 static MSG_Sub desktop_btn_sub = MSG_SUB_INIT;
+static MSG_Sub desktop_chg_sub = MSG_SUB_INIT;
 static u8 desktop_saved_idx = 0U;
 
 /*
@@ -93,7 +94,7 @@ void gui_desktop_refresh_heap_bar(void)
     }
 
     p = desktop_page->heap_info_str;
-    p = _desktop_append_str(p, "M:");
+    p = _desktop_append_str(p, " M:");
     p = _desktop_append_u16(p, pct);
     _desktop_append_str(p, "%");
 
@@ -259,29 +260,27 @@ void gui_desktop_select_next(void)
 }
 
 /*
- *@ brief    : Refresh the right-side power status cluster (charging bolt, voltage, battery icon)
- *             in the Desktop top bar when Desktop is active.
- *@ type     : public
- *@ argu in  : None.
- *@ argu out : Charging lightning bolt, "X.XXV" voltage text, and battery level bar updated.
- *@ theme    : Flicker-free partial redraw of top bar power region on Desktop only.
+ *@ brief    : Render the given BAT_Info onto the top-right icon area and bottom-right voltage area.
+ *@ type     : private
+ *@ argu in  : info: pointer to BAT_Info payload (from message->data or battery_get_info()).
+ *@ argu out : Top-right [lightning + battery] icons and bottom-right "X.XXV" voltage updated.
+ *@ theme    : Flicker-free partial redraw without affecting centered "Spinmaster OS" title.
  */
-void gui_desktop_refresh_battery_bar(void)
+static void _desktop_render_battery_info(const BAT_Info *info)
 {
-    const BAT_Info *info;
     u16 centi_v;
     u16 fill_color;
     u16 text_color;
-    s16 cy = (s16)((DESKTOP_TOP_BAR_H - 1U) / 2U);
-    s16 text_y = (s16)(((DESKTOP_TOP_BAR_H - 1U) - 8U) / 2U);
+    s16 top_cy = (s16)((DESKTOP_TOP_BAR_H - 1U) / 2U);
+    s16 bot_y0 = (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H + 1U);
+    s16 bot_text_y = (s16)(bot_y0 + ((DESKTOP_BOTTOM_BAR_H - 1U) - 8U) / 2U);
     char volt_str[6];
 
-    if (desktop_page == null)
+    if (desktop_page == null || info == null)
     {
         return;
     }
 
-    info = battery_get_info();
     centi_v = (u16)((info->bat_mv + 5U) / 10U);
     if (centi_v > 999U)
     {
@@ -308,45 +307,72 @@ void gui_desktop_refresh_battery_bar(void)
     else
     {
         fill_color = GUI_RGB565(0, 230, 118);
-        text_color = GUI_RGB565(180, 225, 255);
+        text_color = GUI_RGB565(120, 220, 255);
     }
 
-    /* Clear only the right-side power indicator area above the divider line */
+    /* 1. Top bar right side (x = 124..159): clear icon zone, draw lightning bolt & battery icon */
     gui_fill_rect(DESKTOP_POWER_AREA_X0, 0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 2U),
                   DESKTOP_TOPBAR_BG);
-
-    /* 1. Charging lightning bolt icon when USB charger is connected */
     if (info->usb_online)
     {
-        gui_icon_draw_lightning(DESKTOP_CHG_ICON_CX, cy, GUI_COLOR_YELLOW);
+        gui_icon_draw_lightning(DESKTOP_CHG_ICON_CX, top_cy, GUI_COLOR_YELLOW);
     }
+    gui_icon_draw_battery(DESKTOP_BAT_ICON_X, top_cy, info->percent, GUI_COLOR_WHITE, fill_color);
 
-    /* 2. Compact battery voltage readout ("X.XXV") */
-    gui_draw_str_at(DESKTOP_VOLT_TEXT_X, text_y, volt_str, text_color, GUI_Font_6x8);
-
-    /* 3. Proportional battery icon anchored to the right edge */
-    gui_icon_draw_battery(DESKTOP_BAT_ICON_X, cy, info->percent, GUI_COLOR_WHITE, fill_color);
+    /* 2. Bottom bar right side (x = 122..159): clear voltage zone and draw "X.XXV" */
+    gui_fill_rect(DESKTOP_BOT_VOLT_X0, bot_y0, (s16)(LCD_WIDTH - 1U), (s16)(LCD_HEIGHT - 1U),
+                  DESKTOP_BOTBAR_BG);
+    gui_draw_str_at(DESKTOP_VOLT_TEXT_X, bot_text_y, volt_str, text_color, GUI_Font_6x8);
 }
 
 /*
- *@ brief    : Draw the PyQt-style top status bar with title, charging bolt, voltage, and battery.
+ *@ brief    : Handle MSG_Charge messages while the Desktop page is active.
+ *@ type     : private
+ *@ argu in  : message: MSG_Charge message with const BAT_Info* in message->data.
+ *@ argu out : Top-right charging/battery icons and bottom-right voltage refreshed.
+ *@ theme    : Message-bus subscriber callback for Desktop power display.
+ */
+static void _desktop_on_charge_msg(const MSG_Message *message)
+{
+    if (desktop_page == null || message == null || message->type != MSG_Charge)
+    {
+        return;
+    }
+    if (message->data == null)
+    {
+        bsp_halt_fault(BSP_Fault_MSG_Message);
+    }
+    _desktop_render_battery_info((const BAT_Info *)message->data);
+}
+
+/*
+ *@ brief    : Refresh the top-bar right-side charging/battery icons and the bottom-bar
+ *             right-side battery voltage readout when Desktop is active.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : Top-right [lightning + battery] icons and bottom-right "X.XXV" voltage updated.
+ *@ theme    : Flicker-free partial redraw without affecting centered "Spinmaster OS" title.
+ */
+void gui_desktop_refresh_battery_bar(void)
+{
+    _desktop_render_battery_info(battery_get_info());
+}
+
+/*
+ *@ brief    : Draw the PyQt-style top status bar with centered title and battery indicator.
  *@ type     : private
  *@ argu in  : top_bar: pointer to top bar label.
- *@ argu out : Top bar, status dot, power status cluster, and bottom accent line drawn.
+ *@ argu out : Top bar, status dot, and bottom accent line drawn.
  *@ theme    : Modern PyQt status header dynamically positioned for any LCD_WIDTH.
  */
 static void _desktop_draw_top_bar(const GUI_Label *top_bar)
 {
     s16 cy = (s16)((DESKTOP_TOP_BAR_H - 1U) / 2U);
 
-    gui_fill_rect(0, 0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 2U), DESKTOP_TOPBAR_BG);
     gui_label_draw(top_bar);
 
     /* Small green status LED dot on the left */
-    gui_fill_circle(7, cy, 2U, GUI_RGB565(0, 230, 118));
-
-    /* Render charging bolt, battery voltage, and battery icon on the right */
-    gui_desktop_refresh_battery_bar();
+    gui_fill_circle(8, cy, 3U, GUI_RGB565(0, 230, 118));
 
     /* Subtle bottom divider line */
     gui_draw_hline(0, (s16)(LCD_WIDTH - 1U), (s16)(DESKTOP_TOP_BAR_H - 1U),
@@ -384,18 +410,18 @@ void gui_desktop_enter(void)
     }
     desktop_page->selected_idx = desktop_saved_idx;
 
-    /* 2. Configure Top Bar using GUI_Label with smallest font (GUI_Font_6x8) on the left */
-    gui_label_init(&desktop_page->top_bar, DESKTOP_TITLE_X0, 0,
-                   (u16)(DESKTOP_POWER_AREA_X0 - DESKTOP_TITLE_X0), (u16)(DESKTOP_TOP_BAR_H - 1U),
+    /* 2. Configure Top Bar using GUI_Label with smallest font (GUI_Font_6x8), centered */
+    gui_label_init(&desktop_page->top_bar, 0, 0, LCD_WIDTH, (u16)(DESKTOP_TOP_BAR_H - 1U),
                    "Spinmaster OS", GUI_Font_6x8);
-    desktop_page->top_bar.align = GUI_Align_Left;
+    desktop_page->top_bar.align = GUI_Align_Center;
     desktop_page->top_bar.bg_color = DESKTOP_TOPBAR_BG;
     desktop_page->top_bar.text_color = GUI_COLOR_WHITE;
     desktop_page->top_bar.transparent = false;
 
     /* 3. Configure Bottom Bar using GUI_Label to display ram_heap free percentage on the left */
-    gui_label_init(&desktop_page->bottom_bar, 0, (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H),
-                   LCD_WIDTH, DESKTOP_BOTTOM_BAR_H, desktop_page->heap_info_str, GUI_Font_6x8);
+    gui_label_init(&desktop_page->bottom_bar, 0, (s16)(LCD_HEIGHT - DESKTOP_BOTTOM_BAR_H + 1U),
+                   (u16)DESKTOP_BOT_VOLT_X0, (u16)(DESKTOP_BOTTOM_BAR_H - 1U),
+                   desktop_page->heap_info_str, GUI_Font_6x8);
     desktop_page->bottom_bar.align = GUI_Align_Left;
     desktop_page->bottom_bar.bg_color = DESKTOP_BOTBAR_BG;
     desktop_page->bottom_bar.text_color = GUI_RGB565(120, 220, 255);
@@ -430,13 +456,15 @@ void gui_desktop_enter(void)
     }
 
     gui_desktop_refresh_heap_bar();
+    gui_desktop_refresh_battery_bar();
 
-    /* 6. Subscribe to button messages for left/right selection */
+    /* 6. Subscribe to button and charge/battery messages while Desktop is active */
     msg_subscribe_type(&desktop_btn_sub, MSG_Button, null, _desktop_on_button_msg);
+    msg_subscribe_type(&desktop_chg_sub, MSG_Charge, null, _desktop_on_charge_msg);
 }
 
 /*
- *@ brief    : Exit the desktop UI: unsubscribe button events and release all widget RAM to heap.
+ *@ brief    : Exit the desktop UI: unsubscribe events and release all widget RAM to heap.
  *@ type     : public
  *@ argu in  : None.
  *@ argu out : All desktop widget resources reclaimed back to ram_heap.
@@ -449,6 +477,7 @@ void gui_desktop_exit(void)
         return;
     }
 
+    msg_unsubscribe_node(&desktop_chg_sub);
     msg_unsubscribe_node(&desktop_btn_sub);
     desktop_page = null;
     heap_release_to_mark(desktop_heap_mark);

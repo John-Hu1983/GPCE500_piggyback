@@ -28,12 +28,12 @@
 #define DESKTOP_TOPBAR_BG       GUI_RGB565(26, 34, 54)
 #define DESKTOP_BOTBAR_BG       GUI_RGB565(24, 30, 46)
 
-/* Top bar right-side power status cluster coordinates (160x18 bar) */
-#define DESKTOP_TITLE_X0        13
-#define DESKTOP_POWER_AREA_X0   (s16)(LCD_WIDTH - 65U)
-#define DESKTOP_CHG_ICON_CX     (s16)(LCD_WIDTH - 61U)
-#define DESKTOP_VOLT_TEXT_X     (s16)(LCD_WIDTH - 54U)
-#define DESKTOP_BAT_ICON_X      (s16)(LCD_WIDTH - 21U)
+/* Top bar right-side icon cluster & bottom bar right-side voltage coordinates */
+#define DESKTOP_POWER_AREA_X0   (s16)(LCD_WIDTH - 36U)
+#define DESKTOP_CHG_ICON_CX     (s16)(LCD_WIDTH - 30U)
+#define DESKTOP_BAT_ICON_X      (s16)(LCD_WIDTH - 22U)
+#define DESKTOP_BOT_VOLT_X0     (s16)(LCD_WIDTH - 38U)
+#define DESKTOP_VOLT_TEXT_X     (s16)(LCD_WIDTH - 34U)
 // clang-format on
 
 typedef struct
