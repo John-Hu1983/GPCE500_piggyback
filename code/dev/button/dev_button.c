@@ -158,13 +158,18 @@ static void _btn_sample_key(const BTN_Config *cfg, BTN_State *state, bool allow_
 
     state->flags = (state->flags & ~BTN_DEBOUNCE_MASK) | (db_cnt & BTN_DEBOUNCE_MASK);
 
-    /* 3. Count hold duration while stably pressed. */
-    if ((state->flags & BTN_FLAG_DOWN) != 0 && (state->flags & BTN_FLAG_HELD) == 0)
+    /* 3. Count hold duration and periodic long-press while stably pressed. */
+    if ((state->flags & BTN_FLAG_DOWN) != 0)
     {
         state->timer++;
         if (state->timer >= BTN_HOLD_SCANS)
         {
-            _btn_queue_hold(state);
+            state->timer = 0;
+            if ((state->flags & BTN_FLAG_HELD) == 0)
+            {
+                _btn_queue_hold(state);
+            }
+            state->flags |= BTN_MSG_LONG_PRESS;
         }
     }
 }
@@ -241,6 +246,10 @@ void btn_service_scan(bool allow_double)
         if ((events & BTN_MSG_HOLD) != 0)
         {
             _btn_publish_event((BTN_Id)i, BTN_Hold);
+        }
+        if ((events & BTN_MSG_LONG_PRESS) != 0)
+        {
+            _btn_publish_event((BTN_Id)i, BTN_Long_Press);
         }
     }
 

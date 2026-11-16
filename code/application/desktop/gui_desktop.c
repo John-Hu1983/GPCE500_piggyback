@@ -193,15 +193,29 @@ static void _desktop_on_button_msg(const MSG_Message *message)
             spu_play_voice(SPU_Channel_0, SPU_A3400_4BIT, SPU_Freq_12K, voice_idx);
             voice_idx = (u8)((voice_idx + 1U) % 5U);
         }
+        else if (desktop_page->selected_idx == 2U)
+        {
+            /* Vol card: enter Settings page focused on Volume */
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
+            gui_setting_enter_item(GUI_Setting_Volume);
+        }
+        else if (desktop_page->selected_idx == 3U)
+        {
+            /* Light card: enter Settings page focused on Brightness */
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
+            gui_setting_enter_item(GUI_Setting_Brightness);
+        }
         else if (desktop_page->selected_idx == 4U)
         {
             /* Game card: enter 1st-level Game Center submenu */
             spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
             gui_game_menu_enter();
         }
-        else
+        else if (desktop_page->selected_idx == 5U)
         {
-            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_HIT, TONE_VOL_HIGH);
+            /* Setup card: enter Settings page */
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
+            gui_setting_enter();
         }
     }
     else if (btn->key == Btn_A0_Back && btn->event == BTN_Hold)

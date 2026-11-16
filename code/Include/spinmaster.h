@@ -55,6 +55,7 @@
 
 #include "../application/backend_service/backend_service.h"
 #include "../application/desktop/gui_desktop.h"
+#include "../application/setting/gui_setting.h"
 #include "../application/game/gui_game.h"
 #include "../application/game/snake/game_snake.h"
 #include "../application/game/tetris/game_tetris.h"

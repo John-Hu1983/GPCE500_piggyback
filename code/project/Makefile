@@ -129,6 +129,7 @@ OBJFILES	= \
 	"$(OUTDIR)\gui_switch.obj" \
 	"$(OUTDIR)\backend_service.obj" \
 	"$(OUTDIR)\gui_desktop.obj" \
+	"$(OUTDIR)\gui_setting.obj" \
 	"$(OUTDIR)\gui_game.obj" \
 	"$(OUTDIR)\game_snake.obj" \
 	"$(OUTDIR)\game_tetris.obj" \
@@ -370,6 +371,13 @@ OBJFILES	= \
 "$(OUTDIR)\gui_desktop.obj": "$(OUTDIR)\gui_desktop.asm"
 	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gui_desktop.obj" "$(OUTDIR)\gui_desktop.asm" 
 
+"$(OUTDIR)\gui_setting.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\setting\gui_setting.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\spinmaster.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\setting\gui_setting.h" 
+	set PATH="$(APPDIR)\toolchain\";%PATH% & \
+	$(CC) $(CFLAGS) -o "$(OUTDIR)\gui_setting.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/application/setting/gui_setting.c" 
+
+"$(OUTDIR)\gui_setting.obj": "$(OUTDIR)\gui_setting.asm"
+	$(AS) $(CASFLAGS) $(INCLUDES) -o "$(OUTDIR)\gui_setting.obj" "$(OUTDIR)\gui_setting.asm" 
+
 "$(OUTDIR)\gui_game.asm": "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\gui_game.c" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\spinmaster.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\System.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\SPI_Flash.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_config.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\bsp\bsp_global.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\ram_heap\ram_heap.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_gpio.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\Include\user_define.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_adc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_iopwm.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_rtc.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_exisr.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_spi.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\hal\hal_uart.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\core\audio_spu.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\tone\audio_tone.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\timer\soft_timer.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\audio\demo\audio_demo.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\message\message.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\button\dev_button.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\battery\dev_battery.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\lcd\st7735p3.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\dev\lcd\lcd_monitor.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\geometry\gui_geometry.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\font\gui_font.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\icon\gui_icon.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\button\gui_button.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\textbox\gui_textbox.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\label\gui_label.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\progressbar\gui_progressbar.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\checkbox\gui_checkbox.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\slider\gui_slider.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\gui\widget\switch\gui_switch.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\backend_service\backend_service.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\desktop\gui_desktop.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\gui_game.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\snake\game_snake.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\tetris\game_tetris.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\brick\game_brick.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\flappy\game_flappy.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\shooter\game_shooter.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\application\game\g2048\game_2048.h" "D:\JohnHu\Github_private\GPCE500_piggyback\code\schedule\schedule.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stddef.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\string.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdio.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\_ansi.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdarg.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdlib.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\reent.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\sys\reent.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\machine/_types.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\assert.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\limits.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\stdarg.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\math.h" "C:\Program Files (x86)\Generalplus\unSPIDE_4.1.1\library\include\machine\ieeefp.h" "GPCE36_CE5.h" "Resource.h" "voice/FileMergerVersion1/FileMerger.h" 
 	set PATH="$(APPDIR)\toolchain\";%PATH% & \
 	$(CC) $(CFLAGS) -o "$(OUTDIR)\gui_game.asm" "D:/JohnHu/Github_private/GPCE500_piggyback/code/application/game/gui_game.c" 
@@ -584,6 +592,9 @@ CLEANFILES = \
 	"$(OUTDIR)\gui_desktop.obj" \
 	"$(OUTDIR)\gui_desktop.lst" \
 	"$(OUTDIR)\gui_desktop.asm" \
+	"$(OUTDIR)\gui_setting.obj" \
+	"$(OUTDIR)\gui_setting.lst" \
+	"$(OUTDIR)\gui_setting.asm" \
 	"$(OUTDIR)\gui_game.obj" \
 	"$(OUTDIR)\gui_game.lst" \
 	"$(OUTDIR)\gui_game.asm" \

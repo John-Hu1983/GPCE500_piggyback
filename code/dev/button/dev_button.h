@@ -38,12 +38,13 @@
 #define BTN_FLAG_HELD       0x0200U
 #define BTN_FLAG_WAIT       0x0400U
 #define BTN_FLAG_SECOND     0x0800U
+#define BTN_MSG_LONG_PRESS  0x0080U
 #define BTN_MSG_CLICK       0x1000U
 #define BTN_MSG_DOUBLE      0x2000U
 #define BTN_MSG_HOLD        0x4000U
 #define BTN_MSG_CLICK2      0x8000U
-#define BTN_MSG_MASK        (BTN_MSG_CLICK | BTN_MSG_DOUBLE | BTN_MSG_HOLD | BTN_MSG_CLICK2)
-#define BTN_DEBOUNCE_MASK   0x00FFU
+#define BTN_MSG_MASK        (BTN_MSG_LONG_PRESS | BTN_MSG_CLICK | BTN_MSG_DOUBLE | BTN_MSG_HOLD | BTN_MSG_CLICK2)
+#define BTN_DEBOUNCE_MASK   0x003FU
 // clang-format on
 
 typedef struct
@@ -72,7 +73,8 @@ typedef enum
     BTN_Null = 0,
     BTN_Click,
     BTN_Double,
-    BTN_Hold
+    BTN_Hold,
+    BTN_Long_Press
 } BTN_Event;
 
 typedef struct

@@ -871,6 +871,29 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # End Group
+# Begin Group "setting"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\setting\gui_setting.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\setting\gui_setting.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # Begin Group "game"
 #PROP Default_Filter=
 USEPARAM=FALSE
@@ -1962,6 +1985,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\application\desktop\gui_desktop.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "setting"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\setting\gui_setting.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\setting\gui_setting.h
 USEPARAM=FALSE
 PARAM=
 ID=
