@@ -128,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1885432832
+EXPORT=1801547379
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -199,7 +199,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1801547379
+EXPORT=1885432832
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -910,6 +910,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\application\scope\gui_scope.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "pimd"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\pimd\gui_pimd.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\pimd\gui_pimd.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1272,7 +1295,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1885432832
+EXPORT=1801547379
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -1343,7 +1366,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1801547379
+EXPORT=1885432832
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -2054,6 +2077,29 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\application\scope\gui_scope.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
+# Begin Group "pimd"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\pimd\gui_pimd.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\pimd\gui_pimd.h
 USEPARAM=FALSE
 PARAM=
 ID=

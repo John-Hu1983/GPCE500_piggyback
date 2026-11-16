@@ -91,6 +91,7 @@
     "${workspaceFolder}/application/desktop",
     "${workspaceFolder}/application/setting",
     "${workspaceFolder}/application/scope",
+    "${workspaceFolder}/application/pimd",
     "${workspaceFolder}/application/game",
     "${workspaceFolder}/application/game/snake",
     "${workspaceFolder}/application/game/tetris",

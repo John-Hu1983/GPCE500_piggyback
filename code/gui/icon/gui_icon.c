@@ -150,6 +150,15 @@ void gui_icon_draw(GUI_Icon icon, s16 cx, s16 cy, u16 bg_color, u16 fg_color)
         gui_draw_line_thick((s16)(cx + 3), (s16)(cy + 5), (s16)(cx + 6), cy, 2U, fg_color);
         break;
 
+    case GUI_Icon_Pimd:
+        /* Concentric pulse-induction search coil rings + center target dot */
+        gui_draw_circle(cx, cy, 7U, fg_color);
+        gui_draw_circle(cx, cy, 4U, GUI_COLOR_YELLOW);
+        gui_fill_circle(cx, cy, 1U, fg_color);
+        gui_draw_hline((s16)(cx - 7), (s16)(cx - 5), cy, fg_color);
+        gui_draw_hline((s16)(cx + 5), (s16)(cx + 7), cy, fg_color);
+        break;
+
     case GUI_Icon_None:
     default:
         break;

@@ -6,8 +6,9 @@
 #define SCOPE_LUT_SIZE          72U     /* 72 steps = 360 deg (5 deg/step); 24 steps = 120 deg */
 #define SCOPE_PHASE_120_STEPS   24U
 
-#define SCOPE_TICK_PERIOD       16U     /* 16 RTC ticks @ 2048Hz = 7.8ms */
-#define SCOPE_PHASE_STEP        4U      /* Phase steps advanced per frame (4 * 5 deg = 20 deg) */
+#define SCOPE_TICK_PERIOD       4U      /* 4 RTC ticks @ 2048Hz (~2ms slice interval) */
+#define SCOPE_COLS_PER_SLICE    37U     /* 148 columns / 4 slices = 37 columns (~8ms) per slice */
+#define SCOPE_PHASE_STEP        6U      /* Phase steps advanced per full frame (6 * 5 deg = 30 deg) */
 
 #define SCOPE_BG_COLOR          GUI_RGB565(10, 14, 22)
 #define SCOPE_HUD_BG            GUI_RGB565(22, 30, 48)
@@ -39,11 +40,28 @@
 
 typedef struct
 {
-    u8 prev_y[SCOPE_CHANNELS][SCOPE_WAVE_W];
     u8 phase;
+    u8 old_phase;
+    u8 render_phase;
     u8 freq_step;
+    u8 old_freq;
+    u8 render_freq;
+    u8 col_cursor;
+    u8 idx0;
+    u8 idx1;
+    u8 idx2;
+    u8 step_acc;
+    u8 old_idx0;
+    u8 old_idx1;
+    u8 old_idx2;
+    u8 old_step_acc;
     s16 amplitude;
+    s16 old_amp;
+    s16 render_amp;
+    s16 old_prev[SCOPE_CHANNELS];
+    s16 new_prev[SCOPE_CHANNELS];
     bool paused;
+    bool dirty;
     bool initialized;
 } GUI_Scope_Page;
 

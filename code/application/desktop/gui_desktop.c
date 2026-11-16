@@ -1,23 +1,23 @@
 #include "..\..\Include\spinmaster.h"
 
 /* Desktop 2x3 (2 rows x 3 cols) button captions stored in Flash/ROM (slot 4 is Game) */
-static const char *const desktop_btn_labels[DESKTOP_BTN_COUNT] = {"Music", "Voice", "Vol",
+static const char *const desktop_btn_labels[DESKTOP_BTN_COUNT] = {"Music", "Voice", "PIMD",
                                                                   "Scope", "Game",  "Setup"};
 
 /* PyQt-style circular badge accent colors for each app card */
 static const u16 desktop_icon_colors[DESKTOP_BTN_COUNT] = {
     GUI_RGB565(235, 64, 122), /* Music : Rose Pink */
     GUI_RGB565(46, 144, 255), /* Voice : Dodger Blue */
-    GUI_RGB565(0, 196, 140),  /* Vol   : Emerald Green */
+    GUI_RGB565(0, 196, 140),  /* PIMD  : Emerald Green */
     GUI_RGB565(255, 168, 0),  /* Scope : Amber Gold */
     GUI_RGB565(156, 88, 255), /* Game  : Royal Purple */
     GUI_RGB565(0, 184, 212)   /* Setup : Cyan Teal */
 };
 
 /* Vector icon types for each of the 6 desktop cards */
-static const GUI_Btn_Icon desktop_btn_icons[DESKTOP_BTN_COUNT] = {GUI_Icon_Music,  GUI_Icon_Voice,
-                                                                  GUI_Icon_Volume, GUI_Icon_Scope,
-                                                                  GUI_Icon_Game,   GUI_Icon_Setup};
+static const GUI_Btn_Icon desktop_btn_icons[DESKTOP_BTN_COUNT] = {GUI_Icon_Music, GUI_Icon_Voice,
+                                                                  GUI_Icon_Pimd,  GUI_Icon_Scope,
+                                                                  GUI_Icon_Game,  GUI_Icon_Setup};
 
 static GUI_Desktop_Page *desktop_page = null;
 static HEAP_Mark desktop_heap_mark = 0U;
@@ -195,9 +195,9 @@ static void _desktop_on_button_msg(const MSG_Message *message)
         }
         else if (desktop_page->selected_idx == 2U)
         {
-            /* Vol card: enter Settings page focused on Volume */
+            /* PIMD card: enter PIMD pulse generator page */
             spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
-            gui_setting_enter_item(GUI_Setting_Volume);
+            gui_pimd_enter();
         }
         else if (desktop_page->selected_idx == 3U)
         {

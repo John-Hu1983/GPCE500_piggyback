@@ -5,6 +5,7 @@
 
 // clang-format off
 #define POWER_LOCK_PIN      ((gpio_pin_s){GPIOB, 0})
+#define PIMD_EN_PIN         ((gpio_pin_s){GPIOB, 1})
 
 #define USB_DET_PIN         ((gpio_pin_s){GPIOA, 9})
 #define BAT_DET_PIN         ((gpio_pin_s){GPIOA, 10})

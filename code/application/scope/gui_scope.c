@@ -21,7 +21,7 @@ static const u16 scope_ch_colors[SCOPE_CHANNELS] = {
 
 static GUI_Scope_Page *scope_page = null;
 static HEAP_Mark scope_heap_mark = 0U;
-static SWT_Timer scope_timer;
+static SCH_Task scope_task = SCH_TASK_INIT;
 static MSG_Sub scope_btn_sub = MSG_SUB_INIT;
 
 /*
@@ -144,17 +144,85 @@ static void _scope_draw_graticule(void)
 }
 
 /*
- *@ brief    : Compute and incrementally render one frame of the 3-channel 120-deg sine waves.
+ *@ brief    : Compute clamped screen Y coordinate from a LUT index and amplitude.
+ *@ type     : private
+ *@ argu in  : lut_idx: 0..71 sine LUT index; amp: wave amplitude in pixels.
+ *@ argu out : Clamped vertical pixel coordinate inside the wave box.
+ *@ theme    : Single-shift (>> 7) sine scaling without division or RAM tables.
+ */
+static s16 _scope_calc_y(u8 lut_idx, s16 amp)
+{
+    s16 offset = (s16)((scope_sin_lut[lut_idx] * amp) >> 7);
+    s16 y = (s16)(SCOPE_CENTER_Y - offset);
+
+    if (y < SCOPE_WAVE_Y0)
+    {
+        y = SCOPE_WAVE_Y0;
+    }
+    else if (y >= (s16)(SCOPE_WAVE_Y0 + (s16)SCOPE_WAVE_H))
+    {
+        y = (s16)(SCOPE_WAVE_Y0 + (s16)SCOPE_WAVE_H - 1);
+    }
+    return y;
+}
+
+/*
+ *@ brief    : Prepare a new 148-column frame by latching current and previous wave parameters.
  *@ type     : private
  *@ argu in  : None.
- *@ argu out : Old wave segments erased and new 3-phase sine curves drawn column-by-column.
- *@ theme    : Flicker-free incremental oscilloscope waveform renderer.
+ *@ argu out : 3-phase LUT indices initialized for column 0 of both old and new waveforms.
+ *@ theme    : O(1) RAM frame setup without per-column history buffers.
  */
-static void _scope_render_frame(void)
+static void _scope_begin_frame(void)
 {
-    u8 col, ch;
-    s16 old_prev[SCOPE_CHANNELS];
-    s16 new_prev[SCOPE_CHANNELS];
+    if (scope_page == null)
+    {
+        return;
+    }
+
+    scope_page->render_phase = scope_page->phase;
+    scope_page->render_freq = scope_page->freq_step;
+    scope_page->render_amp = scope_page->amplitude;
+    scope_page->col_cursor = 0U;
+    scope_page->step_acc = 0U;
+    scope_page->old_step_acc = 0U;
+
+    scope_page->idx0 = scope_page->render_phase;
+    scope_page->idx1 = (u8)(scope_page->idx0 + SCOPE_PHASE_120_STEPS);
+    if (scope_page->idx1 >= SCOPE_LUT_SIZE)
+    {
+        scope_page->idx1 = (u8)(scope_page->idx1 - SCOPE_LUT_SIZE);
+    }
+    scope_page->idx2 = (u8)(scope_page->idx1 + SCOPE_PHASE_120_STEPS);
+    if (scope_page->idx2 >= SCOPE_LUT_SIZE)
+    {
+        scope_page->idx2 = (u8)(scope_page->idx2 - SCOPE_LUT_SIZE);
+    }
+
+    scope_page->old_idx0 = scope_page->old_phase;
+    scope_page->old_idx1 = (u8)(scope_page->old_idx0 + SCOPE_PHASE_120_STEPS);
+    if (scope_page->old_idx1 >= SCOPE_LUT_SIZE)
+    {
+        scope_page->old_idx1 = (u8)(scope_page->old_idx1 - SCOPE_LUT_SIZE);
+    }
+    scope_page->old_idx2 = (u8)(scope_page->old_idx1 + SCOPE_PHASE_120_STEPS);
+    if (scope_page->old_idx2 >= SCOPE_LUT_SIZE)
+    {
+        scope_page->old_idx2 = (u8)(scope_page->old_idx2 - SCOPE_LUT_SIZE);
+    }
+}
+
+/*
+ *@ brief    : Render up to `max_cols` columns of the current frame and return to main loop.
+ *@ type     : private
+ *@ argu in  : max_cols: number of columns to render in this slice (e.g., 37 or 148).
+ *@ argu out : Slice of columns updated on LCD; `initialized` set when column 147 completes.
+ *@ theme    : Non-blocking sliced rendering so main loop services button timers every ~8ms.
+ */
+static void _scope_render_slice(u8 max_cols)
+{
+    u8 count = 0U;
+    u8 ch;
     bool first_frame;
 
     if (scope_page == null)
@@ -162,88 +230,152 @@ static void _scope_render_frame(void)
         return;
     }
 
+    if (scope_page->col_cursor == 0U)
+    {
+        _scope_begin_frame();
+    }
+
     first_frame = !scope_page->initialized;
 
-    for (col = 0U; col < SCOPE_WAVE_W; ++col)
+    while (scope_page->col_cursor < SCOPE_WAVE_W && count < max_cols)
     {
+        u8 col = scope_page->col_cursor;
         s16 x = (s16)(SCOPE_WAVE_X0 + (s16)col);
-        u8 base_idx =
-            (u8)((scope_page->phase + (u16)col * (u16)scope_page->freq_step / 2U) % SCOPE_LUT_SIZE);
         s16 new_y[SCOPE_CHANNELS];
+        s16 old_y[SCOPE_CHANNELS];
 
-        /* 1. Compute new Y for all 3 channels (0 deg, 120 deg, 240 deg) at column `col` */
-        for (ch = 0U; ch < SCOPE_CHANNELS; ++ch)
+        new_y[0] = _scope_calc_y(scope_page->idx0, scope_page->render_amp);
+        new_y[1] = _scope_calc_y(scope_page->idx1, scope_page->render_amp);
+        new_y[2] = _scope_calc_y(scope_page->idx2, scope_page->render_amp);
+
+        scope_page->step_acc = (u8)(scope_page->step_acc + scope_page->render_freq);
+        while (scope_page->step_acc >= 2U)
         {
-            u8 lut_idx = (u8)((base_idx + ch * SCOPE_PHASE_120_STEPS) % SCOPE_LUT_SIZE);
-            s16 offset = (s16)(((s32)scope_sin_lut[lut_idx] * (s32)scope_page->amplitude) / 127L);
-            s16 y = (s16)(SCOPE_CENTER_Y - offset);
-
-            if (y < SCOPE_WAVE_Y0)
+            scope_page->step_acc = (u8)(scope_page->step_acc - 2U);
+            if (++scope_page->idx0 >= SCOPE_LUT_SIZE)
             {
-                y = SCOPE_WAVE_Y0;
+                scope_page->idx0 = 0U;
             }
-            if (y >= (s16)(SCOPE_WAVE_Y0 + (s16)SCOPE_WAVE_H))
+            if (++scope_page->idx1 >= SCOPE_LUT_SIZE)
             {
-                y = (s16)(SCOPE_WAVE_Y0 + (s16)SCOPE_WAVE_H - 1);
+                scope_page->idx1 = 0U;
             }
-            new_y[ch] = y;
+            if (++scope_page->idx2 >= SCOPE_LUT_SIZE)
+            {
+                scope_page->idx2 = 0U;
+            }
         }
 
-        /* 2. Erase old segments at column `x` first so crossing channels never erase each other */
         if (!first_frame)
         {
+            old_y[0] = _scope_calc_y(scope_page->old_idx0, scope_page->old_amp);
+            old_y[1] = _scope_calc_y(scope_page->old_idx1, scope_page->old_amp);
+            old_y[2] = _scope_calc_y(scope_page->old_idx2, scope_page->old_amp);
+
+            scope_page->old_step_acc = (u8)(scope_page->old_step_acc + scope_page->old_freq);
+            while (scope_page->old_step_acc >= 2U)
+            {
+                scope_page->old_step_acc = (u8)(scope_page->old_step_acc - 2U);
+                if (++scope_page->old_idx0 >= SCOPE_LUT_SIZE)
+                {
+                    scope_page->old_idx0 = 0U;
+                }
+                if (++scope_page->old_idx1 >= SCOPE_LUT_SIZE)
+                {
+                    scope_page->old_idx1 = 0U;
+                }
+                if (++scope_page->old_idx2 >= SCOPE_LUT_SIZE)
+                {
+                    scope_page->old_idx2 = 0U;
+                }
+            }
+
             for (ch = 0U; ch < SCOPE_CHANNELS; ++ch)
             {
-                s16 old_y = (s16)scope_page->prev_y[ch][col];
                 if (col == 0U)
                 {
-                    gui_draw_point(x, old_y, _scope_get_bg_pixel(x, old_y));
+                    if (old_y[ch] != new_y[ch])
+                    {
+                        gui_draw_point(x, old_y[ch], _scope_get_bg_pixel(x, old_y[ch]));
+                    }
                 }
-                else
+                else if (scope_page->old_prev[ch] != scope_page->new_prev[ch] ||
+                         old_y[ch] != new_y[ch])
                 {
-                    _scope_erase_segment(x, old_prev[ch], old_y);
+                    _scope_erase_segment(x, scope_page->old_prev[ch], old_y[ch]);
                 }
-                old_prev[ch] = old_y;
+                scope_page->old_prev[ch] = old_y[ch];
             }
         }
 
-        /* 3. Draw new segments for all 3 channels at column `x` */
+        /* Draw new segments for all 3 channels at column `x` */
         for (ch = 0U; ch < SCOPE_CHANNELS; ++ch)
         {
-            if (col == 0U)
+            if (col == 0U || scope_page->new_prev[ch] == new_y[ch])
             {
                 gui_draw_point(x, new_y[ch], scope_ch_colors[ch]);
             }
             else
             {
-                s16 y0 = (new_prev[ch] <= new_y[ch]) ? new_prev[ch] : new_y[ch];
-                s16 y1 = (new_prev[ch] <= new_y[ch]) ? new_y[ch] : new_prev[ch];
+                s16 y0 = (scope_page->new_prev[ch] <= new_y[ch]) ? scope_page->new_prev[ch]
+                                                                 : new_y[ch];
+                s16 y1 = (scope_page->new_prev[ch] <= new_y[ch]) ? new_y[ch]
+                                                                 : scope_page->new_prev[ch];
                 gui_draw_vline(x, y0, y1, scope_ch_colors[ch]);
             }
-            new_prev[ch] = new_y[ch];
-            scope_page->prev_y[ch][col] = (u8)new_y[ch];
+            scope_page->new_prev[ch] = new_y[ch];
         }
+
+        scope_page->col_cursor++;
+        count++;
     }
 
-    scope_page->initialized = true;
+    if (scope_page->col_cursor >= SCOPE_WAVE_W)
+    {
+        scope_page->col_cursor = 0U;
+        scope_page->old_phase = scope_page->render_phase;
+        scope_page->old_freq = scope_page->render_freq;
+        scope_page->old_amp = scope_page->render_amp;
+        scope_page->initialized = true;
+    }
 }
 
 /*
- *@ brief    : Periodic 32FPS software timer callback advancing the 3-phase sine wave phase.
+ *@ brief    : Periodic scheduler task rendering one 37-column slice (~8ms) per invocation.
  *@ type     : private
  *@ argu in  : None.
- *@ argu out : Phase incremented and next frame rendered when not paused.
- *@ theme    : Real-time oscilloscope sweep timer.
+ *@ argu out : Next 37 columns rendered; phase advanced when a full 148-column frame completes.
+ *@ theme    : Cooperative sliced rendering yielding back to main loop every ~8ms for button scan.
  */
-static void _scope_on_timer(void)
+static void _scope_service_task(void)
 {
-    if (scope_page == null || scope_page->paused)
+    if (scope_page == null)
     {
         return;
     }
 
-    scope_page->phase = (u8)((scope_page->phase + SCOPE_PHASE_STEP) % SCOPE_LUT_SIZE);
-    _scope_render_frame();
+    if (scope_page->col_cursor != 0U)
+    {
+        /* Continue rendering the in-progress frame slice */
+        _scope_render_slice(SCOPE_COLS_PER_SLICE);
+        return;
+    }
+
+    if (!scope_page->paused)
+    {
+        scope_page->phase = (u8)(scope_page->phase + SCOPE_PHASE_STEP);
+        if (scope_page->phase >= SCOPE_LUT_SIZE)
+        {
+            scope_page->phase = (u8)(scope_page->phase - SCOPE_LUT_SIZE);
+        }
+        scope_page->dirty = false;
+        _scope_render_slice(SCOPE_COLS_PER_SLICE);
+    }
+    else if (scope_page->dirty)
+    {
+        scope_page->dirty = false;
+        _scope_render_slice(SCOPE_COLS_PER_SLICE);
+    }
 }
 
 /*
@@ -308,7 +440,7 @@ static void _scope_on_button_msg(const MSG_Message *message)
         if (scope_page->amplitude + SCOPE_AMP_STEP <= SCOPE_AMP_MAX)
         {
             scope_page->amplitude = (s16)(scope_page->amplitude + SCOPE_AMP_STEP);
-            _scope_render_frame();
+            scope_page->dirty = true;
         }
     }
     else if (btn->key == Btn_A5_Down)
@@ -316,7 +448,7 @@ static void _scope_on_button_msg(const MSG_Message *message)
         if (scope_page->amplitude - SCOPE_AMP_STEP >= SCOPE_AMP_MIN)
         {
             scope_page->amplitude = (s16)(scope_page->amplitude - SCOPE_AMP_STEP);
-            _scope_render_frame();
+            scope_page->dirty = true;
         }
     }
     else if (btn->key == Btn_A6_Right)
@@ -324,7 +456,7 @@ static void _scope_on_button_msg(const MSG_Message *message)
         if (scope_page->freq_step < SCOPE_FREQ_MAX)
         {
             scope_page->freq_step++;
-            _scope_render_frame();
+            scope_page->dirty = true;
         }
     }
     else if (btn->key == Btn_A4_Left)
@@ -332,7 +464,7 @@ static void _scope_on_button_msg(const MSG_Message *message)
         if (scope_page->freq_step > SCOPE_FREQ_MIN)
         {
             scope_page->freq_step--;
-            _scope_render_frame();
+            scope_page->dirty = true;
         }
     }
 }
@@ -362,22 +494,24 @@ void gui_scope_enter(void)
 
     scope_page->phase = 0U;
     scope_page->freq_step = SCOPE_FREQ_DEFAULT;
+    scope_page->col_cursor = 0U;
     scope_page->amplitude = SCOPE_AMP_DEFAULT;
     scope_page->paused = false;
+    scope_page->dirty = false;
     scope_page->initialized = false;
 
     _scope_draw_graticule();
-    _scope_render_frame();
+    _scope_render_slice(SCOPE_WAVE_W);
 
     msg_subscribe_type(&scope_btn_sub, MSG_Button, null, _scope_on_button_msg);
-    swt_start_timer(&scope_timer, SCOPE_TICK_PERIOD, SWT_Repeat, _scope_on_timer);
+    sch_start_task(&scope_task, SCOPE_TICK_PERIOD, SCOPE_TICK_PERIOD, _scope_service_task);
 }
 
 /*
- *@ brief    : Exit the Oscilloscope page, stop sweep timer, and release ram_heap memory.
+ *@ brief    : Exit the Oscilloscope page, stop sweep task, and release ram_heap memory.
  *@ type     : public
  *@ argu in  : None.
- *@ argu out : Timer stopped, button subscription detached, and heap memory freed.
+ *@ argu out : Task stopped, button subscription detached, and heap memory freed.
  *@ theme    : Zero-fragmentation page exit via heap_release_to_mark().
  */
 void gui_scope_exit(void)
@@ -387,7 +521,7 @@ void gui_scope_exit(void)
         return;
     }
 
-    swt_stop_timer(&scope_timer);
+    sch_stop_task(&scope_task);
     msg_unsubscribe_node(&scope_btn_sub);
     scope_page = null;
     heap_release_to_mark(scope_heap_mark);

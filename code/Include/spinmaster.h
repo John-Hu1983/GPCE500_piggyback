@@ -57,6 +57,7 @@
 #include "../application/desktop/gui_desktop.h"
 #include "../application/setting/gui_setting.h"
 #include "../application/scope/gui_scope.h"
+#include "../application/pimd/gui_pimd.h"
 #include "../application/game/gui_game.h"
 #include "../application/game/snake/game_snake.h"
 #include "../application/game/tetris/game_tetris.h"
