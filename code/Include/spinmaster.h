@@ -51,14 +51,15 @@
 #include "../gui/widget/checkbox/gui_checkbox.h"
 #include "../gui/widget/slider/gui_slider.h"
 #include "../gui/widget/switch/gui_switch.h"
-#include "../gui/desktop/gui_desktop.h"
-#include "../gui/game/gui_game.h"
-#include "../gui/game/snake/game_snake.h"
-#include "../gui/game/tetris/game_tetris.h"
-#include "../gui/game/brick/game_brick.h"
-#include "../gui/game/flappy/game_flappy.h"
-#include "../gui/game/shooter/game_shooter.h"
-#include "../gui/game/g2048/game_2048.h"
+
+#include "../application/desktop/gui_desktop.h"
+#include "../application/game/gui_game.h"
+#include "../application/game/snake/game_snake.h"
+#include "../application/game/tetris/game_tetris.h"
+#include "../application/game/brick/game_brick.h"
+#include "../application/game/flappy/game_flappy.h"
+#include "../application/game/shooter/game_shooter.h"
+#include "../application/game/g2048/game_2048.h"
 
 #include "../schedule/schedule.h"
 
