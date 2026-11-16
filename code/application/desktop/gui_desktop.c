@@ -2,21 +2,21 @@
 
 /* Desktop 2x3 (2 rows x 3 cols) button captions stored in Flash/ROM (slot 4 is Game) */
 static const char *const desktop_btn_labels[DESKTOP_BTN_COUNT] = {"Music", "Voice", "Vol",
-                                                                  "Light", "Game",  "Setup"};
+                                                                  "Scope", "Game",  "Setup"};
 
 /* PyQt-style circular badge accent colors for each app card */
 static const u16 desktop_icon_colors[DESKTOP_BTN_COUNT] = {
     GUI_RGB565(235, 64, 122), /* Music : Rose Pink */
     GUI_RGB565(46, 144, 255), /* Voice : Dodger Blue */
     GUI_RGB565(0, 196, 140),  /* Vol   : Emerald Green */
-    GUI_RGB565(255, 168, 0),  /* Light : Amber Gold */
+    GUI_RGB565(255, 168, 0),  /* Scope : Amber Gold */
     GUI_RGB565(156, 88, 255), /* Game  : Royal Purple */
     GUI_RGB565(0, 184, 212)   /* Setup : Cyan Teal */
 };
 
 /* Vector icon types for each of the 6 desktop cards */
 static const GUI_Btn_Icon desktop_btn_icons[DESKTOP_BTN_COUNT] = {GUI_Icon_Music,  GUI_Icon_Voice,
-                                                                  GUI_Icon_Volume, GUI_Icon_Light,
+                                                                  GUI_Icon_Volume, GUI_Icon_Scope,
                                                                   GUI_Icon_Game,   GUI_Icon_Setup};
 
 static GUI_Desktop_Page *desktop_page = null;
@@ -201,9 +201,9 @@ static void _desktop_on_button_msg(const MSG_Message *message)
         }
         else if (desktop_page->selected_idx == 3U)
         {
-            /* Light card: enter Settings page focused on Brightness */
+            /* Scope card: enter 3-channel 120-deg Sine Wave Oscilloscope page */
             spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
-            gui_setting_enter_item(GUI_Setting_Brightness);
+            gui_scope_enter();
         }
         else if (desktop_page->selected_idx == 4U)
         {

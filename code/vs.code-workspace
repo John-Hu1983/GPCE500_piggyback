@@ -88,6 +88,7 @@
 			"${workspaceFolder}/application/backend_service",
 			"${workspaceFolder}/application/desktop",
 			"${workspaceFolder}/application/setting",
+			"${workspaceFolder}/application/scope",
 			"${workspaceFolder}/application/game",
 			"${workspaceFolder}/application/game/snake",
 			"${workspaceFolder}/application/game/tetris",

@@ -140,6 +140,16 @@ void gui_icon_draw(GUI_Icon icon, s16 cx, s16 cy, u16 bg_color, u16 fg_color)
         gui_icon_draw_lightning(cx, cy, fg_color);
         break;
 
+    case GUI_Icon_Scope:
+        /* Oscilloscope graticule crosshair + sine wave curve */
+        gui_draw_hline((s16)(cx - 6), (s16)(cx + 6), cy, GUI_RGB565(90, 120, 160));
+        gui_draw_vline(cx, (s16)(cy - 6), (s16)(cy + 6), GUI_RGB565(90, 120, 160));
+        gui_draw_line_thick((s16)(cx - 6), cy, (s16)(cx - 3), (s16)(cy - 5), 2U, fg_color);
+        gui_draw_line_thick((s16)(cx - 3), (s16)(cy - 5), (s16)(cx + 3), (s16)(cy + 5), 2U,
+                            fg_color);
+        gui_draw_line_thick((s16)(cx + 3), (s16)(cy + 5), (s16)(cx + 6), cy, 2U, fg_color);
+        break;
+
     case GUI_Icon_None:
     default:
         break;

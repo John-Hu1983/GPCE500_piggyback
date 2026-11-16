@@ -21,7 +21,8 @@ typedef enum
     GUI_Icon_Shooter = 11,
     GUI_Icon_2048 = 12,
     GUI_Icon_Game = 13,
-    GUI_Icon_Lightning = 14
+    GUI_Icon_Lightning = 14,
+    GUI_Icon_Scope = 15
 } GUI_Icon;
 
 typedef GUI_Icon GUI_Btn_Icon;
