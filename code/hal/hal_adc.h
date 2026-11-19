@@ -37,5 +37,6 @@ void adc_init_module(void);
 void adc_enable_module(void);
 void adc_disable_module(void);
 unsigned adc_read_channel(ADC_Channel channel);
+unsigned adc_read_channel_isr(ADC_Channel channel);
 
 #endif /* _HAL_ADC_H__ */

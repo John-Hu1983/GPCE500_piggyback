@@ -46,7 +46,10 @@ typedef enum
     BSP_Fault_EXISR_Handler = 0x0C03,
     BSP_Fault_HEAP_Arg = 0x0D01,
     BSP_Fault_HEAP_State = 0x0D02,
-    BSP_Fault_HEAP_Corrupt = 0x0D03
+    BSP_Fault_HEAP_Corrupt = 0x0D03,
+    BSP_Fault_TMRC_Period = 0x0E01,
+    BSP_Fault_TMRC_Handler = 0x0E02,
+    BSP_Fault_TMRC_IRQ = 0x0E03
 } BSP_Fault;
 
 typedef enum

@@ -1,11 +1,13 @@
-#ifndef _USER_DEFINE_H_
-#define _USER_DEFINE_H_
+#ifndef _IO_ALLOCATION_H_
+#define _IO_ALLOCATION_H_
 
 #include "..\hal\hal_gpio.h"
 
 // clang-format off
 #define POWER_LOCK_PIN      ((gpio_pin_s){GPIOB, 0})
 #define PIMD_EN_PIN         ((gpio_pin_s){GPIOB, 1})
+#define PIMD_ADC_PIN        ((gpio_pin_s){GPIOA, 11})
+#define PIMD_ADC_CH         ADC_Ch_A11
 
 #define USB_DET_PIN         ((gpio_pin_s){GPIOA, 9})
 #define BAT_DET_PIN         ((gpio_pin_s){GPIOA, 10})

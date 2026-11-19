@@ -10,7 +10,7 @@
 #define BACKEND_SERVICE_SLICE   512U
 // clang-format on
 
-void backend_service_init(void);
+void backend_open_service(void);
 void backend_service_stop(void);
 
 #endif /* _BACKEND_SERVICE_H__ */

@@ -31,7 +31,7 @@ int main(void)
     rtc_init_module(RTC_Freq_2K);
     lcd_init_module();
 
-    backend_service_init();
+    backend_open_service();
     gui_desktop_enter();
 
     for (;;)

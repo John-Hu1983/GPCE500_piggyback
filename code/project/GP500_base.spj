@@ -128,7 +128,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1801547379
+EXPORT=1885432832
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -139,7 +139,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\Include\user_define.h
+SOURCE=..\Include\IO_allocation.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -199,7 +199,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1885432832
+EXPORT=1684891904
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -414,6 +414,22 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\hal\hal_rtc.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_timerc.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_timerc.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1295,7 +1311,7 @@ SPECIFICFLAG=0
 #PROP Default_Filter=
 USEPARAM=FALSE
 PARAM=
-EXPORT=1801547379
+EXPORT=1885432832
 SPECIFICFLAG=0
 # Begin Source File
 SOURCE=..\Include\user_config.h
@@ -1306,7 +1322,7 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\Include\user_define.h
+SOURCE=..\Include\IO_allocation.h
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -1366,7 +1382,7 @@ SOURCE=.\voice\FileMergerVersion1\FileMerger.h
 USEPARAM=FALSE
 PARAM=
 ID=
-EXPORT=1885432832
+EXPORT=1684891904
 SPECIFICFLAG=0
 # End Source File
 # End Group
@@ -1581,6 +1597,22 @@ SPECIFICFLAG=0
 # End Source File
 # Begin Source File
 SOURCE=..\hal\hal_rtc.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_timerc.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\hal\hal_timerc.h
 USEPARAM=FALSE
 PARAM=
 ID=

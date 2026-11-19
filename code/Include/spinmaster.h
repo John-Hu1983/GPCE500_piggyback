@@ -24,10 +24,11 @@
 #include "../ram_heap/ram_heap.h"
 
 #include "../hal/hal_gpio.h"
-#include "../Include/user_define.h"
+#include "../Include/IO_allocation.h"
 #include "../hal/hal_adc.h"
 #include "../hal/hal_iopwm.h"
 #include "../hal/hal_rtc.h"
+#include "../hal/hal_timerc.h"
 #include "../hal/hal_exisr.h"
 #include "../hal/hal_spi.h"
 #include "../hal/hal_uart.h"

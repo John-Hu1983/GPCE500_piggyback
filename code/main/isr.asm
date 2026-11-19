@@ -72,6 +72,7 @@
 .external _rtc_service_irq
 .external _spu_service_irq
 .external _exisr_service_irq
+.external _tmrc_service_irq
 
 //**************************************************************************
 // RAM Definition Area
@@ -126,8 +127,11 @@ _IRQ1:
 //****************************************************************
 _IRQ2:
 	push R1, R5 to [SP]
+	push SR to [SP]
 
+	call _tmrc_service_irq
 
+	pop SR from [SP]
 	pop R1, R5 from [SP]
 	reti;
 

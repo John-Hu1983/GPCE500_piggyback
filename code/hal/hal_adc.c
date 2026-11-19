@@ -111,3 +111,56 @@ unsigned adc_read_channel(ADC_Channel channel)
     System_CPU_EnableIRQ();
     return data;
 }
+
+/*
+ *@ brief    : Convert one selected ADC input inside an ISR without altering CPU IRQ state.
+ *@ type     : public
+ *@ argu in  : channel: external input, PGA, VDD/2 or reference.
+ *@ argu out : Full 16-bit raw slope count (0 if input is 0V or conversion times out).
+ *@ theme    : ISR-safe slope conversion for TimerC high-speed sampling.
+ */
+unsigned adc_read_channel_isr(ADC_Channel channel)
+{
+    unsigned status;
+    unsigned data = 0U;
+    unsigned timeout = 512U;
+    volatile unsigned dly;
+
+    if ((unsigned)channel > ADC_Ch_Ref || (*P_CMPADC_Ctrl0 & C_CMPADC_Enable) == 0)
+    {
+        adc_disable_module();
+        bsp_halt_fault(BSP_Fault_ADC_State);
+    }
+
+    *P_CMPADC_Ctrl0 = (*P_CMPADC_Ctrl0 & ~C_CMPADC_INN_Sel) | ((unsigned)channel << 10) |
+                      C_CMPADC_Discharge_Enable;
+    *P_CMPADC_Ctrl1 = ADC_MODE;
+    for (dly = 0U; dly < 80U; ++dly)
+    {
+    }
+
+    *P_CMPADC_Status = ADC_FLAGS;
+    *P_INT_Status = C_IRQ3_ADC;
+    *P_CMPADC_Ctrl0 &= ~C_CMPADC_Discharge_Enable;
+
+    for (;;)
+    {
+        status = *P_CMPADC_Status;
+        if ((status & C_CMPADC_INT_Flag) != 0U)
+        {
+            data = *P_CMPADC_Data;
+            break;
+        }
+        if ((status & C_CMPADC_Timeout_Flag) != 0U || --timeout == 0U)
+        {
+            data = 0U;
+            break;
+        }
+    }
+
+    *P_CMPADC_Ctrl0 |= C_CMPADC_Discharge_Enable;
+    *P_CMPADC_Status = ADC_FLAGS;
+    *P_INT_Status = C_IRQ3_ADC;
+
+    return data;
+}

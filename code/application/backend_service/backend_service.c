@@ -20,6 +20,7 @@ static void _backend_service_task(void)
     u16 mv_diff;
     bool chg_changed = false;
 
+
     battery_sample_update();
     info = battery_get_info();
 
@@ -70,7 +71,7 @@ static void _backend_service_task(void)
  *@ argu out : ADC & battery monitor initialized; periodic backend_task registered in scheduler.
  *@ theme    : Call at startup before entering Desktop UI.
  */
-void backend_service_init(void)
+void backend_open_service(void)
 {
     const BAT_Info *info;
 
