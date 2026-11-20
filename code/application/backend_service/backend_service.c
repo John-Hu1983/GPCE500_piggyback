@@ -20,6 +20,10 @@ static void _backend_service_task(void)
     u16 mv_diff;
     bool chg_changed = false;
 
+    if (pimd_is_phy_busy())
+    {
+        return;
+    }
 
     battery_sample_update();
     info = battery_get_info();

@@ -17,6 +17,7 @@ typedef void (*TMRC_Handler)(void);
 void tmrc_init_module(TMRC_Handler handler);
 void tmrc_start_us(u16 period_us);
 void tmrc_set_period_us(u16 period_us);
+void tmrc_disable_irq(void);
 void tmrc_stop_module(void);
 void tmrc_service_irq(void);
 

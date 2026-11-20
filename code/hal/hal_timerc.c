@@ -111,6 +111,19 @@ void tmrc_set_period_us(u16 period_us)
 }
 
 /*
+ *@ brief    : Mask TimerC CPU interrupt (IRQ2) while keeping TimerC counter running.
+ *@ type     : public
+ *@ argu in  : None.
+ *@ argu out : C_IRQ2_TMC masked and cleared; TimerC continues generating hardware triggers.
+ *@ theme    : Allow TimerC to trigger CMPADC in hardware without CPU IRQ2 overhead.
+ */
+void tmrc_disable_irq(void)
+{
+    *P_INT_Ctrl &= ~C_IRQ2_TMC;
+    *P_INT_Status = C_IRQ2_TMC;
+}
+
+/*
  *@ brief    : Stop TimerC counter and mask IRQ2 interrupt.
  *@ type     : public
  *@ argu in  : None.

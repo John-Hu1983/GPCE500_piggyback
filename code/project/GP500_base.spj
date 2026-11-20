@@ -939,8 +939,14 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
+# Begin Group "gui"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\application\pimd\gui_pimd.c
+SOURCE=..\application\pimd\gui\gui_pimd.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -948,13 +954,37 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\application\pimd\gui_pimd.h
+SOURCE=..\application\pimd\gui\gui_pimd.h
 USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=3
 SPECIFICFLAG=0
 # End Source File
+# End Group
+# Begin Group "phy"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\pimd\phy\phy_pimd.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\pimd\phy\phy_pimd.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End Group
 # Begin Group "game"
 #PROP Default_Filter=
@@ -2122,8 +2152,14 @@ USEPARAM=FALSE
 PARAM=
 EXPORT=3
 SPECIFICFLAG=0
+# Begin Group "gui"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
 # Begin Source File
-SOURCE=..\application\pimd\gui_pimd.c
+SOURCE=..\application\pimd\gui\gui_pimd.c
 USEPARAM=FALSE
 PARAM=
 ID=
@@ -2131,13 +2167,37 @@ EXPORT=3
 SPECIFICFLAG=0
 # End Source File
 # Begin Source File
-SOURCE=..\application\pimd\gui_pimd.h
+SOURCE=..\application\pimd\gui\gui_pimd.h
 USEPARAM=FALSE
 PARAM=
 ID=
 EXPORT=3
 SPECIFICFLAG=0
 # End Source File
+# End Group
+# Begin Group "phy"
+#PROP Default_Filter=
+USEPARAM=FALSE
+PARAM=
+EXPORT=3
+SPECIFICFLAG=0
+# Begin Source File
+SOURCE=..\application\pimd\phy\phy_pimd.c
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# Begin Source File
+SOURCE=..\application\pimd\phy\phy_pimd.h
+USEPARAM=FALSE
+PARAM=
+ID=
+EXPORT=3
+SPECIFICFLAG=0
+# End Source File
+# End Group
 # End Group
 # Begin Group "game"
 #PROP Default_Filter=

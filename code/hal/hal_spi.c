@@ -227,7 +227,8 @@ void spi_service_irq(void)
     {
         *P_INT_Status = C_IRQ3_SPI2;
     }
-    if (*P_DMA_INTSTS & C_DMA1_TX_Done_Flag)
+    if ((*P_DMA_INTSTS & C_DMA1_TX_Done_Flag) &&
+        ((*P_DMA1_CTRL0 & C_DMA_Request_Sel) == C_DMA_Request_SPI2))
     {
         *P_DMA_INTSTS |= C_DMA1_TX_Done_Flag;
         *P_SPI2_Man_Ctrl &= ~C_SPI_TX_DMA_Enable;
