@@ -28,15 +28,15 @@ void gui_label_init(GUI_Label *lbl, s16 x, s16 y, u16 w, u16 h, const char *text
 }
 
 /*
- *@ brief    : Render a GUI_Label widget onto the LCD.
+ *@ brief    : Render a GUI_Label widget onto the LCD without pre-blanking the text area.
  *@ type     : public
  *@ argu in  : lbl: pointer to label descriptor.
  *@ argu out : Label text rendered according to alignment and transparency mode.
- *@ theme    : When transparent is false and w > 0, clears the bounding area for flicker-free updates.
+ *@ theme    : When transparent is false, streams opaque text first and fills only outer margins.
  */
 void gui_label_draw(const GUI_Label *lbl)
 {
-    s16 tx, ty;
+    s16 x1, y1, tx, ty, tx1, ty1;
     u16 str_w, char_h;
 
     if (lbl == null)
@@ -45,15 +45,15 @@ void gui_label_draw(const GUI_Label *lbl)
     }
 
     char_h = gui_font_get_char_height(lbl->font);
+    x1 = (s16)(lbl->x + (s16)lbl->w - 1);
+    y1 = (s16)(lbl->y + (s16)lbl->h - 1);
 
-    if (!lbl->transparent && lbl->w > 0U && lbl->h > 0U)
+    if (lbl->text == null || lbl->text[0] == '\0')
     {
-        gui_fill_rect(lbl->x, lbl->y, (s16)(lbl->x + (s16)lbl->w - 1),
-                      (s16)(lbl->y + (s16)lbl->h - 1), lbl->bg_color);
-    }
-
-    if (lbl->text == null)
-    {
+        if (!lbl->transparent && lbl->w > 0U && lbl->h > 0U)
+        {
+            gui_fill_rect(lbl->x, lbl->y, x1, y1, lbl->bg_color);
+        }
         return;
     }
 
@@ -63,13 +63,20 @@ void gui_label_draw(const GUI_Label *lbl)
 
     if (lbl->w > 0U)
     {
-        if (lbl->align == GUI_Align_Center)
+        switch (lbl->align)
         {
+        case GUI_Align_Center:
             tx = (s16)(lbl->x + ((s16)lbl->w - (s16)str_w) / 2);
-        }
-        else if (lbl->align == GUI_Align_Right)
-        {
+            break;
+
+        case GUI_Align_Right:
             tx = (s16)(lbl->x + (s16)lbl->w - (s16)str_w);
+            break;
+
+        case GUI_Align_Left:
+        default:
+            tx = lbl->x;
+            break;
         }
         if (tx < lbl->x)
         {
@@ -82,13 +89,43 @@ void gui_label_draw(const GUI_Label *lbl)
         ty = (s16)(lbl->y + ((s16)lbl->h - (s16)char_h) / 2);
     }
 
-    if (lbl->transparent || lbl->w > 0U)
+    if (lbl->transparent)
     {
         gui_draw_str_at(tx, ty, lbl->text, lbl->text_color, lbl->font);
     }
     else
     {
         gui_draw_str_bg(tx, ty, lbl->text, lbl->text_color, lbl->bg_color, lbl->font);
+        if (lbl->w > 0U && lbl->h > 0U)
+        {
+            tx1 = (s16)(tx + (s16)str_w - 1);
+            ty1 = (s16)(ty + (s16)char_h - 1);
+            if (tx1 > x1)
+            {
+                tx1 = x1;
+            }
+            if (ty1 > y1)
+            {
+                ty1 = y1;
+            }
+
+            if (lbl->y < ty)
+            {
+                gui_fill_rect(lbl->x, lbl->y, x1, (s16)(ty - 1), lbl->bg_color);
+            }
+            if (ty1 < y1)
+            {
+                gui_fill_rect(lbl->x, (s16)(ty1 + 1), x1, y1, lbl->bg_color);
+            }
+            if (lbl->x < tx)
+            {
+                gui_fill_rect(lbl->x, ty, (s16)(tx - 1), ty1, lbl->bg_color);
+            }
+            if (tx1 < x1)
+            {
+                gui_fill_rect((s16)(tx1 + 1), ty, x1, ty1, lbl->bg_color);
+            }
+        }
     }
 }
 

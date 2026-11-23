@@ -4,35 +4,20 @@ static const gpio_pin_s Pimd_En_Pin = PIMD_EN_PIN;
 static const gpio_pin_s Pimd_Adc_Pin = PIMD_ADC_PIN;
 
 static volatile u16 pimd_raw_samples[PIMD_SAMPLE_COUNT];
-static volatile u8 pimd_sample_idx = 0U;
 static volatile PIMD_Phy_Phase pimd_phy_phase = PIMD_Phy_Idle;
 static volatile bool pimd_frame_ready = false;
 
 /*
- *@ brief    : Stop hardware TimerC, DMA1/ADC auto-mode, and restore manual ADC idle state.
+ *@ brief    : Stop hardware TimerC and ADC auto-sampling, and return PHY to idle state.
  *@ type     : private
  *@ argu in  : mark_ready: true when a full 12-sample frame has been acquired.
- *@ argu out : TimerC stopped, DMA1/ADC IRQ3 masked, CMPADC returned to manual discharge mode.
- *@ theme    : Clean hardware handoff so shared ADC remains available to main-loop callers.
+ *@ argu out : TimerC and ADC auto-burst stopped; pimd_frame_ready set when mark_ready is true.
+ *@ theme    : Clean hardware handoff via HAL so shared ADC remains available to main-loop callers.
  */
 static void _pimd_finish_acquire(bool mark_ready)
 {
     tmrc_stop_module();
-
-#if (PIMD_PHY_MODE == PIMD_PHY_MODE_DMA)
-    *P_DMA1_CTRL1 = C_DMA_Stop;
-    *P_DMA1_CTRL0 = C_DMA_Disable;
-    *P_INT_Ctrl &= ~C_IRQ3_DMA1;
-    *P_DMA_INTSTS = C_DMA1_TX_Done_Flag | C_DMA1_TX_Error_Flag;
-    *P_INT_Status = C_IRQ3_DMA1;
-#else
-    *P_INT_Ctrl &= ~C_IRQ3_ADC;
-#endif
-
-    *P_CMPADC_Ctrl1 = ADC_MODE;
-    *P_CMPADC_Ctrl0 = C_CMPADC_INN_V12 | ADC_CTRL0_BASE | C_CMPADC_Enable;
-    *P_CMPADC_Status = ADC_FLAGS;
-    *P_INT_Status = C_IRQ3_ADC;
+    adc_stop_auto_sample();
 
     pimd_phy_phase = PIMD_Phy_Idle;
     if (mark_ready)
@@ -41,92 +26,65 @@ static void _pimd_finish_acquire(bool mark_ready)
     }
 }
 
-#if (PIMD_ADC_DETECT_EN != 0U)
 /*
- *@ brief    : Configure TimerC hardware trigger (50us) and start CMPADC Auto acquisition.
+ *@ brief    : Callback invoked by hal_adc when all 16 slope samples have been captured.
  *@ type     : private
  *@ argu in  : None.
- *@ argu out : TimerC IRQ2 masked while counter runs at 50us; DMA1 or IRQ3 armed for 12 samples.
- *@ theme    : Non-blocking hardware-triggered slope ADC acquisition (DMA or lightweight IRQ).
+ *@ argu out : Stops TimerC trigger and marks the 16-sample frame ready for pimd_process_frame().
+ *@ theme    : End-of-burst notification from ADC DMA1 or IRQ3 completion.
+ */
+static void _pimd_adc_done_isr(void) { _pimd_finish_acquire(true); }
+
+/*
+ *@ brief    : Configure TimerC hardware trigger (75us) and start HAL ADC auto acquisition.
+ *@ type     : private
+ *@ argu in  : None.
+ *@ argu out : TimerC IRQ2 masked while counter runs at 75us; HAL ADC armed for 16 samples.
+ *@ theme    : Non-blocking hardware-triggered slope ADC burst (DMA or lightweight IRQ).
  */
 static void _pimd_start_auto_adc(void)
 {
-    pimd_sample_idx = 0U;
     pimd_phy_phase = PIMD_Phy_Sample_Adc;
 
-    /* Set TimerC to 50us interval and mask CPU IRQ2 so TimerC acts purely as hardware trigger */
+    /* Set TimerC to 75us (3x 25us backlight PWM period) and mask CPU IRQ2 for pure HW trigger */
     tmrc_set_period_us(PIMD_ADC_STEP_US);
     tmrc_disable_irq();
 
-    /* Select IOA11 (PIMD_ADC_CH) with hardware 4us auto S&H discharge and 60uA ramp current */
-    *P_CMPADC_Ctrl1 = C_CMPADC_Stop;
-    *P_CMPADC_Ctrl0 = ((unsigned)PIMD_ADC_CH << 10) | C_CMPADC_Discharge_Enable | C_CMPADC_SH_8us |
-                      C_CMPADC_Hysteresis_Enable | C_CMPADC_IBIAS_60uA | C_CMPADC_Enable;
-    *P_CMPADC_Status = ADC_FLAGS;
-    *P_INT_Status = C_IRQ3_ADC;
-
 #if (PIMD_PHY_MODE == PIMD_PHY_MODE_DMA)
-    /* Ultimate scheme: DMA1 moves 12 words from P_CMPADC_Data to pimd_raw_samples with 0 CPU IRQs */
-    *P_DMA1_CTRL1 = C_DMA_Stop;
-    *P_DMA1_CTRL0 = C_DMA_Disable;
-    *P_DMA_INTSTS = C_DMA1_TX_Done_Flag | C_DMA1_TX_Error_Flag;
-    *P_INT_Status = C_IRQ3_DMA1;
-
-    *P_DMA1_SRCADR = (unsigned)(u32)P_CMPADC_Data;
-    *P_DMA1_DSTADR = (unsigned)(u32)pimd_raw_samples;
-    *P_DMA1_DTN = PIMD_SAMPLE_COUNT;
-    *P_DMA1_CTRL1 = C_DMA_Double_Buf_Disable | C_DMA_Stop_Immdly;
-    *P_DMA1_CTRL0 = C_DMA_Request_ADC | C_DMA_Cont_Disable | C_DMA_Burst_Disable |
-                    C_DMA_Src_Inc_Disable | C_DMA_Dest_Inc_Enable | C_DMA_Circular_Disable |
-                    C_DMA_Error_INT_Disable | C_DMA_Done_INT_Enable | C_DMA_Enable;
-
-    *P_FIQ_Sel &= ~C_IRQ3_DMA1;
-    *P_INT_Ctrl |= C_IRQ3_DMA1;
-
-    *P_CMPADC_Ctrl1 = C_CMPADC_DMA_Enable | C_CMPADC_Auto_Enable | C_CMPADC_CMPO_None |
-                      C_CMPADC_TMC | C_CMPADC_Start;
+    adc_start_auto_dma(PIMD_ADC_CH, pimd_raw_samples, PIMD_SAMPLE_COUNT, _pimd_adc_done_isr);
 #else
-    /* Lightweight IRQ scheme: TimerC triggers CMPADC in hardware; IRQ3 reads *P_CMPADC_Data */
-    *P_FIQ_Sel &= ~C_IRQ3_ADC;
-    *P_INT_Ctrl |= C_IRQ3_ADC;
-
-    *P_CMPADC_Ctrl1 = C_CMPADC_DMA_Disable | C_CMPADC_Auto_Enable | C_CMPADC_CMPO_None |
-                      C_CMPADC_TMC | C_CMPADC_Start;
+    adc_start_auto_irq(PIMD_ADC_CH, pimd_raw_samples, PIMD_SAMPLE_COUNT, _pimd_adc_done_isr);
 #endif
 }
-#endif
 
 /*
- *@ brief    : TimerC (IRQ2) callback handling the 250us pulse HIGH and 250us pre-ADC quiet wait.
+ *@ brief    : TimerC (IRQ2) callback handling the 250us pulse HIGH and 300us pre-ADC quiet wait.
  *@ type     : private
  *@ argu in  : None.
- *@ argu out : Pulls P1_METAL_PULSE LOW at 250us, then launches hardware auto-ADC at 500us.
+ *@ argu out : Pulls P1_METAL_PULSE LOW at 250us, then launches hardware auto-ADC at +300us.
  *@ theme    : Microsecond pulse shaping before handing off to hardware-triggered ADC.
  */
 static void _pimd_timerc_isr(void)
 {
-    if (pimd_phy_phase == PIMD_Phy_Pulse_High)
+    switch (pimd_phy_phase)
     {
+    case PIMD_Phy_Pulse_High:
         /* End of 250us excitation: pull P1_METAL_PULSE LOW */
         gpio_write_level(Pimd_En_Pin.port, Pimd_En_Pin.pin, false);
-#if (PIMD_ADC_DETECT_EN != 0U)
         tmrc_set_period_us(PIMD_PRE_ADC_WAIT_US);
         pimd_phy_phase = PIMD_Phy_Pre_Adc_Wait;
-#else
-        tmrc_stop_module();
-        pimd_phy_phase = PIMD_Phy_Idle;
-#endif
-    }
-#if (PIMD_ADC_DETECT_EN != 0U)
-    else if (pimd_phy_phase == PIMD_Phy_Pre_Adc_Wait)
-    {
-        /* End of 500us pre-ADC delay: launch hardware TimerC-triggered Auto ADC (DMA or IRQ) */
+        break;
+
+    case PIMD_Phy_Pre_Adc_Wait:
+        /* End of 300us pre-ADC delay: launch hardware TimerC-triggered Auto ADC (375..1500us) */
         _pimd_start_auto_adc();
-    }
-#endif
-    else
-    {
+        break;
+
+    case PIMD_Phy_Sample_Adc:
+    case PIMD_Phy_Idle:
+    default:
         _pimd_finish_acquire(false);
+        break;
     }
 }
 
@@ -238,7 +196,6 @@ void pimd_trigger_pulse(PIMD_Phy_State *state)
         return;
     }
 
-#if (PIMD_ADC_DETECT_EN != 0U)
     _pimd_finish_acquire(false);
 
     /* Sample internal 1.5V reference only during silent calibration before beeps can occur */
@@ -250,12 +207,7 @@ void pimd_trigger_pulse(PIMD_Phy_State *state)
             state->ref_raw = ref;
         }
     }
-#else
-    tmrc_stop_module();
-    state->pulse_cnt++;
-#endif
 
-    pimd_sample_idx = 0U;
     pimd_frame_ready = false;
     pimd_phy_phase = PIMD_Phy_Pulse_High;
 
@@ -321,16 +273,14 @@ void pimd_process_frame(PIMD_Phy_State *state)
     for (i = 0U; i < PIMD_SAMPLE_COUNT; ++i)
     {
         u16 raw = pimd_raw_samples[i];
-        raw_mv[i] =
-            (u16)(((u32)raw * (u32)PIMD_ADC_REF_MV + (u32)(ref_raw / 2U)) / (u32)ref_raw);
+        raw_mv[i] = (u16)(((u32)raw * (u32)PIMD_ADC_REF_MV + (u32)(ref_raw / 2U)) / (u32)ref_raw);
     }
 
     /* 2. Apply 3-point [1, 2, 1]/4 smoothing along the curve to reject single-sample ADC spikes */
     sm_mv[0] = (u16)(((u32)raw_mv[0] * 3UL + (u32)raw_mv[1] + 2UL) / 4UL);
-    sm_mv[PIMD_SAMPLE_COUNT - 1U] =
-        (u16)(((u32)raw_mv[PIMD_SAMPLE_COUNT - 2U] + (u32)raw_mv[PIMD_SAMPLE_COUNT - 1U] * 3UL +
-               2UL) /
-              4UL);
+    sm_mv[PIMD_SAMPLE_COUNT - 1U] = (u16)(((u32)raw_mv[PIMD_SAMPLE_COUNT - 2U] +
+                                           (u32)raw_mv[PIMD_SAMPLE_COUNT - 1U] * 3UL + 2UL) /
+                                          4UL);
     for (i = 1U; (u8)(i + 1U) < PIMD_SAMPLE_COUNT; ++i)
     {
         sm_mv[i] =
@@ -360,12 +310,13 @@ void pimd_process_frame(PIMD_Phy_State *state)
         }
     }
 
-    /* 4. Compute rising slope over a 4-step (200us) span normalized to mV/100us */
-    for (i = 0U; (u8)(i + 4U) < PIMD_SAMPLE_COUNT; ++i)
+    /* 4. Compute rising slope over a 3-step (225us @ 75us/step) span normalized to mV/100us */
+    for (i = 0U; (u8)(i + PIMD_SLOPE_SPAN_STEPS) < PIMD_SAMPLE_COUNT; ++i)
     {
-        if (i <= max_idx && sm_mv[i + 4U] > sm_mv[i])
+        if (i <= max_idx && sm_mv[i + PIMD_SLOPE_SPAN_STEPS] > sm_mv[i])
         {
-            u16 slp = (u16)((sm_mv[i + 4U] - sm_mv[i] + 1U) / 2U);
+            u16 diff_mv = (u16)(sm_mv[i + PIMD_SLOPE_SPAN_STEPS] - sm_mv[i]);
+            u16 slp = (u16)(((u32)diff_mv * 4UL + 4UL) / 9UL);
             if (slp > max_slope)
             {
                 max_slope = slp;
@@ -374,7 +325,7 @@ void pimd_process_frame(PIMD_Phy_State *state)
     }
     if (max_slope == 0U && max_idx > 0U && sm_mv[max_idx] > v_min)
     {
-        max_slope = (u16)((sm_mv[max_idx] - v_min + 1U) / 2U);
+        max_slope = (u16)(((u32)(sm_mv[max_idx] - v_min) * 4UL + 4UL) / 9UL);
     }
 
     state->pulse_cnt++;
@@ -383,7 +334,8 @@ void pimd_process_frame(PIMD_Phy_State *state)
     state->rise_us = rise_us;
     state->raw_slope = max_slope;
 
-    /* 5. Step-aware adaptive IIR filter: fast response (1/2) on transitions, steady (1/4) at rest */
+    /* 5. Step-aware adaptive IIR filter: fast response (1/2) on transitions, steady (1/4) at rest
+     */
     if (state->pulse_cnt <= 2U)
     {
         state->filt_slope = max_slope;
@@ -393,8 +345,8 @@ void pimd_process_frame(PIMD_Phy_State *state)
     {
         u16 slp_diff = (max_slope >= state->filt_slope) ? (u16)(max_slope - state->filt_slope)
                                                         : (u16)(state->filt_slope - max_slope);
-        u16 pk_diff =
-            (v_max >= state->filt_peak) ? (u16)(v_max - state->filt_peak) : (u16)(state->filt_peak - v_max);
+        u16 pk_diff = (v_max >= state->filt_peak) ? (u16)(v_max - state->filt_peak)
+                                                  : (u16)(state->filt_peak - v_max);
 
         if (slp_diff > 15U)
         {
@@ -523,53 +475,4 @@ void pimd_process_frame(PIMD_Phy_State *state)
             }
         }
     }
-}
-
-/*
- *@ brief    : Service IRQ3 for PIMD acquisition (DMA1 transfer done or ADC conversion complete).
- *@ type     : public
- *@ argu in  : None.
- *@ argu out : Completes 12-sample acquisition in DMA mode, or reads 1 sample in lightweight IRQ mode.
- *@ theme    : Ultra-low-latency IRQ3 handler (< 1.5us) compatible with A1800 62.5us audio ISR.
- */
-void pimd_service_irq(void)
-{
-#if (PIMD_PHY_MODE == PIMD_PHY_MODE_DMA)
-    unsigned flags = *P_INT_Status & *P_INT_Ctrl & ~*P_FIQ_Sel & C_IRQ3_DMA1;
-
-    if (flags == 0U || pimd_phy_phase != PIMD_Phy_Sample_Adc)
-    {
-        return;
-    }
-
-    if ((*P_DMA_INTSTS & (C_DMA1_TX_Done_Flag | C_DMA1_TX_Error_Flag)) != 0U)
-    {
-        _pimd_finish_acquire(true);
-    }
-    else
-    {
-        *P_INT_Status = C_IRQ3_DMA1;
-    }
-#else
-    unsigned flags = *P_INT_Status & *P_INT_Ctrl & ~*P_FIQ_Sel & C_IRQ3_ADC;
-
-    if (flags == 0U || pimd_phy_phase != PIMD_Phy_Sample_Adc)
-    {
-        return;
-    }
-
-    *P_CMPADC_Status = ADC_FLAGS;
-    *P_INT_Status = C_IRQ3_ADC;
-
-    if (pimd_sample_idx < PIMD_SAMPLE_COUNT)
-    {
-        pimd_raw_samples[pimd_sample_idx] = (u16)(*P_CMPADC_Data);
-        pimd_sample_idx++;
-    }
-
-    if (pimd_sample_idx >= PIMD_SAMPLE_COUNT)
-    {
-        _pimd_finish_acquire(true);
-    }
-#endif
 }

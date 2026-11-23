@@ -73,7 +73,7 @@
 .external _spu_service_irq
 .external _exisr_service_irq
 .external _tmrc_service_irq
-.external _pimd_service_irq
+.external _adc_service_irq
 
 //**************************************************************************
 // RAM Definition Area
@@ -143,7 +143,7 @@ _IRQ3:
 	push R1, R5 to [SP]
 	push SR to [SP]
 
-	call _pimd_service_irq
+	call _adc_service_irq
 	call _uart_service_irq
 	call _spi_service_irq
 

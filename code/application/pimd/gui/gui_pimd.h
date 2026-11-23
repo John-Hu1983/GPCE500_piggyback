@@ -5,6 +5,7 @@
 #define PIMD_CYCLE_TICKS        110U
 #define PIMD_BEEP_ON_TICKS      24U
 #define PIMD_BEEP_QUIET_TICKS   (PIMD_CYCLE_TICKS - PIMD_BEEP_ON_TICKS)
+#define PIMD_UI_REFRESH_DIV     3U
 
 #define PIMD_BG_COLOR           GUI_RGB565(18, 22, 34)
 #define PIMD_PANEL_BG           GUI_RGB565(26, 34, 52)
@@ -31,6 +32,15 @@ typedef enum
     PIMD_Btn_Quit = 2
 } PIMD_Btn_Id;
 
+typedef enum
+{
+    PIMD_Status_None = 0,
+    PIMD_Status_Stop = 1,
+    PIMD_Status_Cal = 2,
+    PIMD_Status_Metal = 3,
+    PIMD_Status_No_Metal = 4
+} PIMD_Status_Id;
+
 typedef struct
 {
     GUI_Button buttons[PIMD_BTN_COUNT];
@@ -38,6 +48,9 @@ typedef struct
     GUI_Textbox info_boxes[PIMD_INFO_BOX_COUNT];
     char info_bufs[PIMD_INFO_BOX_COUNT][PIMD_INFO_TEXT_LEN];
     u8 selected_idx;
+    u8 ui_div_cnt;
+    PIMD_Status_Id last_status_id;
+    u8 last_hit_cnt;
     PIMD_Phy_State phy;
 } GUI_Pimd_Page;
 

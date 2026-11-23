@@ -35,13 +35,13 @@ static void _pimd_append_str(char *dst, u8 *pos, u8 max_len, const char *str)
 }
 
 /*
- *@ brief    : Append an unsigned 16-bit integer to a character buffer.
+ *@ brief    : Append an unsigned 16-bit integer right-aligned in a fixed-width field.
  *@ type     : private
- *@ argu in  : dst: target buffer; pos: write cursor; max_len: buffer size; val: unsigned value.
- *@ argu out : Decimal digits appended and null-terminated.
- *@ theme    : Compact integer formatter for GUI_Textbox diagnostic lines.
+ *@ argu in  : dst: target buffer; pos: write cursor; max_len: buffer size; val: value; width: min chars.
+ *@ argu out : Space-padded decimal digits appended and null-terminated.
+ *@ theme    : Fixed-column numeric formatting so trailing units/brackets never jump horizontally.
  */
-static void _pimd_append_u16(char *dst, u8 *pos, u8 max_len, u16 val)
+static void _pimd_append_u16_pad(char *dst, u8 *pos, u8 max_len, u16 val, u8 width)
 {
     char tmp[6];
     u8 idx = 0U;
@@ -58,6 +58,12 @@ static void _pimd_append_u16(char *dst, u8 *pos, u8 max_len, u16 val)
         val /= 10U;
     } while (val != 0U && idx < sizeof(tmp));
 
+    while (width > idx && (u8)(p + 1U) < max_len)
+    {
+        dst[p++] = ' ';
+        width--;
+    }
+
     while (idx > 0U && (u8)(p + 1U) < max_len)
     {
         dst[p++] = tmp[--idx];
@@ -67,13 +73,13 @@ static void _pimd_append_u16(char *dst, u8 *pos, u8 max_len, u16 val)
 }
 
 /*
- *@ brief    : Append a signed 16-bit delta (with explicit '+' or '-') to a character buffer.
+ *@ brief    : Append a signed 16-bit delta ('+' or '-') with fixed-width magnitude padding.
  *@ type     : private
- *@ argu in  : dst: target buffer; pos: write cursor; max_len: buffer size; val: signed delta.
- *@ argu out : Signed decimal string appended and null-terminated.
- *@ theme    : Format baseline deviation (+dSlope / +dPeak) for textbox readout.
+ *@ argu in  : dst: target buffer; pos: write cursor; max_len: buffer size; val: delta; width: digits.
+ *@ argu out : Sign character + space-padded decimal magnitude appended.
+ *@ theme    : Keep +dSlope and +dPeak columns locked in place across 1..3 digit transitions.
  */
-static void _pimd_append_s16_delta(char *dst, u8 *pos, u8 max_len, s16 val)
+static void _pimd_append_s16_delta(char *dst, u8 *pos, u8 max_len, s16 val, u8 width)
 {
     u16 mag;
 
@@ -87,20 +93,108 @@ static void _pimd_append_s16_delta(char *dst, u8 *pos, u8 max_len, s16 val)
         _pimd_append_str(dst, pos, max_len, "+");
         mag = (u16)val;
     }
-    _pimd_append_u16(dst, pos, max_len, mag);
+    _pimd_append_u16_pad(dst, pos, max_len, mag, width);
+}
+
+/*
+ *@ brief    : Compute current status badge ID from PIMD_Phy_State.
+ *@ type     : private
+ *@ argu in  : phy: pointer to current PIMD_Phy_State.
+ *@ argu out : PIMD_Status_Id enum value.
+ *@ theme    : Detect status transitions to avoid redundant status_box redraws.
+ */
+static PIMD_Status_Id _pimd_get_status_id(const PIMD_Phy_State *phy)
+{
+    if (phy == null || !phy->running)
+    {
+        return PIMD_Status_Stop;
+    }
+    if (!phy->calibrated)
+    {
+        return PIMD_Status_Cal;
+    }
+    if (phy->metal_detected)
+    {
+        return PIMD_Status_Metal;
+    }
+    return PIMD_Status_No_Metal;
+}
+
+/*
+ *@ brief    : Incrementally update one telemetry textbox row by redrawing only changed characters.
+ *@ type     : private
+ *@ argu in  : row: row index (0..3); new_str: formatted text; color: RGB565; full_draw: draw frame.
+ *@ argu out : Only modified 6x8 character cells updated over SPI; box frame untouched when !full_draw.
+ *@ theme    : Zero-flicker character-diff rendering for fixed-layout telemetry lines.
+ */
+static void _pimd_update_info_row(u8 row, const char *new_str, u16 color, bool full_draw)
+{
+    GUI_Textbox *box;
+    char *old_str;
+    bool color_changed;
+    s16 tx, ty;
+    u8 i = 0U;
+
+    if (pimd_page == null || row >= PIMD_INFO_BOX_COUNT || new_str == null)
+    {
+        return;
+    }
+
+    box = &pimd_page->info_boxes[row];
+    old_str = pimd_page->info_bufs[row];
+    color_changed = (box->text_color != color);
+    box->text_color = color;
+
+    if (full_draw)
+    {
+        while (new_str[i] != '\0' && (u8)(i + 1U) < PIMD_INFO_TEXT_LEN)
+        {
+            old_str[i] = new_str[i];
+            i++;
+        }
+        old_str[i] = '\0';
+        box->text = old_str;
+        gui_textbox_draw(box);
+        return;
+    }
+
+    tx = (s16)(box->x + (s16)box->padding);
+    ty = (s16)(box->y + (s16)box->padding);
+
+    while (new_str[i] != '\0' && (u8)(i + 1U) < PIMD_INFO_TEXT_LEN)
+    {
+        if (color_changed || old_str[i] != new_str[i])
+        {
+            gui_draw_char_bg((s16)(tx + (s16)(i * 6U)), ty, new_str[i], color, box->bg_color,
+                             box->font);
+            old_str[i] = new_str[i];
+        }
+        i++;
+    }
+
+    while (old_str[i] != '\0' && (u8)(i + 1U) < PIMD_INFO_TEXT_LEN)
+    {
+        gui_draw_char_bg((s16)(tx + (s16)(i * 6U)), ty, ' ', color, box->bg_color, box->font);
+        old_str[i] = '\0';
+        i++;
+    }
+    old_str[i] = '\0';
 }
 
 /*
  *@ brief    : Refresh the status badge textbox and 4 diagnostic GUI_Textbox rows.
  *@ type     : private
- *@ argu in  : None.
- *@ argu out : Status and dSlp/dPk/T0/Sig textboxes formatted and redrawn.
+ *@ argu in  : full_draw: true on page entry to draw box borders/backgrounds; false for diff update.
+ *@ argu out : Status badge updated on state change; info rows updated via character diff.
  *@ theme    : Flicker-free GUI_Textbox telemetry panel above the button bar.
  */
-static void _pimd_update_textboxes(void)
+static void _pimd_update_textboxes(bool full_draw)
 {
     const PIMD_Phy_State *phy;
+    char line_buf[PIMD_INFO_TEXT_LEN];
+    PIMD_Status_Id status_id;
     u8 pos;
+    u16 row_color;
 
     if (pimd_page == null)
     {
@@ -108,90 +202,91 @@ static void _pimd_update_textboxes(void)
     }
 
     phy = &pimd_page->phy;
+    status_id = _pimd_get_status_id(phy);
 
-    /* Update top-right state badge textbox */
-    if (!phy->running)
+    /* Update top-right state badge textbox only when status actually changes or on full_draw */
+    if (full_draw || status_id != pimd_page->last_status_id)
     {
-        pimd_page->status_box.bg_color = GUI_RGB565(64, 74, 92);
-        pimd_page->status_box.border_color = GUI_RGB565(96, 112, 138);
-        pimd_page->status_box.text_color = GUI_COLOR_WHITE;
-        gui_textbox_set_text(&pimd_page->status_box, "STOP");
-    }
-#if (PIMD_ADC_DETECT_EN == 0U)
-    else
-    {
-        pimd_page->status_box.bg_color = GUI_RGB565(0, 130, 180);
-        pimd_page->status_box.border_color = GUI_RGB565(60, 200, 255);
-        pimd_page->status_box.text_color = GUI_COLOR_WHITE;
-        gui_textbox_set_text(&pimd_page->status_box, "PULSE ONLY");
-    }
-#else
-    else if (!phy->calibrated)
-    {
-        pimd_page->status_box.bg_color = GUI_RGB565(180, 120, 0);
-        pimd_page->status_box.border_color = GUI_RGB565(240, 180, 40);
-        pimd_page->status_box.text_color = GUI_COLOR_WHITE;
-        gui_textbox_set_text(&pimd_page->status_box, "CAL...");
-    }
-    else if (phy->metal_detected)
-    {
-        pimd_page->status_box.bg_color = GUI_RGB565(210, 36, 36);
-        pimd_page->status_box.border_color = GUI_RGB565(255, 120, 120);
-        pimd_page->status_box.text_color = GUI_COLOR_WHITE;
-        gui_textbox_set_text(&pimd_page->status_box, "METAL !");
-    }
-    else
-    {
-        pimd_page->status_box.bg_color = GUI_RGB565(0, 148, 86);
-        pimd_page->status_box.border_color = GUI_RGB565(60, 220, 150);
-        pimd_page->status_box.text_color = GUI_COLOR_WHITE;
-        gui_textbox_set_text(&pimd_page->status_box, "NO METAL");
-    }
-#endif
+        pimd_page->last_status_id = status_id;
+        switch (status_id)
+        {
+        case PIMD_Status_Stop:
+            pimd_page->status_box.bg_color = GUI_RGB565(64, 74, 92);
+            pimd_page->status_box.border_color = GUI_RGB565(96, 112, 138);
+            pimd_page->status_box.text_color = GUI_COLOR_WHITE;
+            gui_textbox_set_text(&pimd_page->status_box, "STOP");
+            break;
 
-    /* Row 0: Net slope change dSlp & (current Slp / baseline Bas) */
+        case PIMD_Status_Cal:
+            pimd_page->status_box.bg_color = GUI_RGB565(180, 120, 0);
+            pimd_page->status_box.border_color = GUI_RGB565(240, 180, 40);
+            pimd_page->status_box.text_color = GUI_COLOR_WHITE;
+            gui_textbox_set_text(&pimd_page->status_box, "CAL...");
+            break;
+
+        case PIMD_Status_Metal:
+            pimd_page->status_box.bg_color = GUI_RGB565(210, 36, 36);
+            pimd_page->status_box.border_color = GUI_RGB565(255, 120, 120);
+            pimd_page->status_box.text_color = GUI_COLOR_WHITE;
+            gui_textbox_set_text(&pimd_page->status_box, "METAL !");
+            break;
+
+        case PIMD_Status_No_Metal:
+        case PIMD_Status_None:
+        default:
+            pimd_page->status_box.bg_color = GUI_RGB565(0, 148, 86);
+            pimd_page->status_box.border_color = GUI_RGB565(60, 220, 150);
+            pimd_page->status_box.text_color = GUI_COLOR_WHITE;
+            gui_textbox_set_text(&pimd_page->status_box, "NO METAL");
+            break;
+        }
+    }
+
+    pimd_page->last_hit_cnt = phy->hit_cnt;
+
+    /* Row 0: Net slope change dSlp & (current Slp / baseline Bas) with fixed column widths */
     pos = 0U;
-    _pimd_append_str(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, "dSlp:");
-    _pimd_append_s16_delta(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, phy->d_slope);
-    _pimd_append_str(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, " (");
-    _pimd_append_u16(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, phy->filt_slope);
-    _pimd_append_str(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, "/");
-    _pimd_append_u16(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, phy->base_slope);
-    _pimd_append_str(pimd_page->info_bufs[0], &pos, PIMD_INFO_TEXT_LEN, ")");
-    pimd_page->info_boxes[0].text_color =
-        phy->metal_detected ? GUI_RGB565(255, 220, 80) : GUI_RGB565(120, 240, 255);
-    gui_textbox_set_text(&pimd_page->info_boxes[0], pimd_page->info_bufs[0]);
+    line_buf[0] = '\0';
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "dSlp:");
+    _pimd_append_s16_delta(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->d_slope, 3U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, " (");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->filt_slope, 3U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "/");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->base_slope, 3U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, ")");
+    row_color = phy->metal_detected ? GUI_RGB565(255, 220, 80) : GUI_RGB565(120, 240, 255);
+    _pimd_update_info_row(0U, line_buf, row_color, full_draw);
 
-    /* Row 1: Net peak change dPk & current Peak (mV) */
+    /* Row 1: Net peak change dPk & current Peak (mV) with fixed column widths */
     pos = 0U;
-    _pimd_append_str(pimd_page->info_bufs[1], &pos, PIMD_INFO_TEXT_LEN, "dPk :");
-    _pimd_append_s16_delta(pimd_page->info_bufs[1], &pos, PIMD_INFO_TEXT_LEN, phy->d_peak);
-    _pimd_append_str(pimd_page->info_bufs[1], &pos, PIMD_INFO_TEXT_LEN, " (Pk:");
-    _pimd_append_u16(pimd_page->info_bufs[1], &pos, PIMD_INFO_TEXT_LEN, phy->filt_peak);
-    _pimd_append_str(pimd_page->info_bufs[1], &pos, PIMD_INFO_TEXT_LEN, "mV)");
-    pimd_page->info_boxes[1].text_color = GUI_RGB565(200, 230, 255);
-    gui_textbox_set_text(&pimd_page->info_boxes[1], pimd_page->info_bufs[1]);
+    line_buf[0] = '\0';
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "dPk :");
+    _pimd_append_s16_delta(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->d_peak, 3U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, " (Pk:");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->filt_peak, 4U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "mV)");
+    _pimd_update_info_row(1U, line_buf, GUI_RGB565(200, 230, 255), full_draw);
 
-    /* Row 2: Rising-edge onset delay T0 (us) & floor voltage (mV) */
+    /* Row 2: Rising-edge onset delay T0 (us) & floor voltage (mV) with fixed column widths */
     pos = 0U;
-    _pimd_append_str(pimd_page->info_bufs[2], &pos, PIMD_INFO_TEXT_LEN, "T0:");
-    _pimd_append_u16(pimd_page->info_bufs[2], &pos, PIMD_INFO_TEXT_LEN, phy->rise_us);
-    _pimd_append_str(pimd_page->info_bufs[2], &pos, PIMD_INFO_TEXT_LEN, "us Flr:");
-    _pimd_append_u16(pimd_page->info_bufs[2], &pos, PIMD_INFO_TEXT_LEN, phy->v_floor_mv);
-    _pimd_append_str(pimd_page->info_bufs[2], &pos, PIMD_INFO_TEXT_LEN, "mV");
-    pimd_page->info_boxes[2].text_color = GUI_RGB565(180, 220, 190);
-    gui_textbox_set_text(&pimd_page->info_boxes[2], pimd_page->info_bufs[2]);
+    line_buf[0] = '\0';
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "T0:");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->rise_us, 3U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "us Flr:");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->v_floor_mv, 4U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "mV");
+    _pimd_update_info_row(2U, line_buf, GUI_RGB565(180, 220, 190), full_draw);
 
     /* Row 3: Deadband-filtered signal score, threshold (55), and hit counter (0..2) */
     pos = 0U;
-    _pimd_append_str(pimd_page->info_bufs[3], &pos, PIMD_INFO_TEXT_LEN, "Sig:");
-    _pimd_append_u16(pimd_page->info_bufs[3], &pos, PIMD_INFO_TEXT_LEN, phy->sig_score);
-    _pimd_append_str(pimd_page->info_bufs[3], &pos, PIMD_INFO_TEXT_LEN, "/55 Hit:");
-    _pimd_append_u16(pimd_page->info_bufs[3], &pos, PIMD_INFO_TEXT_LEN, (u16)phy->hit_cnt);
-    _pimd_append_str(pimd_page->info_bufs[3], &pos, PIMD_INFO_TEXT_LEN, "/2");
-    pimd_page->info_boxes[3].text_color =
-        phy->metal_detected ? GUI_RGB565(255, 110, 110) : GUI_RGB565(170, 195, 230);
-    gui_textbox_set_text(&pimd_page->info_boxes[3], pimd_page->info_bufs[3]);
+    line_buf[0] = '\0';
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "Sig:");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, phy->sig_score, 3U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "/55 Hit:");
+    _pimd_append_u16_pad(line_buf, &pos, PIMD_INFO_TEXT_LEN, (u16)phy->hit_cnt, 1U);
+    _pimd_append_str(line_buf, &pos, PIMD_INFO_TEXT_LEN, "/2");
+    row_color = phy->metal_detected ? GUI_RGB565(255, 110, 110) : GUI_RGB565(170, 195, 230);
+    _pimd_update_info_row(3U, line_buf, row_color, full_draw);
 }
 
 /*
@@ -214,7 +309,7 @@ static void _pimd_draw_status_panel(void)
     gui_icon_draw(GUI_Icon_Pimd, 18, 13, PIMD_PANEL_BG, GUI_RGB565(0, 220, 160));
     gui_draw_str_at(28, 9, "PIMD", GUI_COLOR_WHITE, GUI_Font_6x8);
 
-    _pimd_update_textboxes();
+    _pimd_update_textboxes(true);
 }
 
 /*
@@ -264,14 +359,20 @@ static void _pimd_cycle_timer_cb(void)
         system_clear_watchdog();
     }
 
-#if (PIMD_ADC_DETECT_EN != 0U)
     /* 3. Process the newly acquired 12-sample frame and refresh LCD textboxes */
     if (pimd_is_frame_ready())
     {
         pimd_process_frame(&pimd_page->phy);
     }
 
-    _pimd_update_textboxes();
+    pimd_page->ui_div_cnt++;
+    if (_pimd_get_status_id(&pimd_page->phy) != pimd_page->last_status_id ||
+        pimd_page->phy.hit_cnt != pimd_page->last_hit_cnt ||
+        pimd_page->ui_div_cnt >= PIMD_UI_REFRESH_DIV)
+    {
+        pimd_page->ui_div_cnt = 0U;
+        _pimd_update_textboxes(false);
+    }
 
     /* 4. Play a short 12ms beep, then leave 42ms of silence for +4V5 & C104 to settle */
     if (pimd_page->phy.beep_pending)
@@ -284,7 +385,6 @@ static void _pimd_cycle_timer_cb(void)
             return;
         }
     }
-#endif
 
     swt_start_timer(&pimd_timer, PIMD_CYCLE_TICKS, SWT_Once, _pimd_cycle_timer_cb);
 }
@@ -304,7 +404,8 @@ static void _pimd_start_output(void)
     }
 
     pimd_start_phy(&pimd_page->phy);
-    _pimd_update_textboxes();
+    pimd_page->ui_div_cnt = 0U;
+    _pimd_update_textboxes(false);
     swt_start_timer(&pimd_timer, 2U, SWT_Once, _pimd_cycle_timer_cb);
 }
 
@@ -323,7 +424,8 @@ static void _pimd_stop_output(void)
 
     if (pimd_page != null)
     {
-        _pimd_update_textboxes();
+        pimd_page->ui_div_cnt = 0U;
+        _pimd_update_textboxes(false);
     }
 }
 
@@ -368,6 +470,7 @@ static void _pimd_set_focus(u8 new_idx)
 static void _pimd_on_button_msg(const MSG_Message *message)
 {
     const BTN_Message *btn;
+    u8 next;
 
     if (pimd_page == null || message == null || message->type != MSG_Button)
     {
@@ -382,19 +485,24 @@ static void _pimd_on_button_msg(const MSG_Message *message)
 
     if (btn->key == Btn_A0_Back)
     {
-        if (btn->event == BTN_Hold)
+        switch (btn->event)
         {
+        case BTN_Hold:
             _pimd_stop_output();
             bsp_power_off();
-        }
-        else if (btn->event == BTN_Click)
-        {
+            break;
+
+        case BTN_Click:
             if (gui_setting_get_volume() > 0U)
             {
                 spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
             }
             gui_pimd_exit();
             gui_desktop_enter();
+            break;
+
+        default:
+            break;
         }
         return;
     }
@@ -404,52 +512,68 @@ static void _pimd_on_button_msg(const MSG_Message *message)
         return;
     }
 
-    if (btn->key == Btn_A4_Left || btn->key == Btn_A1_Up)
+    switch (btn->key)
     {
-        u8 next = (pimd_page->selected_idx == 0U) ? (u8)(PIMD_BTN_COUNT - 1U)
-                                                  : (u8)(pimd_page->selected_idx - 1U);
+    case Btn_A4_Left:
+    case Btn_A1_Up:
+        next = (pimd_page->selected_idx == 0U) ? (u8)(PIMD_BTN_COUNT - 1U)
+                                               : (u8)(pimd_page->selected_idx - 1U);
         if (gui_setting_get_volume() > 0U)
         {
             spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         }
         _pimd_set_focus(next);
-    }
-    else if (btn->key == Btn_A6_Right || btn->key == Btn_A5_Down)
-    {
-        u8 next = (u8)((pimd_page->selected_idx + 1U) % PIMD_BTN_COUNT);
+        break;
+
+    case Btn_A6_Right:
+    case Btn_A5_Down:
+        next = (u8)((pimd_page->selected_idx + 1U) % PIMD_BTN_COUNT);
         if (gui_setting_get_volume() > 0U)
         {
             spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
         }
         _pimd_set_focus(next);
-    }
-    else if (btn->key == Btn_A7_Enter && btn->event == BTN_Click)
-    {
-        if (pimd_page->selected_idx == (u8)PIMD_Btn_Start)
+        break;
+
+    case Btn_A7_Enter:
+        if (btn->event != BTN_Click)
         {
+            break;
+        }
+        switch ((PIMD_Btn_Id)pimd_page->selected_idx)
+        {
+        case PIMD_Btn_Start:
             if (gui_setting_get_volume() > 0U)
             {
                 spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MAX);
             }
             _pimd_start_output();
-        }
-        else if (pimd_page->selected_idx == (u8)PIMD_Btn_Stop)
-        {
+            break;
+
+        case PIMD_Btn_Stop:
             if (gui_setting_get_volume() > 0U)
             {
                 spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_HIT, TONE_VOL_HIGH);
             }
             _pimd_stop_output();
-        }
-        else if (pimd_page->selected_idx == (u8)PIMD_Btn_Quit)
-        {
+            break;
+
+        case PIMD_Btn_Quit:
             if (gui_setting_get_volume() > 0U)
             {
                 spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_MOVE, TONE_VOL_HIGH);
             }
             gui_pimd_exit();
             gui_desktop_enter();
+            break;
+
+        default:
+            break;
         }
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -479,6 +603,9 @@ void gui_pimd_enter(void)
     }
 
     pimd_page->selected_idx = (u8)PIMD_Btn_Start;
+    pimd_page->ui_div_cnt = 0U;
+    pimd_page->last_status_id = PIMD_Status_None;
+    pimd_page->last_hit_cnt = 0U;
     pimd_init_phy(&pimd_page->phy);
 
     /* Initialize top-right status badge textbox */

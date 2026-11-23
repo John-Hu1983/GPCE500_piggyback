@@ -12,24 +12,26 @@
 #define PIMD_PHY_MODE_DMA           0U
 #define PIMD_PHY_MODE_IRQ           1U
 #define PIMD_PHY_MODE               PIMD_PHY_MODE_DMA
-#define PIMD_ADC_DETECT_EN          1U
 
 /*
  * PIMD (Pulse Induction Metal Detector) hardware TimerC + ADC sampling parameters:
  * - Pulse HIGH width     : 250us HIGH on P1_METAL_PULSE (IOB1), then pulled LOW
- * - Pre-ADC quiet wait   : 150us LOW settling wait before first ADC read (total 400us)
- * - ADC sample window    : 12 samples @ 50us interval (400us .. 950us) on IOA11 (ADC_Ch_A11)
+ * - Pre-ADC quiet wait   : 300us LOW wait after falling edge (1st sample triggers at 300+75 = 375us)
+ * - ADC sample step      : 75us (exact 3x of 25us 40kHz backlight PWM period for ripple cancellation,
+ *                          and >57us so 3.2V full-scale slope conversion never gets truncated)
+ * - ADC sample window    : 16 samples @ 75us interval (375us .. 1500us after falling edge) on IOA11
  */
 #define PIMD_PULSE_HIGH_US          250U
-#define PIMD_PRE_ADC_WAIT_US        150U
-#define PIMD_SAMPLE_START_US        (PIMD_PULSE_HIGH_US + PIMD_PRE_ADC_WAIT_US)
-#define PIMD_ADC_STEP_US            50U
-#define PIMD_SAMPLE_COUNT           12U
+#define PIMD_PRE_ADC_WAIT_US        300U
+#define PIMD_ADC_STEP_US            75U
+#define PIMD_SAMPLE_START_US        (PIMD_PRE_ADC_WAIT_US + PIMD_ADC_STEP_US)
+#define PIMD_SAMPLE_COUNT           16U
+#define PIMD_SLOPE_SPAN_STEPS       3U
 
 #define PIMD_ADC_REF_MV             1500U
 #define PIMD_DEFAULT_REF_RAW        2048U
 #define PIMD_RISE_DETECT_MV         35U
-#define PIMD_WARMUP_PULSES          12U
+#define PIMD_WARMUP_PULSES          16U
 #define PIMD_CAL_PULSES             8U
 #define PIMD_SLOPE_DEADBAND_MV      18U
 #define PIMD_PEAK_DEADBAND_MV       30U
@@ -78,6 +80,5 @@ void pimd_trigger_pulse(PIMD_Phy_State *state);
 bool pimd_is_frame_ready(void);
 bool pimd_is_phy_busy(void);
 void pimd_process_frame(PIMD_Phy_State *state);
-void pimd_service_irq(void);
 
 #endif /* _PHY_PIMD_H__ */
