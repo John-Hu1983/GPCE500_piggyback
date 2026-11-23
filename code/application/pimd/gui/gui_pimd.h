@@ -3,6 +3,8 @@
 
 // clang-format off
 #define PIMD_CYCLE_TICKS        110U
+#define PIMD_BEEP_ON_TICKS      24U
+#define PIMD_BEEP_QUIET_TICKS   (PIMD_CYCLE_TICKS - PIMD_BEEP_ON_TICKS)
 
 #define PIMD_BG_COLOR           GUI_RGB565(18, 22, 34)
 #define PIMD_PANEL_BG           GUI_RGB565(26, 34, 52)

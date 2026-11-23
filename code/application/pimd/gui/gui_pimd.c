@@ -8,6 +8,7 @@ static SWT_Timer pimd_timer;
 static MSG_Sub pimd_btn_sub = MSG_SUB_INIT;
 
 static void _pimd_cycle_timer_cb(void);
+static void _pimd_beep_off_timer_cb(void);
 
 /*
  *@ brief    : Append a null-terminated string into a character buffer at index *pos.
@@ -116,6 +117,15 @@ static void _pimd_update_textboxes(void)
         pimd_page->status_box.text_color = GUI_COLOR_WHITE;
         gui_textbox_set_text(&pimd_page->status_box, "STOP");
     }
+#if (PIMD_ADC_DETECT_EN == 0U)
+    else
+    {
+        pimd_page->status_box.bg_color = GUI_RGB565(0, 130, 180);
+        pimd_page->status_box.border_color = GUI_RGB565(60, 200, 255);
+        pimd_page->status_box.text_color = GUI_COLOR_WHITE;
+        gui_textbox_set_text(&pimd_page->status_box, "PULSE ONLY");
+    }
+#else
     else if (!phy->calibrated)
     {
         pimd_page->status_box.bg_color = GUI_RGB565(180, 120, 0);
@@ -137,6 +147,7 @@ static void _pimd_update_textboxes(void)
         pimd_page->status_box.text_color = GUI_COLOR_WHITE;
         gui_textbox_set_text(&pimd_page->status_box, "NO METAL");
     }
+#endif
 
     /* Row 0: Net slope change dSlp & (current Slp / baseline Bas) */
     pos = 0U;
@@ -207,6 +218,25 @@ static void _pimd_draw_status_panel(void)
 }
 
 /*
+ *@ brief    : Stop the short detection beep well before the next excitation pulse.
+ *@ type     : private
+ *@ argu in  : None.
+ *@ argu out : SPU Channel 1 silenced and quiet settling delay armed before next pulse.
+ *@ theme    : Guarantee >40ms of power-rail silence after a beep so C104 settles cleanly.
+ */
+static void _pimd_beep_off_timer_cb(void)
+{
+    spu_stop_channel(SPU_Channel_1);
+
+    if (pimd_page == null || !pimd_page->phy.running)
+    {
+        return;
+    }
+
+    swt_start_timer(&pimd_timer, PIMD_BEEP_QUIET_TICKS, SWT_Once, _pimd_cycle_timer_cb);
+}
+
+/*
  *@ brief    : Periodic software timer callback processing completed frames and re-triggering.
  *@ type     : private
  *@ argu in  : None.
@@ -215,6 +245,8 @@ static void _pimd_draw_status_panel(void)
  */
 static void _pimd_cycle_timer_cb(void)
 {
+    u16 wait_guard = 25000U;
+
     if (pimd_page == null || !pimd_page->phy.running)
     {
         pimd_stop_phy(pimd_page != null ? &pimd_page->phy : null);
@@ -222,24 +254,37 @@ static void _pimd_cycle_timer_cb(void)
         return;
     }
 
+    /* 1. Silence speaker before starting analog excitation and ADC burst */
+    spu_stop_channel(SPU_Channel_1);
+
+    /* 2. Run the ~950us pulse + Auto-ADC burst while SPI2/LCD/GPIOB are completely quiet */
+    pimd_trigger_pulse(&pimd_page->phy);
+    while (pimd_is_phy_busy() && --wait_guard != 0U)
+    {
+        system_clear_watchdog();
+    }
+
+#if (PIMD_ADC_DETECT_EN != 0U)
+    /* 3. Process the newly acquired 12-sample frame and refresh LCD textboxes */
     if (pimd_is_frame_ready())
     {
         pimd_process_frame(&pimd_page->phy);
     }
 
-    spu_stop_channel(SPU_Channel_1);
-    pimd_trigger_pulse(&pimd_page->phy);
-
     _pimd_update_textboxes();
 
+    /* 4. Play a short 12ms beep, then leave 42ms of silence for +4V5 & C104 to settle */
     if (pimd_page->phy.beep_pending)
     {
         pimd_page->phy.beep_pending = false;
         if (gui_setting_get_volume() > 0U)
         {
-            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_HIGH);
+            spu_play_tone(SPU_Channel_1, TONE_Wave_Pulse, GAME_TONE_SCORE, TONE_VOL_MID);
+            swt_start_timer(&pimd_timer, PIMD_BEEP_ON_TICKS, SWT_Once, _pimd_beep_off_timer_cb);
+            return;
         }
     }
+#endif
 
     swt_start_timer(&pimd_timer, PIMD_CYCLE_TICKS, SWT_Once, _pimd_cycle_timer_cb);
 }
@@ -260,8 +305,7 @@ static void _pimd_start_output(void)
 
     pimd_start_phy(&pimd_page->phy);
     _pimd_update_textboxes();
-    pimd_trigger_pulse(&pimd_page->phy);
-    swt_start_timer(&pimd_timer, PIMD_CYCLE_TICKS, SWT_Once, _pimd_cycle_timer_cb);
+    swt_start_timer(&pimd_timer, 2U, SWT_Once, _pimd_cycle_timer_cb);
 }
 
 /*

@@ -12,15 +12,16 @@
 #define PIMD_PHY_MODE_DMA           0U
 #define PIMD_PHY_MODE_IRQ           1U
 #define PIMD_PHY_MODE               PIMD_PHY_MODE_DMA
+#define PIMD_ADC_DETECT_EN          1U
 
 /*
  * PIMD (Pulse Induction Metal Detector) hardware TimerC + ADC sampling parameters:
  * - Pulse HIGH width     : 250us HIGH on P1_METAL_PULSE (IOB1), then pulled LOW
- * - Pre-ADC quiet wait   : 250us LOW settling wait before first ADC read (total 500us)
- * - ADC sample window    : 12 samples @ 50us interval (500us .. 1050us) on IOA11 (ADC_Ch_A11)
+ * - Pre-ADC quiet wait   : 150us LOW settling wait before first ADC read (total 400us)
+ * - ADC sample window    : 12 samples @ 50us interval (400us .. 950us) on IOA11 (ADC_Ch_A11)
  */
 #define PIMD_PULSE_HIGH_US          250U
-#define PIMD_PRE_ADC_WAIT_US        250U
+#define PIMD_PRE_ADC_WAIT_US        150U
 #define PIMD_SAMPLE_START_US        (PIMD_PULSE_HIGH_US + PIMD_PRE_ADC_WAIT_US)
 #define PIMD_ADC_STEP_US            50U
 #define PIMD_SAMPLE_COUNT           12U
@@ -28,8 +29,8 @@
 #define PIMD_ADC_REF_MV             1500U
 #define PIMD_DEFAULT_REF_RAW        2048U
 #define PIMD_RISE_DETECT_MV         35U
-#define PIMD_WARMUP_PULSES          6U
-#define PIMD_CAL_PULSES             6U
+#define PIMD_WARMUP_PULSES          12U
+#define PIMD_CAL_PULSES             8U
 #define PIMD_SLOPE_DEADBAND_MV      18U
 #define PIMD_PEAK_DEADBAND_MV       30U
 #define PIMD_DETECT_ON_TH           55U

@@ -91,7 +91,14 @@ void gui_textbox_draw(const GUI_Textbox *box)
         ty = (s16)(box->y + 1);
     }
 
-    gui_draw_str_at(tx, ty, box->text, box->text_color, box->font);
+    if (box->has_bg)
+    {
+        gui_draw_str_bg(tx, ty, box->text, box->text_color, box->bg_color, box->font);
+    }
+    else
+    {
+        gui_draw_str_at(tx, ty, box->text, box->text_color, box->font);
+    }
 }
 
 /*

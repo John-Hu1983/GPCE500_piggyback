@@ -30,7 +30,7 @@ static void _pimd_finish_acquire(bool mark_ready)
 #endif
 
     *P_CMPADC_Ctrl1 = ADC_MODE;
-    *P_CMPADC_Ctrl0 = ADC_CTRL0_BASE | C_CMPADC_Enable;
+    *P_CMPADC_Ctrl0 = C_CMPADC_INN_V12 | ADC_CTRL0_BASE | C_CMPADC_Enable;
     *P_CMPADC_Status = ADC_FLAGS;
     *P_INT_Status = C_IRQ3_ADC;
 
@@ -41,6 +41,7 @@ static void _pimd_finish_acquire(bool mark_ready)
     }
 }
 
+#if (PIMD_ADC_DETECT_EN != 0U)
 /*
  *@ brief    : Configure TimerC hardware trigger (50us) and start CMPADC Auto acquisition.
  *@ type     : private
@@ -59,7 +60,7 @@ static void _pimd_start_auto_adc(void)
 
     /* Select IOA11 (PIMD_ADC_CH) with hardware 4us auto S&H discharge and 60uA ramp current */
     *P_CMPADC_Ctrl1 = C_CMPADC_Stop;
-    *P_CMPADC_Ctrl0 = ((unsigned)PIMD_ADC_CH << 10) | C_CMPADC_SH_8us |
+    *P_CMPADC_Ctrl0 = ((unsigned)PIMD_ADC_CH << 10) | C_CMPADC_Discharge_Enable | C_CMPADC_SH_8us |
                       C_CMPADC_Hysteresis_Enable | C_CMPADC_IBIAS_60uA | C_CMPADC_Enable;
     *P_CMPADC_Status = ADC_FLAGS;
     *P_INT_Status = C_IRQ3_ADC;
@@ -93,6 +94,7 @@ static void _pimd_start_auto_adc(void)
                       C_CMPADC_TMC | C_CMPADC_Start;
 #endif
 }
+#endif
 
 /*
  *@ brief    : TimerC (IRQ2) callback handling the 250us pulse HIGH and 250us pre-ADC quiet wait.
@@ -105,16 +107,23 @@ static void _pimd_timerc_isr(void)
 {
     if (pimd_phy_phase == PIMD_Phy_Pulse_High)
     {
-        /* End of 250us excitation: pull P1_METAL_PULSE LOW and wait 250us before ADC window */
+        /* End of 250us excitation: pull P1_METAL_PULSE LOW */
         gpio_write_level(Pimd_En_Pin.port, Pimd_En_Pin.pin, false);
+#if (PIMD_ADC_DETECT_EN != 0U)
         tmrc_set_period_us(PIMD_PRE_ADC_WAIT_US);
         pimd_phy_phase = PIMD_Phy_Pre_Adc_Wait;
+#else
+        tmrc_stop_module();
+        pimd_phy_phase = PIMD_Phy_Idle;
+#endif
     }
+#if (PIMD_ADC_DETECT_EN != 0U)
     else if (pimd_phy_phase == PIMD_Phy_Pre_Adc_Wait)
     {
         /* End of 500us pre-ADC delay: launch hardware TimerC-triggered Auto ADC (DMA or IRQ) */
         _pimd_start_auto_adc();
     }
+#endif
     else
     {
         _pimd_finish_acquire(false);
@@ -229,6 +238,7 @@ void pimd_trigger_pulse(PIMD_Phy_State *state)
         return;
     }
 
+#if (PIMD_ADC_DETECT_EN != 0U)
     _pimd_finish_acquire(false);
 
     /* Sample internal 1.5V reference only during silent calibration before beeps can occur */
@@ -240,6 +250,10 @@ void pimd_trigger_pulse(PIMD_Phy_State *state)
             state->ref_raw = ref;
         }
     }
+#else
+    tmrc_stop_module();
+    state->pulse_cnt++;
+#endif
 
     pimd_sample_idx = 0U;
     pimd_frame_ready = false;
@@ -425,14 +439,33 @@ void pimd_process_frame(PIMD_Phy_State *state)
         return;
     }
 
-    /* 7. Asymmetric baseline floor tracking */
-    if (state->filt_slope < state->base_slope)
+    /* 7. Stability-gated baseline tracking (prevents one-way downward ratchet deadlock) */
+    jitter = (max_slope >= state->filt_slope) ? (u16)(max_slope - state->filt_slope)
+                                              : (u16)(state->filt_slope - max_slope);
+    if (jitter <= 12U)
     {
-        state->base_slope = (u16)(((u32)state->base_slope + (u32)state->filt_slope) / 2UL);
+        if (state->stable_cnt < 20U)
+        {
+            state->stable_cnt++;
+        }
     }
-    if (state->filt_peak < state->base_peak)
+    else
     {
-        state->base_peak = (u16)(((u32)state->base_peak + (u32)state->filt_peak) / 2UL);
+        state->stable_cnt = 0U;
+    }
+
+    if (state->stable_cnt >= 3U)
+    {
+        if (state->filt_slope < state->base_slope)
+        {
+            u16 step = (u16)((state->base_slope - state->filt_slope + 7U) / 8U);
+            state->base_slope = (u16)(state->base_slope - step);
+        }
+        if (state->filt_peak < state->base_peak)
+        {
+            u16 step = (u16)((state->base_peak - state->filt_peak + 7U) / 8U);
+            state->base_peak = (u16)(state->base_peak - step);
+        }
     }
 
     state->d_slope = (s16)state->filt_slope - (s16)state->base_slope;
@@ -477,21 +510,16 @@ void pimd_process_frame(PIMD_Phy_State *state)
             }
         }
 
-        /* 9. Slow upward drift tracking ONLY in quiet no-metal state */
-        if (!state->metal_detected && state->d_slope <= 25 && state->d_peak <= 40)
+        /* 9. Slow upward drift tracking when stationary and not in active metal state */
+        if (!state->metal_detected && state->stable_cnt >= 4U && (state->pulse_cnt & 0x03U) == 0U)
         {
-            jitter = (max_slope >= state->filt_slope) ? (u16)(max_slope - state->filt_slope)
-                                                      : (u16)(state->filt_slope - max_slope);
-            if (jitter <= 12U && (state->pulse_cnt & 0x07U) == 0U)
+            if (state->filt_slope > state->base_slope)
             {
-                if (state->filt_slope > state->base_slope)
-                {
-                    state->base_slope++;
-                }
-                if (state->filt_peak > state->base_peak)
-                {
-                    state->base_peak++;
-                }
+                state->base_slope++;
+            }
+            if (state->filt_peak > state->base_peak)
+            {
+                state->base_peak++;
             }
         }
     }

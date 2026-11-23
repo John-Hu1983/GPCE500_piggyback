@@ -336,6 +336,7 @@ void st7735_init_interface(void)
     gpio_init_pattern(Lcd_Reset_Pin.port, Lcd_Reset_Pin.pin, GPIO_Out_High);
 
     iopwm_init_channel(LCD_BL_PWM_CH);
+    iopwm_set_freq(LCD_BL_PWM_CH, IOPWM_Clk_Sys8);
 
     st7735_msg_bit.bits.te_flag = 0;
     exisr_init_channel(EXISR_Ch_2, EXISR_Edge_Rising, st7735_te_irq_callback);
