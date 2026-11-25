@@ -13,10 +13,10 @@
 
 This system implements a **Pulse Induction Metal Detector (PIMD)** by combining microsecond-accurate coil excitation with high-gain eddy-current tail sampling:
 
-1. **Excitation Phase ($0 \sim 250\,\mu\text{s}$)**:
-   The MCU drives `P1_METAL_PULSE` (`IOB1`) HIGH for $250\,\mu\text{s}$, turning on `Q101 (2N7002) -> Q102 -> Q103 (AO3402A)` to build magnetic energy in the search coil `L101 (300uH)`. During this phase, the inverting amplifier `U101 (LMV321)` outputs a high plateau (`~2350 mV` at `IOA11`).
+1. **Excitation Phase ($0 \sim 80\,\mu\text{s}$)**:
+   The MCU drives `P1_METAL_PULSE` (`IOB1`) HIGH for $80\,\mu\text{s}$, directly driving `Q103 (AO3402A)` via `R102 (10R) -> C101 (1uF) -> [D101 // R101 (10K)]` to build magnetic energy in the search coil `L101 (155uH)`. During this phase, the inverting amplifier `U101 (LMV321)` outputs a high plateau (`~2350 mV` at `IOA11`).
 2. **Flyback Decay & Eddy-Current Induction Phase ($0 \sim 300\,\mu\text{s}$ after falling edge)**:
-   At $t = 250\,\mu\text{s}$, the MCU pulls `IOB1` sharply LOW, snapping `Q103` OFF. The collapsing magnetic field generates a flyback pulse (critically damped by `R107 = 560Ω` and clipped within $+4.5\text{V} \pm 0.7\text{V}$ by `D102/D103`), driving the inverting op-amp output downward:
+   At $t = 80\,\mu\text{s}$, the MCU pulls `IOB1` sharply LOW, snapping `Q103` OFF. The collapsing magnetic field generates a flyback pulse (critically damped by `R107 = 560Ω` and clipped within $+4.5\text{V} \pm 0.7\text{V}$ by `D102/D103`), driving the inverting op-amp output downward:
    - **No Metal (Idle)**: The coil energy decays rapidly; the op-amp output dips only to **`~900–950 mV`** and gently recovers to the `~1450 mV` baseline with a shallow slope (`~40 mV / 100us`).
    - **With Metal Present**: Eddy currents induced in the metal target oppose the magnetic field collapse and generate a millivolt-level decay tail. Amplified by `U101` ($\text{gain} \approx -3570\times$), this drives the output all the way down to **`0 mV`**, followed by a **steep rising slope (`> 200 mV / 100us`)** starting at $\Delta t \approx 450\,\mu\text{s}$ after the falling edge and climbing to the true peak.
 3. **ADC Ramp Sampling Window ($375 \sim 1500\,\mu\text{s}$ after falling edge)**:

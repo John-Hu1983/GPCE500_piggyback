@@ -1,6 +1,7 @@
 # 脉冲涡流金属探测 (PIMD) 软件运行原理与架构说明
 
 > English Version: [PIMD_Software_Operation_Principle_EN.md](./PIMD_Software_Operation_Principle_EN.md)
+> 软硬件联调踩坑与计算日志：[PIMD_Debugging_Log_CN.md](./PIMD_Debugging_Log_CN.md)
 >
 > 相关代码文件：
 > - 物理采集与算法层：[phy_pimd.h](../application/pimd/phy/phy_pimd.h)、[phy_pimd.c](../application/pimd/phy/phy_pimd.c)
@@ -13,10 +14,10 @@
 
 本系统采用 **脉冲涡流金属探测（Pulse Induction Metal Detection, PIMD）** 原理：
 
-1. **脉冲激励阶段（$0 \sim 250\,\mu\text{s}$）**：
-   MCU 将 `P1_METAL_PULSE`（`IOB1`）拉高 $250\,\mu\text{s}$，经 `R102 -> C101 (1uF) -> Q101 (2N7002) -> Q102 -> Q103 (AO3402A)` 驱动探测线圈 `L101 (300uH)` 导通储能。此时反相运放 `U101 (LMV321)` 输出高电平平台。
+1. **脉冲激励阶段（$0 \sim 80\,\mu\text{s}$）**：
+   MCU 将 `P1_METAL_PULSE`（`IOB1`）拉高 $80\,\mu\text{s}$，经 `R102 (10R) -> C101 (1uF) -> [D101 // R101 (10K)] -> Q103 (AO3402A)` 直接驱动探测线圈 `L101 (155uH)` 导通储能。此时反相运放 `U101 (LMV321)` 输出高电平平台。
 2. **关断反峰与涡流激发阶段（下降沿后 $0 \sim 300\,\mu\text{s}$）**：
-   在 $t = 250\,\mu\text{s}$ 时刻，MCU 将 `IOB1` 陡峭拉低，`Q103` 瞬间关断。线圈磁场急剧坍塌产生高压反峰（由 `R107 = 560Ω` 临界阻尼消振，并由 `D102/D103` 削顶在 $+4.5\text{V} \pm 0.7\text{V}$），把反相运放 `U101` 输出打向谷底：
+   在 $t = 80\,\mu\text{s}$ 时刻，MCU 将 `IOB1` 陡峭拉低，`Q103` 瞬间关断。线圈磁场急剧坍塌产生高压反峰（由 `R107 = 560Ω` 临界阻尼消振，并由 `D102/D103` 削顶在 $+4.5\text{V} \pm 0.7\text{V}$），把反相运放 `U101` 输出打向谷底：
    - **无金属（Idle）时**：反峰迅速衰减，运放输出谷底仅下探至约 `900~950 mV`，随后平缓回升至静态基线 `~1450 mV`（上升斜率仅约 `40 mV / 100us`）；
    - **有金属靠近时**：金属内部感应出的涡流（Eddy Current）阻碍磁场衰减，产生毫伏级涡流尾迹电压，经 `U101` 约 $3570$ 倍反相放大后，将输出死死压在 **`0 mV` 谷底**，随后在下降沿后约 $450\,\mu\text{s}$ 处开始以 **`> 200 mV / 100us` 的陡峭斜率** 快速爬升并冲高至真实峰值。
 3. **斜坡采样阶段（下降沿后 $375 \sim 1500\,\mu\text{s}$）**：

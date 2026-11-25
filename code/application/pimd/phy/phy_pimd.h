@@ -15,13 +15,13 @@
 
 /*
  * PIMD (Pulse Induction Metal Detector) hardware TimerC + ADC sampling parameters:
- * - Pulse HIGH width     : 250us HIGH on P1_METAL_PULSE (IOB1), then pulled LOW
+ * - Pulse HIGH width     : 80us HIGH on P1_METAL_PULSE (IOB1), then pulled LOW
  * - Pre-ADC quiet wait   : 300us LOW wait after falling edge (1st sample triggers at 300+75 = 375us)
  * - ADC sample step      : 75us (exact 3x of 25us 40kHz backlight PWM period for ripple cancellation,
  *                          and >57us so 3.2V full-scale slope conversion never gets truncated)
  * - ADC sample window    : 16 samples @ 75us interval (375us .. 1500us after falling edge) on IOA11
  */
-#define PIMD_PULSE_HIGH_US          250U
+#define PIMD_PULSE_HIGH_US          80U
 #define PIMD_PRE_ADC_WAIT_US        300U
 #define PIMD_ADC_STEP_US            75U
 #define PIMD_SAMPLE_START_US        (PIMD_PRE_ADC_WAIT_US + PIMD_ADC_STEP_US)

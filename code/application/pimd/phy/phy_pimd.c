@@ -58,10 +58,10 @@ static void _pimd_start_auto_adc(void)
 }
 
 /*
- *@ brief    : TimerC (IRQ2) callback handling the 250us pulse HIGH and 300us pre-ADC quiet wait.
+ *@ brief    : TimerC (IRQ2) callback handling the 80us pulse HIGH and 300us pre-ADC quiet wait.
  *@ type     : private
  *@ argu in  : None.
- *@ argu out : Pulls P1_METAL_PULSE LOW at 250us, then launches hardware auto-ADC at +300us.
+ *@ argu out : Pulls P1_METAL_PULSE LOW at 80us, then launches hardware auto-ADC at +300us.
  *@ theme    : Microsecond pulse shaping before handing off to hardware-triggered ADC.
  */
 static void _pimd_timerc_isr(void)
@@ -69,7 +69,7 @@ static void _pimd_timerc_isr(void)
     switch (pimd_phy_phase)
     {
     case PIMD_Phy_Pulse_High:
-        /* End of 250us excitation: pull P1_METAL_PULSE LOW */
+        /* End of 80us excitation: pull P1_METAL_PULSE LOW */
         gpio_write_level(Pimd_En_Pin.port, Pimd_En_Pin.pin, false);
         tmrc_set_period_us(PIMD_PRE_ADC_WAIT_US);
         pimd_phy_phase = PIMD_Phy_Pre_Adc_Wait;
@@ -186,8 +186,8 @@ void pimd_stop_phy(PIMD_Phy_State *state)
  *@ brief    : Trigger one hardware excitation pulse on P1_METAL_PULSE and start TimerC sequence.
  *@ type     : public
  *@ argu in  : state: pointer to PIMD_Phy_State descriptor.
- *@ argu out : P1_METAL_PULSE driven HIGH and TimerC armed for 250us excitation phase.
- *@ theme    : Start of 250us HIGH + 250us LOW + 600us hardware Auto-ADC burst.
+ *@ argu out : P1_METAL_PULSE driven HIGH and TimerC armed for 80us excitation phase.
+ *@ theme    : Start of 80us HIGH + 300us LOW + 1200us hardware Auto-ADC burst.
  */
 void pimd_trigger_pulse(PIMD_Phy_State *state)
 {
